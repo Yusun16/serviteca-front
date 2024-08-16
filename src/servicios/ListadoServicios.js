@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { NumericFormat } from 'react-number-format';
 
 export default function ListadoServicios() {
 
     //{
     // const urlBase = "...................................................................................";
 
-  //  const[servicios, setServicios] = useState([]);
+   const[servicios, setServicios] = useState([]);
 
     // useEffect(() => {
       //  cargarServicios();
@@ -23,8 +24,15 @@ export default function ListadoServicios() {
   return (
     <div className='container'>
   <div className='container text-center' style={{margin: "30px"}}>
-        <h3> Serviteca Automotriz </h3>
+        <h2> Servicios </h2>
     </div>
+
+    <div className='container text-center' style={{margin: "30px"}}>
+        <div className='container'></div>
+    <button type="button" className="btn btn-center btn-primary" href="/">Agregar Servicio</button>
+    <button type="button" className="btn btn-center btn-primary" href="/">Buscar Servicio</button>
+    </div>
+    
 
     <table className="table table-striped table-hover align-middle">
   <thead className='table-dark'>
@@ -40,12 +48,16 @@ export default function ListadoServicios() {
         <tbody>
             {  //iteramos el arreglo de servicios
             servicios.map((servicios, indice) => (
-                <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@deed</td>
+                <tr key={indice}>
+                <th scope="row">{servicios.idServicios}</th>
+                <td>{servicios.descripcion}</td>
+                <td>{servicios.valorDelServicio}</td>
+                <td>{servicios.año}</td>
+                <td><NumericFormat value={servicios.porcentajeDelOperacio}
+                displayType={'text'}
+                thousandSeparator="," prefix='%'
+                decimalScale={2} fixedDecimalScale/>
+                </td>
                 </tr>
             ))
                
