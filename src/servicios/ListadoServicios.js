@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { NumericFormat } from 'react-number-format';
+import { Link } from 'react-router-dom';
 
 export default function ListadoServicios() {
 
@@ -29,7 +30,7 @@ export default function ListadoServicios() {
 
     <div className='container text-center' style={{margin: "30px"}}>
         <div className='container'></div>
-    <button type="button" className="btn btn-center btn-primary" href="/">Agregar Servicio</button>
+    <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/agregar">Agregar Servicio</Link>
     <button type="button" className="btn btn-center btn-primary" href="/">Buscar Servicio</button>
     </div>
     
