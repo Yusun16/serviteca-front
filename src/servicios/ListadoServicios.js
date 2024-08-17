@@ -19,6 +19,11 @@ export default function ListadoServicios() {
         console.log(resultado.data);
         setServicios(resultado.data);
     }
+
+    const eliminarServicio=async(id)=>{
+      await axios.delete(`${urlBase}/${id}`)
+      cargarServicios();
+    }
     
 
   return (
@@ -43,6 +48,7 @@ export default function ListadoServicios() {
             <th scope="col">Valor del Servicio</th>
             <th scope="col">Año</th>
             <th scope="col">Porcentaje del Operario</th>
+            <th></th>
 
             </tr>
         </thead>
@@ -64,6 +70,10 @@ export default function ListadoServicios() {
                 displayType={'text'}
                 thousandSeparator="," prefix='%'
                 decimalScale={2} fixedDecimalScale/>
+                </td>
+                <td className='text-center'>
+                  <Link to={`/editar/${servicios.idServicio}`} className='btn btn-warning btn-sm me-3'>Editar</Link>
+                  <button onClick={()=> eliminarServicio(servicios.idServicio)} className='btn btn-danger btn-sm'>Eliminar</button>
                 </td>
                 </tr>
             ))
