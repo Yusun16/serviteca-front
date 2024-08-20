@@ -60,7 +60,7 @@ export default function EditarServicio() {
         </div>
         <div className="mb-3">
             <label htmlfor="año" className="form-label">Año</label>
-            <input type="number" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
+            <input type="date" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
         </div>
         <div className="mb-3">
             <label htmlfor="porcentajeOperario" className="form-label">Porcentaje Operario</label>
