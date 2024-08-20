@@ -34,26 +34,16 @@ export default function AgregarServicio() {
         </div>
         <form onSubmit={(e)=> onSubmit(e)}> 
         <div className="mb-3">
-<<<<<<< HEAD
             <label for="descripcion" className="form-label">Descripción</label>
             <input type="text" className="form-control" id="descripcion" name='descripcion' required={true}  />
-=======
-            <label htmlFor="codigo" className="form-label">Codigo</label>
-            <input type="text" className="form-control" id="codigo" name='codigo' required={true} value={codigo} onChange={(e)=>onInputCahnge(e)} />
->>>>>>> 3034c19398dffc41032d3f0a8185ce1bfbcd2d51
         </div>
         <div className="mb-3">
             <label htmlfor="descripcion" className="form-label">Descripción</label>
             <input type="text" className="form-control" id="descripcion" name='descripcion' required={true} value={descripcion} onChange={(e)=>onInputCahnge(e)} />
         </div>
         <div className="mb-3">
-<<<<<<< HEAD
             <label for="año" className="form-label">Año</label>
             <input type="date" step="any" className="form-control" id="año" name='año'/>
-=======
-            <label htmlFor="valorServicio" className="form-label">valor Servicio</label>
-            <input type="text" className="form-control" id="valorServicio" name='valorServicio' required={true} value={valorServicio} onChange={(e)=>onInputCahnge(e)} />
->>>>>>> 3034c19398dffc41032d3f0a8185ce1bfbcd2d51
         </div>
         <div className="mb-3">
             <label htmlfor="año" className="form-label">Año</label>
