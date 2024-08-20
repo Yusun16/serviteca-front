@@ -3,13 +3,13 @@ import React from 'react'
 export default function AgregarServicio() {
   return (
     <div className='container'>
-        <div className='container text-center' style={{margin: "30px"}}>
+        <div className='container text-center' style={{margin: "px"}}>
             <h2>Agregar Servicio</h2>
         </div>
         <form>
         <div className="mb-3">
             <label for="descripcion" className="form-label">Descripción</label>
-            <input type="text" className="form-control" id="descripcion" name='descripcion' required={true} />
+            <input type="text" className="form-control" id="descripcion" name='descripcion' required={true}  />
         </div>
         <div className="mb-3">
             <label for="valor del servicio" className="form-label">Valor Del Servicio</label>
@@ -17,7 +17,7 @@ export default function AgregarServicio() {
         </div>
         <div className="mb-3">
             <label for="año" className="form-label">Año</label>
-            <input type="number" step="any" className="form-control" id="año" name='año'/>
+            <input type="date" step="any" className="form-control" id="año" name='año'/>
         </div>
         <div className="mb-3">
             <label for="porcenteaje del operario" className="form-label">Porcentaje del Operario</label>
