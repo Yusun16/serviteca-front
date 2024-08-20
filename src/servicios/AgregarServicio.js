@@ -34,8 +34,8 @@ export default function AgregarServicio() {
         </div>
         <form onSubmit={(e)=> onSubmit(e)}> 
         <div className="mb-3">
-            <label for="descripcion" className="form-label">Descripción</label>
-            <input type="text" className="form-control" id="descripcion" name='descripcion' required={true}  />
+            <label for="codigo" className="form-label">codigo</label>
+            <input type="text" className="form-control" id="codigo" name='codigo' required={true}  />
         </div>
         <div className="mb-3">
             <label htmlfor="descripcion" className="form-label">Descripción</label>
@@ -46,7 +46,7 @@ export default function AgregarServicio() {
             <input type="date" step="any" className="form-control" id="año" name='año'/>
         </div>
         <div className="mb-3">
-            <label htmlfor="año" className="form-label">Año</label>
+            <label htmlfor="año" className="form-label">Valor del servicio</label>
             <input type="number" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
         </div>
         <div className="mb-3">
