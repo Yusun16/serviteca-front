@@ -35,7 +35,7 @@ export default function AgregarServicio() {
         <form onSubmit={(e)=> onSubmit(e)}> 
         <div className="mb-3">
             <label for="codigo" className="form-label">codigo</label>
-            <input type="text" className="form-control" id="codigo" name='codigo'  value={codigo} required={true}  />
+            <input type="text" className="form-control" id="codigo" name='descripcion' required={true}  />
         </div>
         <div className="mb-3">
             <label htmlfor="descripcion" className="form-label">Descripción</label>
@@ -43,11 +43,11 @@ export default function AgregarServicio() {
         </div>
         <div className="mb-3">
             <label for="año" className="form-label">Año</label>
-            <input type="date" step="any" className="form-control" id="año" name='año' value={año}/>
+            <input type="date" step="any" className="form-control" id="año" name='año'/>
         </div>
         <div className="mb-3">
-            <label htmlfor="valor del servicio" className="form-label">Valor del servicio</label>
-            <input type="number" step="any" className="form-control" id="valor del servicio" name='valor del servicio' value={valorServicio} onChange={(e)=>onInputCahnge(e)} />
+            <label htmlfor="año" className="form-label">Valor del servicio</label>
+            <input type="number" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
         </div>
         <div className="mb-3">
             <label htmlfor="porcentajeOperario" className="form-label">Porcentaje Operario</label>
