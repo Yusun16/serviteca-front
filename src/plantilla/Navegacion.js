@@ -15,7 +15,9 @@ export default function Navegacion() {
       <ul className="navbar-nav">
         <li className="nav-item">
           <Link className="nav-link active" aria-current="page" to="/agregar">Agregar Servicio</Link>
-          
+        </li>
+        <li className="nav-item">
+          <Link className="nav-link active" aria-current="page" to="/ordenservicio">Orden de Servicio</Link>
         </li>
       </ul>
     </div>
