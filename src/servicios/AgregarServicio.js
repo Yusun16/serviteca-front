@@ -29,7 +29,7 @@ export default function AgregarServicio() {
 
   return (
     <div className='container'>
-        <div className='container text-center' style={{margin: "px"}}>
+        <div className='container text-center' style={{margin: "30px"}}>
             <h2>Agregar Servicio</h2>
         </div>
         <form onSubmit={(e)=> onSubmit(e)}> 

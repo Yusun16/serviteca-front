@@ -35,7 +35,7 @@ export default function ListadoServicios() {
     <div className='container text-center' style={{margin: "30px"}}>
         <div className='container'></div>
     <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/agregar">Agregar Servicio</Link>
-    <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/buscar">Buscar Servicio</Link>
+   
     </div>
     
 
