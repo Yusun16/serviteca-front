@@ -29,13 +29,13 @@ export default function AgregarServicio() {
 
   return (
     <div className='container'>
-        <div className='container text-center' style={{margin: "px"}}>
+        <div className='container text-center' style={{margin: "30px"}}>
             <h2>Agregar Servicio</h2>
         </div>
         <form onSubmit={(e)=> onSubmit(e)}> 
         <div className="mb-3">
             <label for="codigo" className="form-label">codigo</label>
-            <input type="text" className="form-control" id="codigo" name='descripcion' required={true}  />
+            <input type="number" className="form-control" id="codigo" name='codigo'  required={true} value={codigo} onChange={(e)=>onInputCahnge(e)}  />
         </div>
         <div className="mb-3">
             <label htmlfor="descripcion" className="form-label">Descripción</label>
@@ -43,11 +43,11 @@ export default function AgregarServicio() {
         </div>
         <div className="mb-3">
             <label for="año" className="form-label">Año</label>
-            <input type="date" step="any" className="form-control" id="año" name='año'/>
+            <input type="date" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)}/>
         </div>
         <div className="mb-3">
-            <label htmlfor="año" className="form-label">Valor del servicio</label>
-            <input type="number" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
+            <label htmlfor="valorServicio" className="form-label">Valor del servicio</label>
+            <input type="number" step="any" className="form-control" id="valorServicio" name='valorServicio' value={valorServicio} onChange={(e)=>onInputCahnge(e)} />
         </div>
         <div className="mb-3">
             <label htmlfor="porcentajeOperario" className="form-label">Porcentaje Operario</label>
