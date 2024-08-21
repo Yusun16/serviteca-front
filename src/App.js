@@ -6,10 +6,11 @@ import BuscarServicio from "./servicios/BuscarServicio";
 import EditarServicio from "./servicios/EditarServicio";
 import ListadoOrden from "./Orden Servicio/ListadoOrden";
 import AgregarOrden from "./Orden Servicio/AgregarOrden";
+import BuscarOrden from "./Orden Servicio/BuscarOrden";
 
 function App() {
   return (
-    <div className="container">
+    <div >
     <BrowserRouter>
     <Navegacion/>
     <Routes>
@@ -19,6 +20,7 @@ function App() {
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
       <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
       <Route exact path="/agregarorden/" element={<AgregarOrden/>}/>
+      <Route exact path="/buscarorden/" element={<BuscarOrden/>}/>
     </Routes>
     </BrowserRouter>
     </div>

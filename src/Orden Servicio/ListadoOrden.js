@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom';
 
 export default function ListadoOrden() {
 
@@ -24,11 +25,15 @@ export default function ListadoOrden() {
             <h3>Orden de Servicio</h3>
         </div>
 
+        <div className='container text-center' style={{margin: "30px"}}>
+        <div className='container'></div>
+        <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/agregarorden">Agregar Servicio</Link>
+        </div>
+
         <table class="table table-striped table-hover align-middel">
             <thead className='table-dark'>
                 <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Codigo Orden de servicio</th>
+                <th scope="col">Orden de servicio</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Tipo de servicio</th>
                 <th scope="col">Placa del vehiculo</th>
@@ -44,7 +49,6 @@ export default function ListadoOrden() {
                 ordenes.map((orden, indice)=>(
                     <tr key={indice}>
                     <th scope="row">{orden.idOrden}</th>
-                    <td>{orden.codigoOrden}</td>
                     <td>{orden.cliente}</td>
                     <td>{orden.tipoServicio}</td>
                     <td>{orden.placaVehiculo}</td>

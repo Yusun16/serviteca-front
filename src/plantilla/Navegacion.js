@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 export default function Navegacion() {
   return (
-    <div className='container'>
+    <div >
         
         <nav className="navbar navbar-expand-lg navbar-dark bg-danger">
   <div className="container-fluid">
@@ -17,7 +17,7 @@ export default function Navegacion() {
           <Link className="nav-link active" aria-current="page" to="/agregar">Agregar Servicio</Link>
         </li>
         <li className="nav-item">
-          <Link className="nav-link active" aria-current="page" to="/ordenservicio">Orden de Servicio</Link>
+          <Link className="nav-link active" aria-current="page" to="/agregarorden">Orden de Servicio</Link>
         </li>
       </ul>
     </div>
