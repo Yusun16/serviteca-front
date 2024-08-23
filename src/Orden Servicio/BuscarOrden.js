@@ -43,6 +43,8 @@ export default function BuscarOrden() {
     const totalPages = Math.ceil(ordenes.length / itemsPerPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const goToPreviousPage = () => setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
+    const goToNextPage = () => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
 
     return (
         <div className='container'>
@@ -64,33 +66,33 @@ export default function BuscarOrden() {
                         <div className="row">
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="orden" className="col-sm-3 col-form-label">N° de servicio:*</label>
+                                    <label htmlFor="numeroServicio" className="col-sm-3 col-form-label">N° de servicio:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                        <input type="text" className="form-control" id="numeroServicio" name='numeroServicio' value={numeroServicio} onChange={(e) => setNumeroServicio(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Cliente:*</label>
+                                    <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                        <input type="text" className="form-control" id="cliente" name='cliente' value={cliente} onChange={(e) => setCliente(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Fehca de Ingreso:*</label>
+                                    <label htmlFor="fecha" className="col-sm-3 col-form-label">Fecha de Ingreso:*</label>
                                     <div className="col-sm-6">
-                                        <input type="date" className="form-control"id="orden" name='orden'/>
+                                        <input type="date" className="form-control" id="fecha" name='fecha' value={fecha} onChange={(e) => setFecha(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Cliente:*</label>
+                                    <label htmlFor="placa" className="col-sm-3 col-form-label">Placa:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                        <input type="text" className="form-control" id="placa" name='placa' value={placa} onChange={(e) => setPlaca(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -108,7 +110,7 @@ export default function BuscarOrden() {
             {ordenes.length > 0 && (
                 <div className='container' style={{ margin: "30px" }}>
                     <table className="table table-striped table-hover align-middle">
-                        <thead >
+                        <thead>
                             <tr>
                                 <th className='th-tabla !important' scope="col">Orden de servicio</th>
                                 <th className='th-tabla !important' scope="col">Cliente</th>
@@ -137,17 +139,37 @@ export default function BuscarOrden() {
             {/* Paginación */}
             {ordenes.length > 0 && (
                 <div className='container' style={{ margin: "30px" }}>
-                    <div className='d-flex justify-content-between'>
-                        <h6>Mostrando {currentPage} de {totalPages}</h6>
-                        <ul className='pagination'>
-                            {[...Array(totalPages)].map((_, index) => (
-                                <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                    <button onClick={() => paginate(index + 1)} className='page-link'>
-                                        {index + 1}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        {/* Texto de página actual */}
+                        <div>
+                            <span>Mostrando página {currentPage} de {totalPages}</span>
+                        </div>
+                        {/* Botones Anterior y Siguiente */}
+                        <div className='d-flex align-items-center'>
+                            <button
+                                onClick={goToPreviousPage}
+                                className="btn btn-secondary"
+                                disabled={currentPage === 1}
+                            >
+                                Anterior
+                            </button>
+                            <ul className='pagination mx-3 mb-0'>
+                                {[...Array(totalPages)].map((_, index) => (
+                                    <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                        <button onClick={() => paginate(index + 1)} className='page-link'>
+                                            {index + 1}
+                                        </button>
+                                    </li>
+                                ))}
+                            </ul>
+                            <button
+                                onClick={goToNextPage}
+                                className="btn btn-secondary"
+                                disabled={currentPage === totalPages}
+                            >
+                                Siguiente
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
