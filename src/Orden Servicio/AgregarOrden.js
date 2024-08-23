@@ -1,6 +1,6 @@
-import axios from 'axios'
-import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function AgregarServicio() {
     let navegacion = useNavigate();
@@ -11,109 +11,162 @@ export default function AgregarServicio() {
         placaVehiculo: "",
         kilometraje: "",
         fecha: ""
-    })
+    });
 
-    const { cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden
+    const { cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
 
-    const onInputCahnge = (e) => {
-        setOrden({ ...orden, [e.target.name]: e.target.value })
-    }
+    const onInputChange = (e) => {
+        setOrden({ ...orden, [e.target.name]: e.target.value });
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
-        await axios.post(urlBase, orden)
-        navegacion("/ordenservicio")
-
-    }
+        await axios.post(urlBase, orden);
+        navegacion("/ordenservicio");
+    };
 
     return (
         <div className='container'>
-            <div className='container text-center' style={{ margin: "30px" }}>
-                <h2>Agregar Orden de Servicio</h2>
-            </div>
-            <div class="container text-center">
-                <div class="row">
-                    <div class="col-5">
-                        <div className='container text-center' style={{ margin: "30px" }}>
-                            <div className='container'></div>
-                            <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/agregarorden">Agregar Servicio</Link>
-                        </div>
+            <nav aria-label="breadcrumb">
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item"><a href="/agregarorden"><i className="fa-solid fa-house"></i> Home</a></li>
+                    <li className="breadcrumb-item active" aria-current="page">Orden de Servicio </li>
+                </ol>
+            </nav>
+            
+            <div className='text-center'>
+                <div className='row mb-4'>
+                    <div className='col'>
+                        <Link type="button" className="btn btn-primary" to="/agregarorden">Agregar Orden de Servicio</Link>
                     </div>
-                    <div class="col-5">
-                        <div className='container text-center' style={{ margin: "30px" }}>
-                            <div className='container'></div>
-                            <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/buscarorden">Buscar Orden de Servicio</Link>
-                        </div>
+                    <div className='col'>
+                        <Link type="button" className="btn btn-primary" to="/buscarorden">Buscar Orden de Servicio</Link>
                     </div>
                 </div>
             </div>
 
+            <h6 className='mb-3' style={{ textAlign: 'left', marginLeft: '20px' }}>Nueva Orden de Servicio</h6>
 
-
-
-            <form onSubmit={(e) => onSubmit(e)}>
-                <div className="mb-3">
-                    <label for="cliente" className="form-label">cliente</label>
-                    <input type="text" className="form-control" id="cliente" name='cliente' required={true} value={cliente} onChange={(e) => onInputCahnge(e)} />
-                </div>
-                <div className="mb-3">
-                    <label for="disabledSelect" class="form-label">Tipo de servicio</label>
-                    <select className="form-select" aria-label="Default select example">
-                        <option required={true} value={tipoServicio} onChange={(e) => onInputCahnge(e)}>Mecanico</option>
-                        <option required={true} value={tipoServicio} onChange={(e) => onInputCahnge(e)}>Lavado</option>
-                        <option required={true} value={tipoServicio} onChange={(e) => onInputCahnge(e)}>Lubricacion</option>
-                    </select>
-                </div>
-                <div className="mb-3">
-                    <label for="placaVehiculo" className="form-label">Placa del Vehiculo</label>
-                    <input type="tex" step="any" className="form-control" id="placaVehiculo" name='placaVehiculo' value={placaVehiculo} onChange={(e) => onInputCahnge(e)} />
-                </div>
-                <div className="row mb-3 ">
-                    <div className='col-8'>
-                        <label htmlfor="kilometraje" className="form-label">Kilometraje</label>
-                        <input type="number" step="any" className="form-control" id="kilometraje" name='kilometraje' value={kilometraje} onChange={(e) => onInputCahnge(e)} />
+            <form onSubmit={onSubmit} className="form-horizontal">
+                <div className="mb-3 row">
+                    <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
+                    <div className="col-sm-6">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="cliente" 
+                            name='cliente' 
+                            required 
+                            value={cliente} 
+                            onChange={onInputChange} 
+                        />
                     </div>
-                    <div className='col-sm-4 col-6 row container text-center'>
-                        <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                </div>
+
+                <div className="mb-3 row">
+                    <label htmlFor="placaVehiculo" className="col-sm-3 col-form-label">Placa:*</label>
+                    <div className="col-sm-6">
+                        <input 
+                            type="text" 
+                            className="form-control" 
+                            id="placaVehiculo" 
+                            name='placaVehiculo' 
+                            required 
+                            value={placaVehiculo} 
+                            onChange={onInputChange} 
+                        />
+                    </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label htmlFor="tipoServicio" className="col-sm-3 col-form-label">Servicio:*</label>
+                    <div className="col-sm-6">
+                        <select 
+                            className="form-select" 
+                            id="tipoServicio" 
+                            name='tipoServicio' 
+                            required 
+                            value={tipoServicio} 
+                            onChange={onInputChange}
+                        >
+                            <option value="">Seleccione un servicio</option>
+                            <option value="Mecanico">Mecánico</option>
+                            <option value="Lavado">Lavado</option>
+                            <option value="Lubricacion">Lubricación</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div className="mb-3 row">
+                    <label htmlFor="kilometraje" className="col-sm-3 col-form-label">Kilometraje Vehículo:*</label>
+                    <div className="col-sm-3">
+                        <input 
+                            type="number" 
+                            className="form-control" 
+                            id="kilometraje" 
+                            name='kilometraje' 
+                            required 
+                            value={kilometraje} 
+                            onChange={onInputChange} 
+                        />
+                    </div>
+                    <div className="col-sm-3">
+                        <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Cambio de Aceite
                         </button>
-                        <div className="modal center" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h1 className="modal-title fs-5" id="exampleModalLabel">Cmabio de Aceite</h1>
-                                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div className="modal-body container text-center">
-                                        <label for="disabledSelect" class="form-label">Tipo de aceite</label>
-                                        <select class="form-select" aria-label="Default select example">
-
-                                            <option value="1">Mineral</option>
-                                            <option value="2">Sintético</option>
-                                        </select>
-                                        <label for="kilometros" className="form-label">Kilometros cambio: *</label>
-                                        <input type="tex" step="any" className="form-control" id="kilometros" name='Kilometros' />
-
-                                    </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-success"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-
-                <div className="mb-3">
-                    <label htmlfor="fecha" className="form-label">Fecha</label>
-                    <input type="date" className="form-control" id="fecha" name='fecha' value={fecha} onChange={(e) => onInputCahnge(e)} />
+                <div className="mb-3 row">
+                    <label htmlFor="fecha" className="col-sm-3 col-form-label">Fecha Ingreso:*</label>
+                    <div className="col-sm-6">
+                        <input 
+                            type="date" 
+                            className="form-control" 
+                            id="fecha" 
+                            name='fecha' 
+                            required 
+                            value={fecha} 
+                            onChange={onInputChange} 
+                        />
+                    </div>
                 </div>
 
-                <div className='text-center'>
-                    <button type="submit" className="btn btn-warning  me-3" ><i className="fa-solid fa-check" /> Agregar</button>        </div>
+                <div className="text-center">
+                    <button type="submit" className="btn btn-success"><i className="fa-solid fa-check" /> Siguiente</button>
+                </div>
             </form>
+
+            <div className="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalLabel">Cambio de Aceite</h5>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <label htmlFor="tipoAceite" className="form-label">Tipo de Aceite:</label>
+                            <select className="form-select" id="tipoAceite">
+                                <option value="Mineral">Mineral</option>
+                                <option value="Sintético">Sintético</option>
+                            </select>
+                            <div className="mt-3">
+                                <label htmlFor="kilometros" className="form-label">Kilómetros Cambio:</label>
+                                <input 
+                                    type="number" 
+                                    className="form-control" 
+                                    id="kilometros" 
+                                    name='kilometros' 
+                                />
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-success"><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    )
+    );
 }
