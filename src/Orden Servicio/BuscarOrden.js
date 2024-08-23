@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 export default function BuscarOrden() {
     const urlBase = "http://localhost:8080/serviteca/ordenservicios";
@@ -8,13 +8,32 @@ export default function BuscarOrden() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(7);
 
-    useEffect(() => {
-        cargarOrdenes();
-    }, []);
+    // Estados para los campos de búsqueda
+    const [numeroServicio, setNumeroServicio] = useState('');
+    const [cliente, setCliente] = useState('');
+    const [fecha, setFecha] = useState('');
+    const [placa, setPlaca] = useState('');
 
-    const cargarOrdenes = async () => {
-        const resultado = await axios.get(urlBase);
-        setOrdenes(resultado.data);
+    // Manejo del envío del formulario de búsqueda
+    const handleBuscar = async (e) => {
+        e.preventDefault();
+        const filtros = {
+            numeroServicio,
+            cliente,
+            fecha,
+            placa
+        };
+        await cargarOrdenes(filtros);
+        setCurrentPage(1); // Reinicia la paginación
+    }
+
+    const cargarOrdenes = async (filtros = {}) => {
+        try {
+            const resultado = await axios.get(urlBase, { params: filtros });
+            setOrdenes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar las órdenes:", error);
+        }
     }
 
     // Paginación
@@ -41,30 +60,38 @@ export default function BuscarOrden() {
             <div className='d-flex justify-content-center' style={{ margin: "30px" }}>
                 <div className='w-100' style={{ maxWidth: "600px" }}>
                     <h6 className='mb-3 text-center'>Buscar Orden de Servicio</h6>
-                    <form>
+                    <form onSubmit={handleBuscar}>
                         <div className="row">
                             <div className="col-12 mb-3">
-                                <div className="d-flex align-items-center">
-                                    <label htmlFor="numeroServicio" className="form-label me-3">N° de servicio:</label>
-                                    <input type="number" className="form-control form-control-sm" id="numeroServicio" />
+                                <div className="mb-3 row">
+                                    <label htmlFor="orden" className="col-sm-3 col-form-label">N° de servicio:*</label>
+                                    <div className="col-sm-6">
+                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
-                                <div className="d-flex align-items-center">
-                                    <label htmlFor="cliente" className="form-label me-3">Cliente:</label>
-                                    <input type="text" className="form-control form-control-sm" id="cliente" name="cliente" />
+                                <div className="mb-3 row">
+                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Cliente:*</label>
+                                    <div className="col-sm-6">
+                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
-                                <div className="d-flex align-items-center">
-                                    <label htmlFor="fecha" className="form-label me-3">Fecha de ingreso:</label>
-                                    <input type="date" className="form-control form-control-sm" id="fecha" name='fecha' />
+                                <div className="mb-3 row">
+                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Fehca de Ingreso:*</label>
+                                    <div className="col-sm-6">
+                                        <input type="date" className="form-control"id="orden" name='orden'/>
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12 mb-3">
-                                <div className="d-flex align-items-center">
-                                    <label htmlFor="placa" className="form-label me-3">Placa:</label>
-                                    <input type="text" className="form-control form-control-sm" id="placa" name='placa' />
+                                <div className="mb-3 row">
+                                    <label htmlFor="orden" className="col-sm-3 col-form-label">Cliente:*</label>
+                                    <div className="col-sm-6">
+                                        <input type="text" className="form-control"id="orden" name='orden'/>
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-12 text-center">
@@ -78,48 +105,52 @@ export default function BuscarOrden() {
             </div>
 
             {/* Tabla con resultados */}
-            <div className='container' style={{ margin: "30px" }}>
-                <table className="table table-striped table-hover align-middle">
-                    <thead className='table-dark'>
-                        <tr>
-                            <th scope="col">Orden de servicio</th>
-                            <th scope="col">Cliente</th>
-                            <th scope="col">Tipo de servicio</th>
-                            <th scope="col">Placa del vehículo</th>
-                            <th scope="col">Kilometraje del Vehículo</th>
-                            <th scope="col">Fecha</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {currentItems.map((orden, indice) => (
-                            <tr key={indice}>
-                                <th scope="row">{orden.idOrden}</th>
-                                <td>{orden.cliente}</td>
-                                <td>{orden.tipoServicio}</td>
-                                <td>{orden.placaVehiculo}</td>
-                                <td>{orden.kilometraje}</td>
-                                <td>{orden.fecha}</td>
+            {ordenes.length > 0 && (
+                <div className='container' style={{ margin: "30px" }}>
+                    <table className="table table-striped table-hover align-middle">
+                        <thead >
+                            <tr>
+                                <th className='th-tabla !important' scope="col">Orden de servicio</th>
+                                <th className='th-tabla !important' scope="col">Cliente</th>
+                                <th className='th-tabla !important' scope="col">Tipo de servicio</th>
+                                <th className='th-tabla !important' scope="col">Placa del vehículo</th>
+                                <th className='th-tabla !important' scope="col">Kilometraje del Vehículo</th>
+                                <th className='th-tabla !important' scope="col">Fecha</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            {currentItems.map((orden, indice) => (
+                                <tr key={indice}>
+                                    <th scope="row">{orden.idOrden}</th>
+                                    <td>{orden.cliente}</td>
+                                    <td>{orden.tipoServicio}</td>
+                                    <td>{orden.placaVehiculo}</td>
+                                    <td>{orden.kilometraje}</td>
+                                    <td>{orden.fecha}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {/* Paginación */}
-            <div className='container' style={{ margin: "30px" }}>
-                <div className='d-flex justify-content-between'>
-                    <h6>Mostrando {currentPage} de {totalPages}</h6>
-                    <ul className='pagination'>
-                        {[...Array(totalPages)].map((_, index) => (
-                            <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                <button onClick={() => paginate(index + 1)} className='page-link'>
-                                    {index + 1}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+            {ordenes.length > 0 && (
+                <div className='container' style={{ margin: "30px" }}>
+                    <div className='d-flex justify-content-between'>
+                        <h6>Mostrando {currentPage} de {totalPages}</h6>
+                        <ul className='pagination'>
+                            {[...Array(totalPages)].map((_, index) => (
+                                <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                    <button onClick={() => paginate(index + 1)} className='page-link'>
+                                        {index + 1}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

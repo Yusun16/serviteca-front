@@ -4,7 +4,7 @@ import imgnav from "../img/logo serviteca.jpg"
 
 export default function Navegacion() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-danger">
+    <nav className="navbar navbar-expand-lg navbar-dark colonav">
       <div className="container-fluid">
         <img src={imgnav} alt="Logo de la serviteca" style={{ width: "150px" }} />
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
