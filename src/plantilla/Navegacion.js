@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import imgnav from '../img/carservice.jpeg';
 
 export default function Navegacion() {
   return (
