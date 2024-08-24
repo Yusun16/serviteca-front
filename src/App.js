@@ -7,17 +7,17 @@ import EditarServicio from "./servicios/EditarServicio";
 
 function App() {
   return (
-    <div className="container">
+    
     <BrowserRouter>
     <Navegacion/>
     <Routes>
       <Route exact path="/" element={<ListadoServicios/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
-      <Route exact path="/buscar" element={<BuscarServicio/>}/>
+      <Route exact path="/buscar/" element={<BuscarServicio/>}/>
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
     </Routes>
     </BrowserRouter>
-    </div>
+    
    
 
   );
