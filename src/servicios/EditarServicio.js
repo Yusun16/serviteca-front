@@ -40,7 +40,6 @@ const [servicio, setServicios] = useState({
 
     }
 
-<<<<<<< HEAD
     return (
         <div className='container'>
             <nav aria-label="breadcrumb">
@@ -52,40 +51,6 @@ const [servicio, setServicios] = useState({
       </nav>
             <div className='container text-center' style={{ margin: "30px" }}>
                 <h2>Editar Servicio</h2>
-=======
-  return (
-    <div className='container'>
-        <div className='container text-center' style={{margin: "30px"}}>
-            <h2>Editar Servicio</h2>
-        </div>
-        <form onSubmit={(e)=> onSubmit(e)}> 
-        <div className="mb-3">
-            <label htmlFor="codigo" className="form-label">Codigo</label>
-            <input type="text" className="form-control" id="codigo" name='codigo' required={true} value={codigo} onChange={(e)=>onInputCahnge(e)} />
-        </div>
-        <div className="mb-3">
-            <label htmlfor="descripcion" className="form-label">Descripción</label>
-            <input type="text" className="form-control" id="descripcion" name='descripcion' required={true} value={descripcion} onChange={(e)=>onInputCahnge(e)} />
-        </div>
-        <div className="mb-3">
-            <label htmlFor="valorServicio" className="form-label">valor Servicio</label>
-            <input type="text" className="form-control" id="valorServicio" name='valorServicio' required={true} value={valorServicio} onChange={(e)=>onInputCahnge(e)} />
-        </div>
-        <div className="mb-3">
-            <label htmlfor="año" className="form-label">Año</label>
-            <input type="date" step="any" className="form-control" id="año" name='año' value={año} onChange={(e)=>onInputCahnge(e)} />
-        </div>
-        <div className="mb-3">
-            <label htmlfor="porcentajeOperario" className="form-label">Porcentaje Operario</label>
-            <input type="text"  className="form-control" id="porcentajeOperario" name='porcentajeOperario' value={porcentajeOperario} onChange={(e)=>onInputCahnge(e)} />
-        </div>
-
-        <div className='text-center'>
-        <button type="submit" className="btn btn-warning btn-sm me-3">Guardar</button>
-            <a href='/' className='btn btn-danger btn-sm'>Regresar</a>
-        </div>
-        </form>
->>>>>>> 52ed94eb2b431d61bcabdfe04d98c6f4e2c6a5c6
             </div>
             <form onSubmit={(e) => onSubmit(e)} className='container' style={{ width: "580px", position: "relative", height: "310px"}} >
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>

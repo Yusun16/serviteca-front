@@ -10,11 +10,6 @@ import BuscarOrden from "./Orden Servicio/BuscarOrden";
 
 function App() {
   return (
-<<<<<<< HEAD
-    
-=======
-    <div >
->>>>>>> 52ed94eb2b431d61bcabdfe04d98c6f4e2c6a5c6
     <BrowserRouter>
     <Navegacion/>
     <Routes>
