@@ -25,6 +25,34 @@ code {
   margin-bottom: 20px;
 }
 
+.colorthead {
+  background-color: #002060 ;
+  color: white;
+} 
+
+
+.colonav {
+  background-color: #D95447;
+}
+
+.btncolor {
+  background-color: #002060;
+  color: white;
+}
+
+.btncolor:hover {
+  background-color: #F2B3B3;;
+  color: white;
+}
+
+/* .tbbody {
+  background-color: #9DD3F4;
+} */
+
+.tr-table-tr:nth-child(even) {
+  background-color: #9DD3F4 !important;
+}
+
 .column001 {
   display: flex;
   flex-direction: column;
@@ -74,6 +102,9 @@ code {
   background-color: #ddd;
 }
 
+<<<<<<< HEAD
+
+=======
 .modal0007 {
   display: none;
   position: fixed;
@@ -85,6 +116,7 @@ code {
   overflow: auto;
   background-color: rgba(0,0,0,0.4);
 }
+>>>>>>> 52ed94eb2b431d61bcabdfe04d98c6f4e2c6a5c6
 
 .modal-content {
   background-color: #fefefe;

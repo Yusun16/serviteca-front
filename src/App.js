@@ -10,20 +10,24 @@ import BuscarOrden from "./Orden Servicio/BuscarOrden";
 
 function App() {
   return (
+<<<<<<< HEAD
+    
+=======
     <div >
+>>>>>>> 52ed94eb2b431d61bcabdfe04d98c6f4e2c6a5c6
     <BrowserRouter>
     <Navegacion/>
     <Routes>
       <Route exact path="/" element={<ListadoServicios/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
-      <Route exact path="/buscar" element={<BuscarServicio/>}/>
+      <Route exact path="/buscar/" element={<BuscarServicio/>}/>
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
       <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
       <Route exact path="/agregarorden/" element={<AgregarOrden/>}/>
       <Route exact path="/buscarorden/" element={<BuscarOrden/>}/>
     </Routes>
     </BrowserRouter>
-    </div>
+    
    
 
   );

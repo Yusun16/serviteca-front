@@ -1,89 +1,188 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { NumericFormat } from 'react-number-format';
 import { Link } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 export default function ListadoServicios() {
 
-    const urlBase = "http://localhost:8080/serviteca/servicios";
+  const urlBase = "http://localhost:8080/serviteca/servicios";
+  const [servicios, setServicios] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
 
-   const[servicios, setServicios] = useState([]);
+  useEffect(() => {
+    cargarServicios();
+  }, []);
 
-     useEffect(() => {
-        cargarServicios();
-    }, []);
+  const cargarServicios = async () => {
+    const resultado = await axios.get(urlBase);
+    setServicios(resultado.data);
+  };
 
-    const cargarServicios = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado carga servicios");
-        console.log(resultado.data);
-        setServicios(resultado.data);
-    }
+  const eliminarServicio = async (id) => {
+    await axios.delete(`${urlBase}/${id}`);
+    cargarServicios();
+  };
 
-    const eliminarServicio=async(id)=>{
-      await axios.delete(`${urlBase}/${id}`)
-      cargarServicios();
-    }
-    
+  // Calcular el índice del primer y último elemento de la página actual
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+  // Extraer los elementos de la página actual
+  const currentItems = servicios.slice(indexOfFirstItem, indexOfLastItem);
+
+  // Calcular el número total de páginas
+  const totalPages = Math.ceil(servicios.length / itemsPerPage);
+
+  // Función para cambiar de página
+  const paginate = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const exportToPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = ["Codigo", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
+    const tableRows = [];
+
+    servicios.forEach(servicio => {
+      const servicioData = [
+        servicio.idServicio,
+        servicio.descripcion,
+        `$${servicio.valorServicio.toLocaleString()}`,
+        servicio.año,
+        `${servicio.porcentajeOperario}%`
+      ];
+      tableRows.push(servicioData);
+    });
+
+    doc.autoTable(tableColumn, tableRows, { startY: 20 });
+    doc.text("Listado de Servicios", 14, 15);
+    doc.save("listado_servicios.pdf");
+  };
+
+  const exportToExcel = () => {
+    const ws = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
+      "Codigo": servicio.idServicio,
+      "Descripción": servicio.descripcion,
+      "Valor del Servicio": servicio.valorServicio,
+      "Año": servicio.año,
+      "Porcentaje del Operario": servicio.porcentajeOperario
+    })));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Servicios");
+    const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, "listado_servicios.xlsx");
+  };
 
   return (
     <div className='container'>
-  <div className='container text-center' style={{margin: "30px"}}>
+      <nav aria-label="breadcrumb">
+        <ol className="breadcrumb">
+          <li className="breadcrumb-item">Inicio</li>
+          <li className="breadcrumb-item active" aria-current="page">Servicios</li>
+        </ol>
+      </nav>
+
+      <div className='container text' style={{ margin: "30px" }}>
         <h2> Servicios </h2>
-    </div>
+      </div>
 
-    <div className='container text-center' style={{margin: "30px"}}>
-        <div className='container'></div>
-    <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/agregar">Agregar Servicio</Link>
-   
-    </div>
-    
-
-    <table className="table table-striped table-hover align-middle">
-  <thead className='table-dark'>
-            <tr>
-            <th scope="col">Id</th>
-            <th scope="col">codigo</th>
-            <th scope="col">descripcion</th>
-            <th scope="col">Valor del Servicio</th>
-            <th scope="col">Año</th>
-            <th scope="col">Porcentaje del Operario</th>
-            <th></th>
-
-            </tr>
-        </thead>
-
+      <div className='container text-center ' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px"}} >
+      
+            <Link type="button" className="btn btn-center btncolor" to="http://localhost:3000/agregar" style={{width: "280px", height: "50px" }}>Agregar servicio</Link>
+              <Link type="button" className="btn btn-center btncolor " to="http://localhost:3000/buscar" style={{width: "280px", height: "50px" }}>Buscar servicio</Link> 
+            
         
-        <tbody>
-            {  //iteramos el arreglo de servicios
-            servicios.map((servicios, indice) => (
-                <tr key={indice}>
-                <th scope="row">{servicios.idServicio}</th>
-                <td>{servicios.codigo}</td>
-                <td>{servicios.descripcion}</td>
-                <td><NumericFormat value={servicios.valorServicio}
-                displayType={'text'}
-                thousandSeparator="," prefix='$'
-                decimalScale={2} fixedDecimalScale/></td>
-                <td>{servicios.año}</td>
-                <td><NumericFormat value={servicios.porcentajeOperario}
-                displayType={'text'}
-                thousandSeparator="," prefix='%'
-                decimalScale={2} fixedDecimalScale/>
-                </td>
-                <td className='text-center'>
-                  <Link to={`/editar/${servicios.idServicio}`} className='btn btn-warning btn-sm me-3'>Editar</Link>
-                  <button onClick={()=> eliminarServicio(servicios.idServicio)} className='btn btn-danger btn-sm'>Eliminar</button>
-                </td>
-                </tr>
-            ))
-               
-            }
-          
-  </tbody>
-</table>
+      </div>
 
+      <div className="nav justify-content-end">
+        <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
+          style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+          onClick={exportToPDF}>
+        </button>
+        <button className="fa-sharp fa-solid fa-file-excel p-2 g-col-6"
+          style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+          onClick={exportToExcel}>
+        </button>
+      </div>
+
+      <div className='container'>
+        <table className="">
+          <thead className=''>
+            <tr className='tr-table-tr'>
+              <th className='text-letras colorthead' scope="col">Codigo</th>
+              <th className='text-letras colorthead' scope="col">Descripción</th>
+              <th className='colorthead' scope="col">Valor del Servicio</th>
+              <th className='colorthead' scope="col">Año</th>
+              <th className='colorthead' scope="col">Porcentaje del Operario</th>
+              <th className='colorthead'>Editar</th>
+              <th className='colorthead'>Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.map((servicio, indice) => (
+              <tr className='tr-table-tr' key={indice}>
+                <th scope="row">{servicio.idServicio}</th>
+                <td>{servicio.descripcion}</td>
+                <td><NumericFormat
+                  value={servicio.valorServicio}
+                  displayType={'text'}
+                  thousandSeparator=","
+                  prefix='$'
+                  decimalScale={2}
+                /></td>
+                <td>{servicio.año}</td>
+                <td><NumericFormat
+                  value={servicio.porcentajeOperario}
+                  displayType={'text'}
+                  thousandSeparator=","
+                  prefix='%'
+                  decimalScale={2}
+                /></td>
+                <td className='text-center'>
+                  <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
+                    <i className="fa-solid fa-pen-to-square"></i>
+                  </Link>
+                </td>
+                <td>
+                  <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
+                    <i className="fa-solid fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        {/* Paginación */}
+        <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+        <div className='d-flex justify-content-between'>
+          <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
+          <div className="d-flex justify-content-start mt-4  justify-content-end">
+
+            <button
+              className="btn btn-secondary me-2"
+              onClick={() => paginate(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              Anterior
+            </button>
+            <span className="align-self-center"> {currentPage} de {totalPages}</span>
+            <button
+              className="btn btn-secondary ms-2"
+              onClick={() => paginate(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              Siguiente
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
-  
-  )
+  );
 }
