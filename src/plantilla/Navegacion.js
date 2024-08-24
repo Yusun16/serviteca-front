@@ -16,7 +16,7 @@ export default function Navegacion() {
       <div>
         <ul className="nav justify-content-end">
           <li className="nav-item">
-            <Link className="fa-solid fa-house" to="/agregarorden" style={{ listStyle: "none", color: "white", fontSize: "31px" }}>  </Link>
+            <Link to="/agregarorden" style={{ listStyle: "none", color: "white", fontSize: "31px" }}><i class="fa-solid fa-house"></i> </Link>
           </li>
         </ul>
       </div>
