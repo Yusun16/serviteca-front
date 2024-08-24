@@ -6,6 +6,7 @@ export default function AgregarServicio() {
     let navegacion = useNavigate();
 
     const [orden, setOrden] = useState({
+        idOrden:"",
         cliente: "",
         tipoServicio: "",
         placaVehiculo: "",
@@ -15,7 +16,7 @@ export default function AgregarServicio() {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const { cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
+    const { idOrden,cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
 
     const onInputChange = (e) => {
         setOrden({ ...orden, [e.target.name]: e.target.value });
@@ -48,14 +49,14 @@ export default function AgregarServicio() {
                     <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                 </ol>
             </nav>
-            
-            <div className='text-center'>
+
+            <div className='text-center ' style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "4px" }} >
                 <div className='row mb-4'>
                     <div className='col'>
-                        <button type="button" className="btn btn-primary" onClick={handleAgregarOrden}>Agregar Nueva Orden de Servicio</button>
+                        <button type="button" className="btn btn-primary"  style={{width:"386px" , height:"60px"}} onClick={handleAgregarOrden}>Agregar Nueva Orden de Servicio</button>
                     </div>
                     <div className='col'>
-                        <Link type="button" className="btn btn-primary" to="/buscarorden">Buscar Orden de Servicio</Link>
+                        <Link type="button" className="btn btn-primary"  style={{width:"386px" , height:"60px", display:"flex", alignItems:"center", justifyContent:"space-around" }} to="/buscarorden">Buscar Orden de Servicio</Link>
                     </div>
                 </div>
             </div>
@@ -63,6 +64,22 @@ export default function AgregarServicio() {
             <h6 className='mb-3' style={{ textAlign: 'left' }}>Nueva Orden de Servicio</h6>
 
             <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "40px" }}>
+
+                <div className="mb-3 row">
+                    <label htmlFor="idOrden" className="col-sm-3 col-form-label">Codigo:*</label>
+                    <div className="col-sm-6">
+                        <input
+                            type="number"
+                            className="form-control"
+                            id="idOrden"
+                            name='idOrden'
+                            required
+                            value={idOrden}
+                            onChange={onInputChange}
+                            disabled={!isEditing}
+                        />
+                    </div>
+                </div>
                 <div className="mb-3 row">
                     <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
                     <div className="col-sm-6">
@@ -130,7 +147,7 @@ export default function AgregarServicio() {
                         />
                     </div>
                     <div className="col-sm-3">
-                        <button type="button" className="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled={!isEditing}>
+                        <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled={!isEditing}>
                             Cambio de Aceite
                         </button>
                     </div>

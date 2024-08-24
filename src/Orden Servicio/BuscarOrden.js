@@ -24,6 +24,8 @@ export default function BuscarOrden() {
             placa
         };
         await cargarOrdenes(filtros);
+        console.log(filtros);
+        
         setCurrentPage(1); // Reinicia la paginación
     }
 
@@ -61,7 +63,7 @@ export default function BuscarOrden() {
             {/* Formulario de búsqueda */}
             <div className='d-flex justify-content-center' style={{ margin: "30px" }}>
                 <div className='w-100' style={{ maxWidth: "600px" }}>
-                    <h6 className='mb-3 text-center'>Buscar Orden de Servicio</h6>
+                    <h6 className='mb-3 text-center' style={{ width: "296px", height: "34px" }}>Buscar Orden de Servicio</h6>
                     <form onSubmit={handleBuscar}>
                         <div className="row">
                             <div className="col-12 mb-3">
@@ -133,6 +135,7 @@ export default function BuscarOrden() {
                             ))}
                         </tbody>
                     </table>
+                    <div class="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
 
