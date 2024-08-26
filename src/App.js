@@ -16,9 +16,10 @@ function App() {
     <Navegacion/>
     <Routes>
     <Route exact path="/inicio" element={<VistaPrincipal/>}/>
-      <Route exact path="/" element={<JefeTaller/>}/>
+      <Route exact path="/login" element={<JefeTaller/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
       <Route exact path="/buscar/" element={<BuscarServicio/>}/>
+      <Route exact path="/" element={<ListadoServicios/>}/>
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
       <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
       <Route exact path="/agregarorden/" element={<AgregarOrden/>}/>
