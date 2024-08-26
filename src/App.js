@@ -13,7 +13,7 @@ import JefeTaller from "./logins/JefeTaller";
 function App() {
   return (
     <BrowserRouter>
-    {/* <Navegacion/> */}
+    <Navegacion/> 
     <Routes>
     <Route exact path="/inicio" element={<VistaPrincipal/>}/>
       <Route exact path="/login" element={<JefeTaller/>}/>
