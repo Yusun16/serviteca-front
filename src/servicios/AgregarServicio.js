@@ -162,7 +162,7 @@ export default function AgregarServicio() {
                         <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6" onClick={exportarPDF} style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}></button>
                         <button className="fa-sharp fa-solid fa-file-excel p-2 g-col-6" onClick={exportarExcel} style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}></button>
                     </div>
-                    <table className="" style={{ margin: "30px" }}>
+                    <table className="container" style={{ margin: "30px" }}>
                         <thead className=''>
                             <tr>
                                 <th className='text-letras colorthead' scope="col">Codigo</th>

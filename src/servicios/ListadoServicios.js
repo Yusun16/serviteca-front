@@ -112,7 +112,7 @@ export default function ListadoServicios() {
       </div>
 
       <div className='container'>
-        <table className="">
+        <table className="container">
           <thead className=''>
             <tr className='tr-table-tr'>
               <th className='text-letras colorthead' scope="col">Codigo</th>

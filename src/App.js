@@ -3,6 +3,7 @@ import Navegacion from "./plantilla/Navegacion";
 import ListadoServicios from "./servicios/ListadoServicios";
 import AgregarServicio from "./servicios/AgregarServicio";
 import BuscarServicio from "./servicios/BuscarServicio";
+import VistaPrincipal from "./servicios/vistaPrincipal";
 import EditarServicio from "./servicios/EditarServicio";
 import ListadoOrden from "./Orden Servicio/ListadoOrden";
 import AgregarOrden from "./Orden Servicio/AgregarOrden";
@@ -13,6 +14,7 @@ function App() {
     <BrowserRouter>
     <Navegacion/>
     <Routes>
+    <Route exact path="/inicio" element={<VistaPrincipal/>}/>
       <Route exact path="/" element={<ListadoServicios/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
       <Route exact path="/buscar/" element={<BuscarServicio/>}/>
