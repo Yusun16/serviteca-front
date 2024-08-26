@@ -1,4 +1,4 @@
-body {
+.body-login {
     margin: 0;
     font-family: Arial, sans-serif;
     background-color: #e85d4a;
@@ -11,21 +11,21 @@ body {
   .login-container {
     text-align: center;
   }
-  
-  .logo {
+
+  .logo-login {
     width: 150px;
     margin-bottom: 20px;
   }
-  
-  .login-card {
+
+  .login-card-1 {
     background-color: white;
     padding: 20px 30px;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     width: 300px;
   }
-  
-  h2 {
+
+  .h2-login {
     font-size: 24px;
     color: #333;
   }
@@ -50,18 +50,18 @@ body {
     border-bottom: 2px solid #e85d4a;
   }
   
-  .input-group {
+  .input-group-login {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
   }
   
-  .input-group i {
+  .input-group-login .i-login {
     margin-right: 10px;
     color: #666;
   }
-  
-  input {
+
+  .input-login {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
@@ -69,7 +69,7 @@ body {
     margin-left: 10px;
   }
   
-  a {
+  .a-login {
     display: block;
     margin: 10px 0;
     color: #333;
