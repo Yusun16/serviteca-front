@@ -16,7 +16,7 @@ function App() {
     <Navegacion/>
     <Routes>
     <Route exact path="/inicio" element={<VistaPrincipal/>}/>
-      <Route exact path="/" element={<ListadoServicios/>}/>
+      <Route exact path="/" element={<JefeTaller/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
       <Route exact path="/buscar/" element={<BuscarServicio/>}/>
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
