@@ -102,21 +102,6 @@ code {
   background-color: #ddd;
 }
 
-<<<<<<< HEAD
-
-=======
-.modal0007 {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.4);
-}
->>>>>>> 52ed94eb2b431d61bcabdfe04d98c6f4e2c6a5c6
 
 .modal-content {
   background-color: #fefefe;
