@@ -33,7 +33,7 @@ export default function ListadoOrden() {
         <table class="table table-striped table-hover align-middel">
             <thead className='table-dark'>
                 <tr>
-                <th scope="col">Orden de servicio</th>
+                <th scope="col">Codigo</th>
                 <th scope="col">Cliente</th>
                 <th scope="col">Tipo de servicio</th>
                 <th scope="col">Placa del vehiculo</th>
@@ -48,7 +48,7 @@ export default function ListadoOrden() {
                 {
                 ordenes.map((orden, indice)=>(
                     <tr key={indice}>
-                    <th scope="row">{orden.idOrden}</th>
+                    <th >{orden.codigo}</th>
                     <td>{orden.cliente}</td>
                     <td>{orden.tipoServicio}</td>
                     <td>{orden.placaVehiculo}</td>

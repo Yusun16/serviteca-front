@@ -182,7 +182,10 @@ code {
   text-decoration: none;
 }
 
-
+.modal-display{
+  display: flex!important;
+  justify-content: center!important;
+}
 
 .th-tabla{
   background-color: #002060 !important;
