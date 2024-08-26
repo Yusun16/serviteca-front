@@ -7,6 +7,7 @@ import EditarServicio from "./servicios/EditarServicio";
 import ListadoOrden from "./Orden Servicio/ListadoOrden";
 import AgregarOrden from "./Orden Servicio/AgregarOrden";
 import BuscarOrden from "./Orden Servicio/BuscarOrden";
+import JefeTaller from "./logins/JefeTaller";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
       <Route exact path="/agregarorden/" element={<AgregarOrden/>}/>
       <Route exact path="/buscarorden/" element={<BuscarOrden/>}/>
+      <Route exact path="/jefetaller/" element={<JefeTaller/>}/>
     </Routes>
     </BrowserRouter>
     
