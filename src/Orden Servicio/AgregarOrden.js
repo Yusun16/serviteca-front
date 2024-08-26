@@ -6,7 +6,7 @@ export default function AgregarServicio() {
     let navegacion = useNavigate();
 
     const [orden, setOrden] = useState({
-        idOrden:"",
+        codigo:"",
         cliente: "",
         tipoServicio: "",
         placaVehiculo: "",
@@ -16,7 +16,7 @@ export default function AgregarServicio() {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const { idOrden,cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
+    const { codigo,cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
 
     const onInputChange = (e) => {
         setOrden({ ...orden, [e.target.name]: e.target.value });
@@ -27,6 +27,7 @@ export default function AgregarServicio() {
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
         await axios.post(urlBase, orden);
         setOrden({
+            codigo:"",
             cliente: "",
             tipoServicio: "",
             placaVehiculo: "",
@@ -66,15 +67,15 @@ export default function AgregarServicio() {
             <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "40px" }}>
 
                 <div className="mb-3 row">
-                    <label htmlFor="idOrden" className="col-sm-3 col-form-label">Codigo:*</label>
+                    <label htmlFor="codigo" className="col-sm-3 col-form-label">Codigo:*</label>
                     <div className="col-sm-6">
                         <input
                             type="number"
                             className="form-control"
-                            id="idOrden"
-                            name='idOrden'
+                            id="codigo"
+                            name='codigo'
                             required
-                            value={idOrden}
+                            value={codigo}
                             onChange={onInputChange}
                             disabled={!isEditing}
                         />
@@ -197,7 +198,7 @@ export default function AgregarServicio() {
                                 />
                             </div>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer modal-display">
                             <button type="button" className="btn btn-success"><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
                         </div>
                     </div>
