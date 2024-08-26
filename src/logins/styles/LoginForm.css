@@ -1,0 +1,89 @@
+.body-login {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #e85d4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  .login-container {
+    text-align: center;
+  }
+
+  .logo-login {
+    width: 150px;
+    margin-bottom: 20px;
+  }
+
+  .login-card-1 {
+    background-color: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+  }
+
+  .h2-login {
+    font-size: 24px;
+    color: #333;
+  }
+  
+  .role-tabs {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  .role-tabs button {
+    background-color: #f5f5f5;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    width: 33%;
+    border-radius: 4px;
+  }
+  
+  .role-tabs .active {
+    background-color: white;
+    border-bottom: 2px solid #e85d4a;
+  }
+  
+  .input-group-login {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .input-group-login .i-login {
+    margin-right: 10px;
+    color: #666;
+  }
+
+  .input-login {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 10px;
+  }
+  
+  .a-login {
+    display: block;
+    margin: 10px 0;
+    color: #333;
+    font-size: 12px;
+    text-decoration: none;
+  }
+  
+  .login-button {
+    background-color: #e85d4a;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+  }
+  
