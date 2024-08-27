@@ -1,12 +1,12 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function AgregarServicio() {
     let navegacion = useNavigate();
 
     const [orden, setOrden] = useState({
-        codigo:"",
+        codigo: "",
         cliente: "",
         tipoServicio: "",
         placaVehiculo: "",
@@ -16,7 +16,20 @@ export default function AgregarServicio() {
 
     const [isEditing, setIsEditing] = useState(false);
 
-    const { codigo,cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
+    const { codigo, cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
+
+    useEffect(() => {
+        const obtenerCodigo = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/serviteca/generarcodigo');
+                setOrden(prevOrden => ({ ...prevOrden, codigo: response.data }));
+            } catch (error) {
+                console.error("Error al obtener el código", error);
+            }
+        };
+
+        obtenerCodigo();
+    }, []);
 
     const onInputChange = (e) => {
         setOrden({ ...orden, [e.target.name]: e.target.value });
@@ -27,19 +40,19 @@ export default function AgregarServicio() {
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
         await axios.post(urlBase, orden);
         setOrden({
-            codigo:"",
+            codigo: "",
             cliente: "",
             tipoServicio: "",
             placaVehiculo: "",
             kilometraje: "",
             fecha: ""
         });
-        setIsEditing(false); // Deshabilita el formulario después de enviar
+        setIsEditing(false);
         navegacion("/ordenservicio");
     };
 
     const handleAgregarOrden = () => {
-        setIsEditing(true); // Habilita el formulario
+        setIsEditing(true);
     };
 
     return (
@@ -67,17 +80,17 @@ export default function AgregarServicio() {
             <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "40px" }}>
 
                 <div className="mb-3 row">
-                    <label htmlFor="codigo" className="col-sm-3 col-form-label">Codigo:*</label>
+                    <label htmlFor="codigo" className="col-sm-3 col-form-label">Código:*</label>
                     <div className="col-sm-6">
                         <input
-                            type="number"
+                            type="text"
                             className="form-control"
                             id="codigo"
                             name='codigo'
                             required
                             value={codigo}
                             onChange={onInputChange}
-                            disabled={!isEditing}
+                            disabled
                         />
                     </div>
                 </div>
@@ -199,7 +212,8 @@ export default function AgregarServicio() {
                             </div>
                         </div>
                         <div className="modal-footer modal-display">
-                            <button type="button" className="btn btn-success"><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
+                            <button type="button" className="btn btn-success"><i className="fa-solid fa-check" /> Aceptar</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                         </div>
                     </div>
                 </div>
