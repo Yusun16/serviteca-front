@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 
 export default function BuscarOrden() {
-    const urlBase = "http://localhost:8080/serviteca/ordenservicios";
+    const urlBase = "http://localhost:8080/serviteca";
 
     const [ordenes, setOrdenes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,21 +17,23 @@ export default function BuscarOrden() {
     // Manejo del envío del formulario de búsqueda
     const handleBuscar = async (e) => {
         e.preventDefault();
-        const filtros = {
-            numeroServicio,
-            cliente,
-            fecha,
-            placa
-        };
+
+        const filtros = {};
+        if (numeroServicio) filtros.idOrden = numeroServicio;
+        if (cliente) filtros.cliente = cliente;
+        if (fecha) filtros.fecha = fecha;
+        if (placa) filtros.placa = placa;
+
         await cargarOrdenes(filtros);
-        console.log(filtros);
-        
+
         setCurrentPage(1); // Reinicia la paginación
     }
 
-    const cargarOrdenes = async (filtros = {}) => {
+    const cargarOrdenes = async (filtros) => {
         try {
-            const resultado = await axios.get(urlBase, { params: filtros });
+            const resultado = await axios.get(`${urlBase}/buscarorden`, { params: filtros });
+            console.log(resultado);
+
             setOrdenes(resultado.data);
         } catch (error) {
             console.error("Error al cargar las órdenes:", error);
@@ -44,7 +46,6 @@ export default function BuscarOrden() {
     const currentItems = ordenes.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(ordenes.length / itemsPerPage);
 
-    const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const goToPreviousPage = () => setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
     const goToNextPage = () => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
 
@@ -78,7 +79,7 @@ export default function BuscarOrden() {
                                 <div className="mb-3 row">
                                     <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="cliente" name='cliente' value={cliente} onChange={(e) => setCliente(e.target.value)} />
+                                        <input type="text" className="form-control" id="cliente" name='cliente' required value={cliente} onChange={(e) => setCliente(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -94,7 +95,7 @@ export default function BuscarOrden() {
                                 <div className="mb-3 row">
                                     <label htmlFor="placa" className="col-sm-3 col-form-label">Placa:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="placa" name='placa' value={placa} onChange={(e) => setPlaca(e.target.value)} />
+                                        <input type="text" className="form-control" id="placa" name='placa' required value={placa} onChange={(e) => setPlaca(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -114,18 +115,18 @@ export default function BuscarOrden() {
                     <table className="table table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th className='th-tabla !important' scope="col">Orden de servicio</th>
-                                <th className='th-tabla !important' scope="col">Cliente</th>
-                                <th className='th-tabla !important' scope="col">Tipo de servicio</th>
-                                <th className='th-tabla !important' scope="col">Placa del vehículo</th>
-                                <th className='th-tabla !important' scope="col">Kilometraje del Vehículo</th>
-                                <th className='th-tabla !important' scope="col">Fecha</th>
+                                <th className='th-tabla' scope="col">Orden de servicio</th>
+                                <th className='th-tabla' scope="col">Cliente</th>
+                                <th className='th-tabla' scope="col">Tipo de servicio</th>
+                                <th className='th-tabla' scope="col">Placa del vehículo</th>
+                                <th className='th-tabla' scope="col">Kilometraje del Vehículo</th>
+                                <th className='th-tabla' scope="col">Fecha</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentItems.map((orden, indice) => (
                                 <tr key={indice}>
-                                    <th scope="row">{orden.idOrden}</th>
+                                    <th>{orden.codigo}</th>
                                     <td>{orden.cliente}</td>
                                     <td>{orden.tipoServicio}</td>
                                     <td>{orden.placaVehiculo}</td>
@@ -135,7 +136,6 @@ export default function BuscarOrden() {
                             ))}
                         </tbody>
                     </table>
-                    <div class="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
 
@@ -145,10 +145,10 @@ export default function BuscarOrden() {
                     <div className='d-flex justify-content-between align-items-center'>
                         {/* Texto de página actual */}
                         <div>
-                            <span>Mostrando página {currentPage} de {totalPages}</span>
+                            <span>Mostrando {currentPage} de {totalPages}</span>
                         </div>
                         {/* Botones Anterior y Siguiente */}
-                        <div className='d-flex align-items-center'>
+                        <div className='pag-num' >
                             <button
                                 onClick={goToPreviousPage}
                                 className="btn btn-secondary"
@@ -156,15 +156,9 @@ export default function BuscarOrden() {
                             >
                                 Anterior
                             </button>
-                            <ul className='pagination mx-3 mb-0'>
-                                {[...Array(totalPages)].map((_, index) => (
-                                    <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
-                                        <button onClick={() => paginate(index + 1)} className='page-link'>
-                                            {index + 1}
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
+                            <div >
+                            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                            </div>
                             <button
                                 onClick={goToNextPage}
                                 className="btn btn-secondary"

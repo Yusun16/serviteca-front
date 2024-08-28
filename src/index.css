@@ -204,3 +204,9 @@ tr:nth-child(even) {
 .tb-tabla{
   background-color: #9DD3F4 !important;
 }
+
+.pag-num{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
