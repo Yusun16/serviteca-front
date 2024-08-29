@@ -92,12 +92,12 @@ export default function ListadoServicios() {
         <h2> Servicios </h2>
       </div>
 
-      <div className='container text-center ' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px"}} >
-      
-            <Link type="button" className="btn btn-center btncolor" to="http://localhost:3000/agregar" style={{width: "280px", height: "50px" }}>Agregar servicio</Link>
-              <Link type="button" className="btn btn-center btncolor " to="http://localhost:3000/buscar" style={{width: "280px", height: "50px" }}>Buscar servicio</Link> 
-            
-        
+      <div className='container text-center ' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px" }} >
+
+        <Link type="button" className="btn btn-center btncolor" to="http://localhost:3000/agregar" style={{ width: "280px", height: "50px" }}>Agregar servicio</Link>
+        <Link type="button" className="btn btn-center btncolor " to="http://localhost:3000/buscar" style={{ width: "280px", height: "50px" }}>Buscar servicio</Link>
+
+
       </div>
 
       <div className="nav justify-content-end">
@@ -111,50 +111,55 @@ export default function ListadoServicios() {
         </button>
       </div>
 
-      <div className='container'>
-        <table className="container">
+      <div className='container' >
+        <table className="container" >
           <thead className=''>
-            <tr className='tr-table-tr'>
-              <th className='text-letras colorthead' scope="col">Codigo</th>
+            <tr>
+              <th className='text-letras colorthead' scope="col">codigo</th>
+
               <th className='text-letras colorthead' scope="col">Descripción</th>
-              <th className='colorthead' scope="col">Valor del Servicio</th>
-              <th className='colorthead' scope="col">Año</th>
-              <th className='colorthead' scope="col">Porcentaje del Operario</th>
-              <th className='colorthead'>Editar</th>
-              <th className='colorthead'>Borrar</th>
+              <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
+              <th className='text-letras colorthead' scope="col">Año</th>
+              <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
+              <th className='text-letras colorthead'>Editar</th>
+              <th className='text-letras colorthead'>Borrar</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.map((servicio, indice) => (
               <tr className='tr-table-tr' key={indice}>
-                <th scope="row">{servicio.idServicio}</th>
-                <td>{servicio.descripcion}</td>
-                <td><NumericFormat
-                  value={servicio.valorServicio}
-                  displayType={'text'}
-                  thousandSeparator=","
-                  prefix='$'
-                  decimalScale={2}
-                /></td>
-                <td>{servicio.año}</td>
-                <td><NumericFormat
-                  value={servicio.porcentajeOperario}
-                  displayType={'text'}
-                  thousandSeparator=","
-                  prefix='%'
-                  decimalScale={2}
-                /></td>
-                <td className='text-center'>
+              <td>{servicio.codigo}</td>
+              <td>{servicio.descripcion}</td>
+              <td>
+                  <NumericFormat
+                      value={servicio.valorServicio}
+                      displayType={'text'}
+                      thousandSeparator=","
+                      prefix='$'
+                      decimalScale={2}
+                  />
+              </td>
+              <td>{servicio.año}</td>
+              <td>
+                  <NumericFormat className=''
+                      value={servicio.porcentajeOperario}
+                      displayType={'text'}
+                      thousandSeparator=","
+                      prefix='%'
+                      decimalScale={2}
+                  />
+              </td>
+              <td className='text-center'>
                   <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
-                    <i className="fa-solid fa-pen-to-square"></i>
+                      <i className="fa-solid fa-pen-to-square"></i>
                   </Link>
-                </td>
-                <td>
+              </td>
+              <td>
                   <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
-                    <i className="fa-solid fa-trash-can"></i>
+                      <i className="fa-solid fa-trash-can"></i>
                   </button>
-                </td>
-              </tr>
+              </td>
+          </tr>
             ))}
           </tbody>
         </table>
@@ -172,7 +177,7 @@ export default function ListadoServicios() {
             >
               Anterior
             </button>
-            <span className="align-self-center"> {currentPage} de {totalPages}</span>
+            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
             <button
               className="btn btn-secondary ms-2"
               onClick={() => paginate(currentPage + 1)}

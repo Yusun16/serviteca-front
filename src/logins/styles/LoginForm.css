@@ -38,13 +38,14 @@
 
 .h2-login {
   font-size: 24px;
-  color: #333;
+  color: black;
+  margin-bottom: 25px;
 }
 
 .role-tabs {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 .role-tabs button {

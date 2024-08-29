@@ -14,9 +14,9 @@ import ListaChequeo from "./ListaChequeo/ListaChequeo";
 function App() {
   return (
     <BrowserRouter>
-    <Navegacion/> 
+        <Navegacion/> 
     <Routes>
-    <Route exact path="/inicio" element={<VistaPrincipal/>}/>
+    <Route exact path="/inicio" element={<VistaPrincipal/> }/>
       <Route exact path="/login" element={<JefeTaller/>}/>
       <Route exact path="/agregar" element={<AgregarServicio/>}/>
       <Route exact path="/buscar/" element={<BuscarServicio/>}/>

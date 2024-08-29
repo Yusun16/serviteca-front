@@ -14,12 +14,12 @@ export default function vistaPrincipal() {
 
                 <button className="btn btn-outline-light text-black" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight" style={{ position: "relative", left: "105%" }}><i className="fa-solid fa-bars"></i></button>
 
-                <div className="offcanvas offcanvas-end colonav" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+                <div className="offcanvas offcanvas-end colonav" style={{width: "311px"}} tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                     <div className="offcanvas-header">
                         <button type="button" className="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                     </div>
                     <div className="text">
-                        <Link className='servicios text-white' style={{textDecoration: "none"}} to="/"> Servicios</Link>
+                        <Link className='servicios text-white' style={{textDecoration: "none", position: "relative", left: "18px" }} to="/"> Servicios</Link>
                     </div>
                 </div>
             </div>

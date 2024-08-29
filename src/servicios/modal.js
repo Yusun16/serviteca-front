@@ -16,8 +16,9 @@ export default function () {
       <div className="modal-body">
         Registro guardado con exito
       </div>
-      <div className="modal-footer">
+      <div className="botonposicion modal-footer" >
         <button type="submit" className="btn btn-success">Ok</button >
+        
       </div>
     </div>
   </div>

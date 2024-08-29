@@ -9,7 +9,7 @@ import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 export default function AgregarServicio() {
-    let navegacion = useNavigate();
+    let navigate = useNavigate();
 
     const [servicio, setServicio] = useState({
         codigo: "",
@@ -25,29 +25,82 @@ export default function AgregarServicio() {
 
     const { codigo, descripcion, valorServicio, año, porcentajeOperario } = servicio;
 
+    useEffect(() => {
+        cargarServicios();
+        obtenerUltimoCodigo();
+    }, []);
+
     const onInputChange = (e) => {
         setServicio({ ...servicio, [e.target.name]: e.target.value });
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const urlBase = "http://localhost:8080/serviteca/servicios";
-        await axios.post(urlBase, servicio);
-        navegacion("/");
+        try {
+            const urlBase = "http://localhost:8080/serviteca/servicios";
+            await axios.post(urlBase, servicio);
+            navigate("/");
+        } catch (error) {
+            console.error("Error al agregar servicio", error);
+        }
     };
 
-    useEffect(() => {
-        cargarServicios();
-    }, []);
-
     const cargarServicios = async () => {
-        const resultado = await axios.get("http://localhost:8080/serviteca/servicios");
-        setServicios(resultado.data);
+        try {
+            const resultado = await axios.get("http://localhost:8080/serviteca/servicios");
+            setServicios(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar servicios", error);
+        }
+    };
+
+    const obtenerUltimoCodigo = async () => {
+        try {
+            const resultado = await axios.get("http://localhost:8080/serviteca/servicios");
+            const ultimoServicio = resultado.data[resultado.data.length - 1];
+            const nuevoCodigo = ultimoServicio ? (parseInt(ultimoServicio.codigo) + 1).toString().padStart(4, '0') : '0001';
+            setServicio({ ...servicio, codigo: nuevoCodigo });
+        } catch (error) {
+            console.error("Error al obtener el último código", error);
+        }
     };
 
     const eliminarServicio = async (id) => {
-        await axios.delete(`http://localhost:8080/serviteca/servicios/${id}`);
-        cargarServicios();
+        try {
+            await axios.delete(`http://localhost:8080/serviteca/servicios/${id}`);
+            cargarServicios();
+        } catch (error) {
+            console.error("Error al eliminar servicio", error);
+        }
+    };
+
+    const exportarPDF = () => {
+        const doc = new jsPDF();
+        doc.text("Listado de Servicios", 20, 10);
+        doc.autoTable({
+            head: [['Codigo', 'Descripción', 'Valor del Servicio', 'Año', 'Porcentaje del Operario']],
+            body: servicios.map(servicio => [
+                servicio.codigo,
+                servicio.descripcion,
+                `$${servicio.valorServicio.toLocaleString()}`,
+                servicio.año,
+                `${servicio.porcentajeOperario}%`
+            ])
+        });
+        doc.save("Listado_Servicios.pdf");
+    };
+
+    const exportarExcel = () => {
+        const worksheet = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
+            Codigo: servicio.codigo,
+            Descripción: servicio.descripcion,
+            Valor_Servicio: servicio.valorServicio,
+            Año: servicio.año,
+            Porcentaje_Operario: servicio.porcentajeOperario
+        })));
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Servicios");
+        XLSX.writeFile(workbook, "Listado_Servicios.xlsx");
     };
 
     // Calcular el índice del primer y último elemento de la página actual
@@ -65,37 +118,6 @@ export default function AgregarServicio() {
         setCurrentPage(pageNumber);
     };
 
-    // Función para exportar a PDF
-    const exportarPDF = () => {
-        const doc = new jsPDF();
-        doc.text("Listado de Servicios", 20, 10);
-        doc.autoTable({
-            head: [['Codigo', 'Descripción', 'Valor del Servicio', 'Año', 'Porcentaje del Operario']],
-            body: servicios.map(servicio => [
-                servicio.idServicio,
-                servicio.descripcion,
-                `$${servicio.valorServicio.toLocaleString()}`,
-                servicio.año,
-                `${servicio.porcentajeOperario}%`
-            ])
-        });
-        doc.save("Listado_Servicios.pdf");
-    };
-
-    // Función para exportar a Excel
-    const exportarExcel = () => {
-        const worksheet = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
-            Codigo: servicio.idServicio,
-            Descripción: servicio.descripcion,
-            Valor_Servicio: servicio.valorServicio,
-            Año: servicio.año,
-            Porcentaje_Operario: servicio.porcentajeOperario
-        })));
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Servicios");
-        XLSX.writeFile(workbook, "Listado_Servicios.xlsx");
-    };
-
     return (
         <div className='container'>
             {/* Formulario de agregar servicio */}
@@ -110,62 +132,96 @@ export default function AgregarServicio() {
                 <h3>Agregar Servicio</h3>
             </div>
 
-            <form onSubmit={onSubmit} className="container" style={{ width: "580px", position: "relative", height: "310px"}}>
+            <form onSubmit={onSubmit} className="container" style={{ width: "580px", position: "relative", height: "310px" }}>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div className="col">
-                        <div className="col">
-                            <div className="mb-3">
-                                <label htmlFor="codigo" className="form-label">Codigo: *</label>
-                                <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={onInputChange} />
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="codigo" className="form-label">Código: *</label>
+                            <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} readOnly />
                         </div>
-                        <div className="col">
-                            <div className="mb-3">
-                                <label htmlFor="descripcion" className="form-label" style={{ resize: "none" }} >Descripción: *</label>
-                                <textarea  style={{resize: "none"}} type="text" className="form-control" rows={5} id="descripcion" name='descripcion' required={true} value={descripcion} onChange={onInputChange} />
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="descripcion" className="form-label">Descripción: *</label>
+                            <textarea
+                                style={{ resize: "none" }}
+                                className="form-control"
+                                rows={5}
+                                id="descripcion"
+                                name='descripcion'
+                                required={true}
+                                value={descripcion}
+                                onChange={onInputChange}
+                            />
                         </div>
                     </div>
-                    <div className="">
-                        <div className="col">
-                            <div className="mb-3">
-                                <label htmlFor="año" className="form-label">Año: *</label>
-                                <input type="date" className="form-control" id="año" name='año' required={true} value={año} onChange={onInputChange} />
-                            </div>
+                    <div>
+                        <div className="mb-3">
+                            <label htmlFor="año" className="form-label">Año: *</label>
+                            <input
+                                type="date"
+                                className="form-control"
+                                id="año"
+                                name='año'
+                                required={true}
+                                value={año}
+                                onChange={onInputChange}
+                            />
                         </div>
-                        <div className="col">
-                            <div className="mb-3">
-                                <label htmlFor="porcentajeOperario" className="form-label">Porcentaje Operario: *</label>
-                                <input type="number" className="form-control" id="porcentajeOperario" name='porcentajeOperario' required={true} value={porcentajeOperario} onChange={onInputChange} />
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="porcentajeOperario" className="form-label">Porcentaje Operario: *</label>
+                            <input
+                                type="number"
+                                className="form-control"
+                                id="porcentajeOperario"
+                                name='porcentajeOperario'
+                                required={true}
+                                value={porcentajeOperario}
+                                onChange={onInputChange}
+                            />
                         </div>
-                        <div className="col">
-                            <div className="mb-3">
-                                <label htmlFor="valorServicio" className="form-label">Valor del servicio: *</label>
-                                <input type="number" step="any" className="form-control" id="valorServicio" name='valorServicio' required={true} value={valorServicio} onChange={onInputChange} />
-                            </div>
+                        <div className="mb-3">
+                            <label htmlFor="valorServicio" className="form-label">Valor del servicio: *</label>
+                            <input
+                                type="number"
+                                step="any"
+                                className="form-control"
+                                id="valorServicio"
+                                name='valorServicio'
+                                required={true}
+                                value={valorServicio}
+                                onChange={onInputChange}
+                            />
                         </div>
                     </div>
                 </div>
 
                 <div className='text-center'>
-                    <button type="button" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#exampleModal"><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <button type="button" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <i className="fa-regular fa-floppy-disk"></i> Guardar
+                    </button>
                     <Modal />
                 </div>
             </form>
 
             {/* Contenedor del formulario y la tabla */}
             <div className='d-flex'>
-                <div className='container' >
+                <div className='container'>
                     {/* Tabla de servicios */}
-                    <div className=" nav justify-content-end">
-                        <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6" onClick={exportarPDF} style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}></button>
-                        <button className="fa-sharp fa-solid fa-file-excel p-2 g-col-6" onClick={exportarExcel} style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}></button>
+                    <div className="nav justify-content-end">
+                        <button
+                            className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
+                            onClick={exportarPDF}
+                            style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+                        ></button>
+                        <button
+                            className="fa-sharp fa-solid fa-file-excel p-2 g-col-6"
+                            onClick={exportarExcel}
+                            style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+                        ></button>
                     </div>
-                    <table className="container" style={{ margin: "30px" }}>
-                        <thead className=''>
+                    <table className="container" style={{ marginTop: "5x" }}>
+                        <thead>
                             <tr>
-                                <th className='text-letras colorthead' scope="col">Codigo</th>
+                                <th className='text-letras colorthead' scope="col">Código</th>
                                 <th className='text-letras colorthead' scope="col">Descripción</th>
                                 <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
                                 <th className='text-letras colorthead' scope="col">Año</th>
@@ -177,7 +233,7 @@ export default function AgregarServicio() {
                         <tbody className='tbbody'>
                             {currentItems.map((servicio, indice) => (
                                 <tr className='tr-table-tr' key={indice}>
-                                    <th scope="row">{servicio.idServicio}</th>
+                                    <th scope="row">{servicio.codigo}</th>
                                     <td>{servicio.descripcion}</td>
                                     <td>
                                         <NumericFormat

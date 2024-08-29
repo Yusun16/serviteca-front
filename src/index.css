@@ -48,6 +48,11 @@ code {
 /* .tbbody {
   background-color: #9DD3F4;
 } */
+ 
+.botonposicion {
+  display: flex !important;
+  justify-content: center  !important;
+}
 
 .tr-table-tr:nth-child(even) {
   background-color: #9DD3F4 !important;
