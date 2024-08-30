@@ -1,100 +1,73 @@
-/* Contenedor principal */
-.lista-chequeo-container {
-    margin: 20px;
+.container-listar {
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Miga de pan */
-.breadcrumb-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
+.h3-lista {
+    color: #343a40;
+    font-weight: bold;
 }
 
-.breadcrumb-container img {
-    width: 50px;
-    margin-right: 10px;
+.card-lista {
+    border: 1px solid #e3e6f0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
-.breadcrumb ol {
-    list-style: none;
-    display: flex;
-    gap: 5px;
-    padding: 0;
+.card:hover {
+    transform: translateY(-5px);
 }
 
-.breadcrumb ol li {
-    display: flex;
-    align-items: center;
+.form-group label {
+    font-weight: bold;
+    color: #495057;
 }
 
-.breadcrumb ol li a {
-    text-decoration: none;
-    color: black;
-}
-
-/* Título de la lista de chequeo */
-h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-/* Contenedores de las secciones de imágenes y observaciones */
-.imagen-observacion-container {
-    width: 45%;
-    margin-bottom: 20px;
-}
-
-.imagen-observacion-container h3 {
-    margin-bottom: 10px;
-}
-
-.imagen-observacion-container img {
-    width: 100%;
-    margin-top: 10px;
-    border: 1px solid #ccc;
-}
-
-textarea {
-    width: 100%;
-    margin-top: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
+.form-control-file {
+    border: 1px solid #ced4da;
+    padding: 5px;
     border-radius: 5px;
 }
 
-/* Contenedor para imágenes y observaciones, incluyendo la organización del layout */
-.images-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+.form-control {
+    border-radius: 5px;
 }
 
-/* Indicador de combustible */
-.combustible-container {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
+.breadcrumb-item a {
+    color: #6c757d;
 }
 
-.combustible-container label {
-    text-align: center;
-    cursor: pointer;
+.breadcrumb-item.active {
+    color: #495057;
+    font-weight: bold;
 }
 
-.combustible-container label input {
-    margin-bottom: 5px;
+.btn {
+    border-radius: 20px;
 }
 
-/* Botón de Ingresar */
-.ingresar-button {
+.btn-light {
+    background-color: #ffffff;
+    border: 1px solid #ced4da;
+    color: #495057;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-light:hover {
+    background-color: #e2e6ea;
+    border-color: #adb5bd;
+}
+
+.btn-success {
     background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    cursor: pointer;
-    display: block;
-    margin: 20px auto 0;
-    text-align: center;
-    border-radius: 5px;
+    border-color: #28a745;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
 }

@@ -11,6 +11,16 @@ const CheckListComponent = () => {
         indicadorCombustible: null,
     });
 
+    const [observaciones, setObservaciones] = useState({
+        observacionDerecha: '',
+        observacionIzquierda: '',
+        observacionFrontal: '',
+        observacionPosterior: '',
+        observacionCombustible: '',
+    });
+
+    const [combustible, setCombustible] = useState('');
+
     const handleImageChange = (event, key) => {
         const file = event.target.files[0];
         if (file) {
@@ -25,9 +35,26 @@ const CheckListComponent = () => {
         }
     };
 
+    const handleObservationChange = (event) => {
+        const { id, value } = event.target;
+        setObservaciones(prevState => ({
+            ...prevState,
+            [id]: value,
+        }));
+    };
+
+    const handleFuelChange = (event) => {
+        setCombustible(event.target.id);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // Aquí puedes agregar la lógica para enviar los datos del formulario
+        console.log('Formulario enviado con observaciones:', observaciones);
+        console.log('Combustible seleccionado:', combustible);
+    };
+
     return (
-
-
         <div className="container">
             <div className='d-flex justify-content-between'>
                 <div>
@@ -50,12 +77,8 @@ const CheckListComponent = () => {
                     </button>
                 </div>
 
-            </div>
-
-            {/* modal Inventario */}
-
-            <div>
-                <div className="modal fade" id="inventario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {/* modal inventario */}
+                <div className="modal fade" id="inventario" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -63,35 +86,7 @@ const CheckListComponent = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">3</th>
-                                            <td colspan="2">Larry the Bird</td>
-                                            <td>@twitter</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                ...
                             </div>
                             <div className="modal-footer">
                                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -101,9 +96,8 @@ const CheckListComponent = () => {
                     </div>
                 </div>
 
-                {/* modal historial */}
-
-                <div className="modal fade" id="historia" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                {/* modal historia */}
+                <div className="modal fade" id="historia" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header">
@@ -111,7 +105,7 @@ const CheckListComponent = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="table table-sm">
+                                <table className="table">
                                     <thead>
                                         <tr>
                                             <th scope="col">#</th>
@@ -135,7 +129,7 @@ const CheckListComponent = () => {
                                         </tr>
                                         <tr>
                                             <th scope="row">3</th>
-                                            <td colspan="2">Larry the Bird</td>
+                                            <td colSpan="2">Larry the Bird</td>
                                             <td>@twitter</td>
                                         </tr>
                                     </tbody>
@@ -152,155 +146,229 @@ const CheckListComponent = () => {
 
             <h3 className='mb-3 text-center' style={{ width: "296px", height: "34px" }}>Lista de Chequeo</h3>
 
+            <form onSubmit={handleSubmit}>
+                <div className="row mt-4">
+                    {/* Foto Lateral Derecho */}
+                    <div className="col-md-6 d-flex align-items-center">
+                        <label className="w-50" htmlFor="fotoDerecha">Foto Lateral Derecho</label>
+                        <div className="w-50">
+                            <div className="card" style={{ width: '100%', height: '180px' }}>
+                                {images.fotoDerecha ? (
+                                    <img src={images.fotoDerecha} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="fotoDerecha" className="card-body text-center">
+                                        <i className="fa-solid fa-upload fa-2x"></i>
+                                        <p>Subir Foto Lateral Derecho</p>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="fotoDerecha"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageChange(event, 'fotoDerecha')}
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionDerecha"
+                                    placeholder="Observación: *"
+                                    value={observaciones.observacionDerecha}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
 
-            {/* Sección de subida de imágenes */}
-            <div className="row mt-4">
-                <div className="col-md-6">
-                    <div className="form-group">
-                        <label htmlFor="fotoDerecha">Foto Lateral Derecho: *</label>
-                        <input
-                            type="file"
-                            className="form-control-file"
-                            id="fotoDerecha"
-                            onChange={(event) => handleImageChange(event, 'fotoDerecha')}
-                        />
+                    {/* Foto Frontal */}
+                    <div className="col-md-6 d-flex align-items-center">
+                        <label className="w-50" htmlFor="fotoFrontal">Foto Frontal</label>
+                        <div className="w-50">
+                            <div className="card" style={{ width: '100%', height: '180px' }}>
+                                {images.fotoFrontal ? (
+                                    <img src={images.fotoFrontal} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="fotoFrontal" className="card-body text-center">
+                                        <i className="fa-solid fa-upload fa-2x"></i>
+                                        <p>Subir Foto Frontal</p>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="fotoFrontal"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageChange(event, 'fotoFrontal')}
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionFrontal"
+                                    placeholder="Observación: *"
+                                    value={observaciones.observacionFrontal}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="card mt-2" style={{ width: '100%', height: '250px' }}>
-                        {images.fotoDerecha && (
-                            <img src={images.fotoDerecha} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'cover' }} />
-                        )}
-                    </div>
-                    <div className="form-group mt-2">
-                        <label htmlFor="observacionDerecha">Observación: *</label>
-                        <input type="text" className="form-control" id="observacionDerecha" />
-                    </div>
-                </div>
 
-                {/* Repetir para otras imágenes */}
-                <div className="col-md-6">
-                    <div className="form-group">
-                        <label htmlFor="fotoFrontal">Foto Frontal: *</label>
-                        <input
-                            type="file"
-                            className="form-control-file"
-                            id="fotoFrontal"
-                            onChange={(event) => handleImageChange(event, 'fotoFrontal')}
-                        />
+                    {/* Foto Lateral Izquierda */}
+                    <div className="col-md-6 d-flex align-items-center">
+                        <label className="w-50" htmlFor="fotoIzquierda">Foto Lateral Izquierda</label>
+                        <div className="w-50">
+                            <div className="card" style={{ width: '100%', height: '180px' }}>
+                                {images.fotoIzquierda ? (
+                                    <img src={images.fotoIzquierda} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="fotoIzquierda" className="card-body text-center">
+                                        <i className="fa-solid fa-upload fa-2x"></i>
+                                        <p>Subir Foto Lateral Izquierda</p>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="fotoIzquierda"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageChange(event, 'fotoIzquierda')}
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionIzquierda"
+                                    placeholder="Observación: *"
+                                    value={observaciones.observacionIzquierda}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div className="card mt-2" style={{ width: '100%', height: '250px' }}>
-                        {images.fotoFrontal && (
-                            <img src={images.fotoFrontal} alt="Foto Frontal" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'cover' }} />
-                        )}
-                    </div>
-                    <div className="form-group mt-2">
-                        <label htmlFor="observacionFrontal">Observación: *</label>
-                        <input type="text" className="form-control" id="observacionFrontal" />
-                    </div>
-                </div>
 
-                {/* Continúa para las demás imágenes */}
-                {/* Foto Izquierda */}
-                <div className="col-md-6">
-                    <div className="form-group">
-                        <label htmlFor="fotoIzquierda">Foto Lateral Izquierda: *</label>
-                        <input
-                            type="file"
-                            className="form-control-file"
-                            id="fotoIzquierda"
-                            onChange={(event) => handleImageChange(event, 'fotoIzquierda')}
-                        />
-                    </div>
-                    <div className="card mt-2" style={{ width: '100%', height: '250px' }}>
-                        {images.fotoIzquierda && (
-                            <img src={images.fotoIzquierda} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'cover' }} />
-                        )}
-                    </div>
-                    <div className="form-group mt-2">
-                        <label htmlFor="observacionIzquierda">Observación: *</label>
-                        <input type="text" className="form-control" id="observacionIzquierda" />
-                    </div>
-                </div>
+                    {/* Foto Posterior */}
+                    <div className="col-md-6 d-flex align-items-center">
+                        <label className="w-50" htmlFor="fotoPosterior">Foto Posterior</label>
+                        <div className="w-50">
+                            <div className="card" style={{ width: '100%', height: '180px' }}>
+                                {images.fotoPosterior ? (
+                                    <img src={images.fotoPosterior} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="fotoPosterior" className="card-body text-center">
+                                        <i className="fa-solid fa-upload fa-2x"></i>
+                                        <p>Subir Foto Posterior</p>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="fotoPosterior"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageChange(event, 'fotoPosterior')}
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionPosterior"
+                                    placeholder="Observación: *"
+                                    value={observaciones.observacionPosterior}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
 
-                {/* Foto Posterior */}
-                <div className="col-md-6">
-                    <div className="form-group">
-                        <label htmlFor="fotoPosterior">Foto Posterior: *</label>
-                        <input
-                            type="file"
-                            className="form-control-file"
-                            id="fotoPosterior"
-                            onChange={(event) => handleImageChange(event, 'fotoPosterior')}
-                        />
-                    </div>
-                    <div className="card mt-2" style={{ width: '100%', height: '250px' }}>
-                        {images.fotoPosterior && (
-                            <img src={images.fotoPosterior} alt="Foto Posterior" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'cover' }} />
-                        )}
-                    </div>
-                    <div className="form-group mt-2">
-                        <label htmlFor="observacionPosterior">Observación: *</label>
-                        <input type="text" className="form-control" id="observacionPosterior" />
-                    </div>
-                </div>
-
-                {/* Indicador de Combustible */}
-                <div className="col-md-6">
-                    <div className="form-group">
-                        <label htmlFor="indicadorCombustible">Indicador de Combustible: *</label>
-                        <input
-                            type="file"
-                            className="form-control-file"
-                            id="indicadorCombustible"
-                            onChange={(event) => handleImageChange(event, 'indicadorCombustible')}
-                        />
-                    </div>
-                    <div className="card mt-2" style={{ width: '100%', height: '250px' }}>
-                        {images.indicadorCombustible && (
-                            <img src={images.indicadorCombustible} alt="Indicador de Combustible" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'cover' }} />
-                        )}
-                    </div>
-                </div>
-                <div className="col-md-6">
-                    <div className="d-flex flex-column">
-                        <div className="d-flex align-items-center mb-2">
-                            <i className="fa-solid fa-gauge-simple-high" style={{ color: '#d95447', fontSize: '24px', marginRight: '8px' }}></i>
-                            <h5>
+                            {/* formuario  */}
+                            <div className="form-group mt-2">
+                                <label>Combustible</label>
                                 <div className="d-flex">
-
+                                <i className="fa-solid fa-gauge-simple-high" style={{color: "#ff5733"}}></i>
                                     <div className="form-check">
-                                        <input className="form-check-input" type="radio" id="fuelE" name="fuel" />
-                                        <label className="form-check-label" htmlFor="fuelE"> E </label>
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            id="fuelE"
+                                            name="fuel"
+                                            checked={combustible === 'fuelE'}
+                                            onChange={handleFuelChange}
+                                        />
+                                        <label className="form-check-label" htmlFor="fuelE">  E </label>
                                     </div>
                                     <div className="form-check">
-                                        <input className="form-check-input" type="radio" id="fuelHalf" name="fuel" />
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            id="fuelHalf"
+                                            name="fuel"
+                                            checked={combustible === 'fuelHalf'}
+                                            onChange={handleFuelChange}
+                                        />
                                         <label className="form-check-label" htmlFor="fuelHalf"> 1/2 </label>
                                     </div>
                                     <div className="form-check">
-                                        <input className="form-check-input" type="radio" id="fuelF" name="fuel" />
+                                        <input
+                                            className="form-check-input"
+                                            type="radio"
+                                            id="fuelF"
+                                            name="fuel"
+                                            checked={combustible === 'fuelF'}
+                                            onChange={handleFuelChange}
+                                        />
                                         <label className="form-check-label" htmlFor="fuelF"> F </label>
                                     </div>
-
                                 </div>
-                            </h5>
+                            </div>
                         </div>
-                        <div className="form-group">
-                            <label htmlFor="observacionCombustible">Observación: *</label>
-                            <input type="text" className="form-control" id="observacionCombustible" />
+                    </div>
+
+                    {/* Indicador de Combustible */}
+                    <div className="col-md-6 d-flex align-items-center">
+                        <label className="w-50" htmlFor="indicadorCombustible">Indicador de Combustible</label>
+                        <div className="w-50">
+                            <div className="card" style={{ width: '100%', height: '180px' }}>
+                                {images.indicadorCombustible ? (
+                                    <img src={images.indicadorCombustible} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="indicadorCombustible" className="card-body text-center">
+                                        <i className="fa-solid fa-upload fa-2x"></i>
+                                        <p>Subir Indicador de Combustible</p>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="indicadorCombustible"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageChange(event, 'indicadorCombustible')}
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <label htmlFor="observacionCombustible">Observación: *</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionCombustible"
+                                    placeholder="Observación: *"
+                                    value={observaciones.observacionCombustible}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
+
                         </div>
                     </div>
                 </div>
-            </div>
 
-
-
-            {/* Botón de enviar */}
-            <div className="row mt-4">
-                <div className="col text-center">
-                    <button className="btn btn-success">Ingresar <i className="fa-solid fa-check"></i></button>
+                {/* Botón de Enviar */}
+                <div className="text-center mt-4">
+                    <button type="submit" className="btn btn-success">Enviar <i class="fa-solid fa-check"></i></button>
                 </div>
-            </div>
+            </form>
         </div>
     );
-}
+};
 
 export default CheckListComponent;

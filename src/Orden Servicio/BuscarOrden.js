@@ -9,20 +9,20 @@ export default function BuscarOrden() {
     const [itemsPerPage] = useState(7);
 
     // Estados para los campos de búsqueda
-    const [numeroServicio, setNumeroServicio] = useState('');
+    const [codigo, setidOrden] = useState('');
     const [cliente, setCliente] = useState('');
     const [fecha, setFecha] = useState('');
-    const [placa, setPlaca] = useState('');
+    const [placaVehiculo, setPlacaVehiculo] = useState('');
 
     // Manejo del envío del formulario de búsqueda
     const handleBuscar = async (e) => {
         e.preventDefault();
 
         const filtros = {};
-        if (numeroServicio) filtros.idOrden = numeroServicio;
+        if (codigo) filtros.codigo = codigo;
         if (cliente) filtros.cliente = cliente;
         if (fecha) filtros.fecha = fecha;
-        if (placa) filtros.placa = placa;
+        if (placaVehiculo) filtros.placaVehiculo = placaVehiculo;
 
         await cargarOrdenes(filtros);
 
@@ -69,9 +69,9 @@ export default function BuscarOrden() {
                         <div className="row">
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="numeroServicio" className="col-sm-3 col-form-label">N° de servicio:*</label>
+                                    <label htmlFor="codigo" className="col-sm-3 col-form-label">N° de servicio:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="numeroServicio" name='numeroServicio' value={numeroServicio} onChange={(e) => setNumeroServicio(e.target.value)} />
+                                        <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={(e) => setidOrden(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,7 @@ export default function BuscarOrden() {
                                 <div className="mb-3 row">
                                     <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="cliente" name='cliente' required value={cliente} onChange={(e) => setCliente(e.target.value)} />
+                                        <input type="text" className="form-control" id="cliente" name='cliente' value={cliente} onChange={(e) => setCliente(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -93,9 +93,9 @@ export default function BuscarOrden() {
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="placa" className="col-sm-3 col-form-label">Placa:*</label>
+                                    <label htmlFor="placaVehiculo" className="col-sm-3 col-form-label">Placa:*</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="placa" name='placa' required value={placa} onChange={(e) => setPlaca(e.target.value)} />
+                                        <input type="text" className="form-control" id="placaVehiculo" name='placaVehiculo' value={placaVehiculo} onChange={(e) => setPlacaVehiculo(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -112,6 +112,7 @@ export default function BuscarOrden() {
             {/* Tabla con resultados */}
             {ordenes.length > 0 && (
                 <div className='container' style={{ margin: "30px" }}>
+                    <h5>Seleccione el N° de servicio para abrir la ejecución</h5>
                     <table className="table table-striped table-hover align-middle">
                         <thead>
                             <tr>
@@ -120,7 +121,7 @@ export default function BuscarOrden() {
                                 <th className='th-tabla' scope="col">Tipo de servicio</th>
                                 <th className='th-tabla' scope="col">Placa del vehículo</th>
                                 <th className='th-tabla' scope="col">Kilometraje del Vehículo</th>
-                                <th className='th-tabla' scope="col">Fecha</th>
+                                <th className='th-tabla' scope="col">Fecha de Servicio</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,6 +137,7 @@ export default function BuscarOrden() {
                             ))}
                         </tbody>
                     </table>
+                    <div class="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
 
@@ -157,7 +159,7 @@ export default function BuscarOrden() {
                                 Anterior
                             </button>
                             <div >
-                            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                                <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
                             </div>
                             <button
                                 onClick={goToNextPage}
