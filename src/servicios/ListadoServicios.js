@@ -50,7 +50,7 @@ export default function ListadoServicios() {
 
     servicios.forEach(servicio => {
       const servicioData = [
-        servicio.idServicio,
+        servicio.codigo,
         servicio.descripcion,
         `$${servicio.valorServicio.toLocaleString()}`,
         servicio.ano,
@@ -66,7 +66,7 @@ export default function ListadoServicios() {
 
   const exportToExcel = () => {
     const ws = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
-      "Codigo": servicio.idServicio,
+      "Codigo": servicio.codigo,
       "Descripción": servicio.descripcion,
       "Valor del Servicio": servicio.valorServicio,
       "Año": servicio.ano,
@@ -115,9 +115,9 @@ export default function ListadoServicios() {
         <table className="container" >
           <thead className=''>
             <tr>
-              <th className='text-letras colorthead' scope="col">codigo</th>
+              <th className='text-letras colorthead' scope="col"> Codigo Servicio</th>
 
-              <th className='text-letras colorthead' scope="col">Descripción</th>
+              <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
               <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
               <th className='text-letras colorthead' scope="col">Año</th>
               <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
