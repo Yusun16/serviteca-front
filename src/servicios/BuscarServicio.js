@@ -142,8 +142,8 @@ export default function BuscarServicio() {
                     <table className="container" style={{ marginTop: "20px" }}>
                         <thead className=''>
                             <tr>
-                                <th className='text-letras colorthead' scope="col">Codigo</th>
-                                <th className='text-letras colorthead' scope="col">Descripción</th>
+                                <th className='text-letras colorthead' scope="col">Codigo Servicio</th>
+                                <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
                                 <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
                                 <th className='text-letras colorthead' scope="col">Año</th>
                                 <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
