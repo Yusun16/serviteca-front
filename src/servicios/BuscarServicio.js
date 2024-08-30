@@ -66,7 +66,7 @@ export default function BuscarServicio() {
                 servicio.codigo,
                 servicio.descripcion,
                 `$${servicio.valorServicio.toLocaleString()}`,
-                servicio.año,
+                servicio.ano,
                 `${servicio.porcentajeOperario}%`
             ];
             tableRows.push(servicioData);
@@ -82,7 +82,7 @@ export default function BuscarServicio() {
             "Codigo": servicio.codigo,
             "Descripción": servicio.descripcion,
             "Valor del Servicio": servicio.valorServicio,
-            "Año": servicio.año,
+            "Año": servicio.ano,
             "Porcentaje del Operario": servicio.porcentajeOperario
         })));
         const wb = XLSX.utils.book_new();
@@ -165,7 +165,7 @@ export default function BuscarServicio() {
                                             decimalScale={2}
                                         />
                                     </td>
-                                    <td>{servicio.año}</td>
+                                    <td>{servicio.ano}</td>
                                     <td>
                                         <NumericFormat
                                             value={servicio.porcentajeOperario}
