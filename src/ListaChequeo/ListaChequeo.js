@@ -29,7 +29,6 @@ const CheckListComponent = () => {
 
 
         <div className="container">
-
             <div className='d-flex justify-content-between'>
                 <div>
                     <nav aria-label="breadcrumb">
