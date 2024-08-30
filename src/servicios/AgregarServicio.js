@@ -15,7 +15,7 @@ export default function AgregarServicio() {
         codigo: "",
         descripcion: "",
         valorServicio: "",
-        año: "",
+        ano: "",
         porcentajeOperario: ""
     });
 
@@ -23,7 +23,7 @@ export default function AgregarServicio() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const { codigo, descripcion, valorServicio, año, porcentajeOperario } = servicio;
+    const { codigo, descripcion, valorServicio, ano, porcentajeOperario } = servicio;
 
     useEffect(() => {
         cargarServicios();
@@ -83,7 +83,7 @@ export default function AgregarServicio() {
                 servicio.codigo,
                 servicio.descripcion,
                 `$${servicio.valorServicio.toLocaleString()}`,
-                servicio.año,
+                servicio.ano,
                 `${servicio.porcentajeOperario}%`
             ])
         });
@@ -95,7 +95,7 @@ export default function AgregarServicio() {
             Codigo: servicio.codigo,
             Descripción: servicio.descripcion,
             Valor_Servicio: servicio.valorServicio,
-            Año: servicio.año,
+            Año: servicio.ano,
             Porcentaje_Operario: servicio.porcentajeOperario
         })));
         const workbook = XLSX.utils.book_new();
@@ -155,14 +155,14 @@ export default function AgregarServicio() {
                     </div>
                     <div>
                         <div className="mb-3">
-                            <label htmlFor="año" className="form-label">Año: *</label>
+                            <label htmlFor="ano" className="form-label">Año: *</label>
                             <input
                                 type="date"
                                 className="form-control"
-                                id="año"
-                                name='año'
+                                id="ano"
+                                name='ano'
                                 required={true}
-                                value={año}
+                                value={ano}
                                 onChange={onInputChange}
                             />
                         </div>
@@ -244,7 +244,7 @@ export default function AgregarServicio() {
                                             decimalScale={2}
                                         />
                                     </td>
-                                    <td>{servicio.año}</td>
+                                    <td>{servicio.ano}</td>
                                     <td>
                                         <NumericFormat
                                             value={servicio.porcentajeOperario}

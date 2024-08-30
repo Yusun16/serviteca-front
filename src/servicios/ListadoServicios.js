@@ -53,7 +53,7 @@ export default function ListadoServicios() {
         servicio.idServicio,
         servicio.descripcion,
         `$${servicio.valorServicio.toLocaleString()}`,
-        servicio.año,
+        servicio.ano,
         `${servicio.porcentajeOperario}%`
       ];
       tableRows.push(servicioData);
@@ -69,7 +69,7 @@ export default function ListadoServicios() {
       "Codigo": servicio.idServicio,
       "Descripción": servicio.descripcion,
       "Valor del Servicio": servicio.valorServicio,
-      "Año": servicio.año,
+      "Año": servicio.ano,
       "Porcentaje del Operario": servicio.porcentajeOperario
     })));
     const wb = XLSX.utils.book_new();
@@ -139,7 +139,7 @@ export default function ListadoServicios() {
                       decimalScale={2}
                   />
               </td>
-              <td>{servicio.año}</td>
+              <td>{servicio.ano}</td>
               <td>
                   <NumericFormat className=''
                       value={servicio.porcentajeOperario}
