@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import ModalEditar from './modalEditar';
 import { useNavigate, useParams } from 'react-router-dom'
 
 export default function EditarServicio() {
@@ -57,8 +58,8 @@ const [servicio, setServicios] = useState({
                     <div className="col">
                         <div className="col">
                             <div className="mb-3">
-                                <label htmlFor="codigo" className="form-label">Codigo: *</label>
-                                <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={(e) => onInputCahnge(e)} />
+                            <label htmlFor="codigo" className="form-label">Código: *</label>
+                            <input type="number" className="form-control" id="codigo" name='codigo' value={codigo} readOnly   onChange={(e) => onInputCahnge(e)}  />
                             </div>
                         </div>
                         <div className="col">
@@ -72,7 +73,7 @@ const [servicio, setServicios] = useState({
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="año" className="form-label">Año: *</label>
-                                <input type="date" className="form-control" id="año" name='año' required={true} value={año} onChange={(e) => onInputCahnge(e)} />
+                                <input type="date" className="form-control" id="año" name='año' required value={año} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="col">
@@ -92,8 +93,9 @@ const [servicio, setServicios] = useState({
 
 
                 <div className='text-center'>
-                    <button type="submit" className="btn btn-success btn-sm me-3"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <button type="submit" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditar" ><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
                     <button type="submit" href='/' className='btn btn-danger btn-sm me-3 '><i class="fa-regular fa-circle-xmark"></i> Cancelar</button>
+                <ModalEditar/>
                 </div>
             </form>
         </div>

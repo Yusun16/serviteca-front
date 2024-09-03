@@ -38,8 +38,9 @@ export default function AgregarServicio() {
         e.preventDefault();
         try {
             const urlBase = "http://localhost:8080/serviteca/servicios";
-            await axios.post(urlBase, servicio);
-            navigate("/");
+            await axios.post(urlBase, servicio); 
+            // descomentariar la linea en caso de no agregar en la misma vista 
+            // navigate("/");     
         } catch (error) {
             console.error("Error al agregar servicio", error);
         }
@@ -119,7 +120,7 @@ export default function AgregarServicio() {
     };
 
     return (
-        <div className='container'>
+        <div className='container' >
             {/* Formulario de agregar servicio */}
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
@@ -195,10 +196,10 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className='text-center'>
-                    <button type="button" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <button type="submit"   className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
                         <i className="fa-regular fa-floppy-disk"></i> Guardar
                     </button>
-                    <Modal />
+                    <Modal/>
                 </div>
             </form>
 
@@ -218,61 +219,66 @@ export default function AgregarServicio() {
                             style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
                         ></button>
                     </div>
-                    <table className="container" style={{ marginTop: "5x" }}>
-                        <thead>
-                            <tr>
-                                <th className='text-letras colorthead' scope="col">Código</th>
-                                <th className='text-letras colorthead' scope="col">Descripción</th>
-                                <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
-                                <th className='text-letras colorthead' scope="col">Año</th>
-                                <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
-                                <th className='text-letras colorthead'>Editar</th>
-                                <th className='text-letras colorthead'>Borrar</th>
-                            </tr>
-                        </thead>
-                        <tbody className='tbbody'>
-                            {currentItems.map((servicio, indice) => (
-                                <tr className='tr-table-tr' key={indice}>
-                                    <th scope="row">{servicio.codigo}</th>
-                                    <td>{servicio.descripcion}</td>
-                                    <td>
-                                        <NumericFormat
-                                            value={servicio.valorServicio}
-                                            displayType={'text'}
-                                            thousandSeparator=","
-                                            prefix='$'
-                                            decimalScale={2}
-                                        />
-                                    </td>
-                                    <td>{servicio.ano}</td>
-                                    <td>
-                                        <NumericFormat
-                                            value={servicio.porcentajeOperario}
-                                            displayType={'text'}
-                                            thousandSeparator=","
-                                            prefix='%'
-                                            decimalScale={2}
-                                        />
-                                    </td>
-                                    <td className='text-center'>
-                                        <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
-                                            <i className="fa-solid fa-pen-to-square"></i>
-                                        </Link>
-                                    </td>
-                                    <td>
-                                        <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
-                                            <i className="fa-solid fa-trash-can"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                    <table className="container" >
+          <thead className=''>
+            <tr>
+              <th className='text-letras colorthead' scope="col"> Codigo Servicio</th>
+
+              <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
+              <th className='text-letras colorthead' scope="col">Valor total de los Servicio</th>
+      
+              <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
+              <th className='text-letras colorthead'>Editar</th>
+              <th className='text-letras colorthead'>Borrar</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentItems.map((servicio, indice) => (
+              <tr className='tr-table-tr' key={indice}>
+                <td>{servicio.codigo}</td>
+                <td>{servicio.descripcion}</td>
+                <td>
+                  <NumericFormat
+                    value={servicio.valorServicio}
+                    displayType={'text'}
+                    thousandSeparator=","
+                    prefix='$'
+                    decimalScale={2}
+                  />
+                </td>
+                
+                <td>
+                  <NumericFormat
+                    value={servicio.porcentajeOperario}
+                    displayType={'text'}
+                    thousandSeparator=","
+                    decimalScale={2}
+                    renderText={(value) => `${value}%`}
+                  />
+                </td>
+                <td className='text-center'>
+                  <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
+                    <i className="fa-solid fa-pen-to-square"></i>
+                  </Link>
+                </td>
+                <td>
+                  <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
+                    <i className="fa-solid fa-trash-can"></i>
+                  </button>
+                </td>
+              </tr>
+            ))}
+            
+          </tbody>
+        </table>
+
+
                     {/* Paginación */}
-                    <div className="h4 pb-2 mb-4 border-bottom border-black"></div>
-                    <div className='d-flex justify-content-between'>
+                    <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                    <div className='d-flex justify-content-between align-items-center'>
                         <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-                        <div className="d-flex justify-content-start mt-4 justify-content-end">
+                        <div className="d-flex justify-content-start  justify-content-end">
+
                             <button
                                 className="btn btn-secondary me-2"
                                 onClick={() => paginate(currentPage - 1)}
@@ -280,7 +286,7 @@ export default function AgregarServicio() {
                             >
                                 Anterior
                             </button>
-                            <span className="align-self-center"> {currentPage} de {totalPages}</span>
+                            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
                             <button
                                 className="btn btn-secondary ms-2"
                                 onClick={() => paginate(currentPage + 1)}

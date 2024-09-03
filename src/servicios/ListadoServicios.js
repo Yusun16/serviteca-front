@@ -94,8 +94,8 @@ export default function ListadoServicios() {
 
       <div className='container text-center ' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px" }} >
 
-        <Link type="button" className="btn btn-center btncolor" to="http://localhost:3000/agregar" style={{ width: "280px", height: "50px" }}>Agregar servicio</Link>
-        <Link type="button" className="btn btn-center btncolor " to="http://localhost:3000/buscar" style={{ width: "280px", height: "50px" }}>Buscar servicio</Link>
+        <Link type="button" className="btn btn-center btncolor" to="/agregarservicio" style={{ width: "280px", height: "50px" }}>Agregar servicio</Link>
+        <Link type="button" className="btn btn-center btncolor " to="/buscarservicio" style={{ width: "280px", height: "50px" }}>Buscar servicio</Link>
 
 
       </div>
@@ -118,8 +118,8 @@ export default function ListadoServicios() {
               <th className='text-letras colorthead' scope="col"> Codigo Servicio</th>
 
               <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
-              <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
-              <th className='text-letras colorthead' scope="col">Año</th>
+              <th className='text-letras colorthead' scope="col">Valor total de los Servicio</th>
+
               <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
               <th className='text-letras colorthead'>Editar</th>
               <th className='text-letras colorthead'>Borrar</th>
@@ -128,47 +128,48 @@ export default function ListadoServicios() {
           <tbody>
             {currentItems.map((servicio, indice) => (
               <tr className='tr-table-tr' key={indice}>
-              <td>{servicio.codigo}</td>
-              <td>{servicio.descripcion}</td>
-              <td>
+                <td>{servicio.codigo}</td>
+                <td>{servicio.descripcion}</td>
+                <td>
                   <NumericFormat
-                      value={servicio.valorServicio}
-                      displayType={'text'}
-                      thousandSeparator=","
-                      prefix='$'
-                      decimalScale={2}
+                    value={servicio.valorServicio}
+                    displayType={'text'}
+                    thousandSeparator=","
+                    prefix='$'
+                    decimalScale={2}
                   />
-              </td>
-              <td>{servicio.ano}</td>
-              <td>
-                  <NumericFormat className=''
-                      value={servicio.porcentajeOperario}
-                      displayType={'text'}
-                      thousandSeparator=","
-                      prefix='%'
-                      decimalScale={2}
+                </td>
+
+                <td>
+                  <NumericFormat
+                    value={servicio.porcentajeOperario}
+                    displayType={'text'}
+                    thousandSeparator=","
+                    decimalScale={2}
+                    renderText={(value) => `${value}%`}
                   />
-              </td>
-              <td className='text-center'>
+                </td>
+                <td className='text-center'>
                   <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
-                      <i className="fa-solid fa-pen-to-square"></i>
+                    <i className="fa-solid fa-pen-to-square"></i>
                   </Link>
-              </td>
-              <td>
+                </td>
+                <td>
                   <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
-                      <i className="fa-solid fa-trash-can"></i>
+                    <i className="fa-solid fa-trash-can"></i>
                   </button>
-              </td>
-          </tr>
+                </td>
+              </tr>
             ))}
+
           </tbody>
         </table>
 
         {/* Paginación */}
         <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
-        <div className='d-flex justify-content-between'>
+        <div className='d-flex justify-content-between align-items-center'>
           <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-          <div className="d-flex justify-content-start mt-4  justify-content-end">
+          <div className="d-flex justify-content-start  justify-content-end">
 
             <button
               className="btn btn-secondary me-2"

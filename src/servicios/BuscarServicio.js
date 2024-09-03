@@ -25,8 +25,8 @@ export default function BuscarServicio() {
         setServicios(resultado.data);
     };
 
-    const eliminarServicio = async (codigo) => {
-        await axios.delete(`${urlBase}/${codigo}`);
+    const eliminarServicio = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
         cargarServicios();
     };
 
@@ -128,18 +128,18 @@ export default function BuscarServicio() {
 
             {showTable && ( // Mostrar tabla solo si showTable es true
                 <div className='container'>
-            <div className="container nav justify-content-end">
-                <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
-                
-                    style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
-                    onClick={exportToPDF}>
-                </button>
-                <button className="fa-sharp fa-solid fa-file-excel p-2 g-col-6"
-                    style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
-                    onClick={exportToExcel}>
-                </button>
-            </div>
-                    <table className="container" style={{ marginTop: "20px" }}>
+                    <div className="container nav justify-content-end">
+                        <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
+
+                            style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+                            onClick={exportToPDF}>
+                        </button>
+                        <button className="fa-sharp fa-solid fa-file-excel p-2 g-col-6"
+                            style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
+                            onClick={exportToExcel}>
+                        </button>
+                    </div>
+                    <table className="container" style={{ marginTop: "5px" }}>
                         <thead className=''>
                             <tr>
                                 <th className='text-letras colorthead' scope="col">Codigo Servicio</th>
@@ -176,25 +176,35 @@ export default function BuscarServicio() {
                                         />
                                     </td>
                                     <td className='text-center'>
-                                        <Link to={`/editar/${servicio.codigo}`} className='btn btn-sm me-3'>
+                                        <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                         </Link>
                                     </td>
                                     <td>
-                                        <button onClick={() => eliminarServicio(servicio.codigo)} className='btn btn-sm'>
+                                        <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
                                     </td>
                                 </tr>
                             ))}
+                            <tr  >
+                                <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col">  </th>
+                                <th className='text-letras colorthead'></th>
+                                <th className='text-letras colorthead'> </th>
+                            </tr>
                         </tbody>
                     </table>
 
                     {/* Paginación */}
-                    <div className="h4 pb-2 mb-4 border-bottom border-black"></div>
-                    <div className='d-flex justify-content-between'>
+                    <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                    <div className='d-flex justify-content-between align-items-center'>
                         <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-                        <div className="d-flex justify-content-start mt-4 justify-content-end">
+                        <div className="d-flex justify-content-start  justify-content-end">
+
                             <button
                                 className="btn btn-secondary me-2"
                                 onClick={() => paginate(currentPage - 1)}
@@ -202,9 +212,7 @@ export default function BuscarServicio() {
                             >
                                 Anterior
                             </button>
-                            <button type="button" className="btn btn-light">
-                                <span>{currentPage}</span>
-                            </button>
+                            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
                             <button
                                 className="btn btn-secondary ms-2"
                                 onClick={() => paginate(currentPage + 1)}

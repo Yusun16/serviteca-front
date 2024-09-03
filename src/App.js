@@ -10,6 +10,15 @@ import AgregarOrden from "./Orden Servicio/AgregarOrden";
 import BuscarOrden from "./Orden Servicio/BuscarOrden";
 import JefeTaller from "./logins/JefeTaller";
 import ListaChequeo from "./ListaChequeo/ListaChequeo";
+import ListadoCliente from "./Registrar/listadoCliente";
+import AgregarCliente from "./Registrar/agregarCliente";
+import BuscarCliente from "./Registrar/buscarCliente";
+import ListadoVehiculo  from "./Registrar/listadoVehiculo";
+import AgregarVehiculo  from "./Registrar/agregarVehiculo";
+import BuscarVehiculo  from "./Registrar/buscarVehiculo";
+import EjecucionServicio from "./Orden Servicio/ejecucionServicio";
+
+
 
 function App() {
   return (
@@ -18,8 +27,8 @@ function App() {
     <Routes>
     <Route exact path="/inicio" element={<VistaPrincipal/> }/>
       <Route exact path="/login" element={<JefeTaller/>}/>
-      <Route exact path="/agregar" element={<AgregarServicio/>}/>
-      <Route exact path="/buscar/" element={<BuscarServicio/>}/>
+      <Route exact path="/agregarservicio" element={<AgregarServicio/>}/>
+      <Route exact path="/buscarservicio/" element={<BuscarServicio/>}/>
       <Route exact path="/" element={<ListadoServicios/>}/>
       <Route exact path="/editar/:id" element={<EditarServicio/>}/>
       <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
@@ -27,6 +36,15 @@ function App() {
       <Route exact path="/buscarorden/" element={<BuscarOrden/>}/>
       <Route exact path="/jefetaller/" element={<JefeTaller/>}/>
       <Route exact path="/listachequeo/" element={<ListaChequeo/>}/>
+      <Route exact path="/listadocliente/" element={<ListadoCliente/>}/>
+      <Route exact path="/agregarCliente/" element={<AgregarCliente/>}/>
+      <Route exact path="/buscarCliente/" element={<BuscarCliente/>}/>
+      <Route exact path="/listadovehiculo" element={<ListadoVehiculo/>}/>
+      <Route exact path="/agregarvehiculo" element={<AgregarVehiculo/>}/>
+      <Route exact path="/buscarvehiculo" element={<BuscarVehiculo/>}/>
+      <Route exact path="/ejecucionservicio" element={<EjecucionServicio/>}/>
+
+
     </Routes>
     </BrowserRouter>
     
