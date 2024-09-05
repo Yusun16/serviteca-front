@@ -14,11 +14,11 @@ const [servicio, setServicios] = useState({
         codigo: "",
         descripcion: "",
         valorServicio: "",
-        año: "",
+        ano: "",
         porcentajeOperario: ""
     })
 
-    const { codigo, descripcion, valorServicio, año, porcentajeOperario } = servicio
+    const { codigo, descripcion, valorServicio, ano, porcentajeOperario } = servicio
 
     useEffect(() => {
         cargarServicio();
@@ -72,8 +72,8 @@ const [servicio, setServicios] = useState({
                     <div className="">
                         <div className="col">
                             <div className="mb-3">
-                                <label htmlFor="año" className="form-label">Año: *</label>
-                                <input type="date" className="form-control" id="año" name='año' required value={año} onChange={(e) => onInputCahnge(e)} />
+                                <label htmlFor="ano" className="form-label">Año: *</label>
+                                <input type="date" className="form-control" id="ano" name='ano' required value={ano} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="col">
