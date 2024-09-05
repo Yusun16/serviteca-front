@@ -16,7 +16,7 @@ export default function Navegacion() {
       <div>
         <ul className="nav justify-content-end">
           <li className="nav-item">
-            <Link to="/inicio" style={{ listStyle: "none", color: "white", fontSize: "31px" }}><i class="fa-solid fa-house"></i> </Link>
+            <Link to="/inicio" style={{ listStyle: "none", color: "white", display: "flex", position: "absolute", top: "28px", right: "55px", gap: "25px" }}><p>Home</p><i class="fa-solid fa-house" style={{ fontSize: "31px" }}></i> </Link>
           </li>
         </ul>
       </div>
