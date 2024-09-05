@@ -55,7 +55,7 @@ export default function BuscarOrden() {
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
                     <li className="breadcrumb-item">
-                        <a href="/agregarorden"><i className="fa-solid fa-house"></i> Home</a>
+                        <a href="/agregarorden"><i className="fa-solid fa-house"></i> Inicio</a>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">Buscar Orden</li>
                 </ol>
