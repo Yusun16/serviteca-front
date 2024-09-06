@@ -117,7 +117,7 @@ function AutoPartes() {
                 </ol>
             </nav>
             <div className='column005'>
-                <h6 className='text009 pos-text'>Auto-partes</h6>
+                <h6 className='text009 pos-text'>Agregar auto-partes</h6>
                 <ul className="icons001 icons009"></ul>
             </div>
             <form className="container005" onSubmit={handleSubmit}>
@@ -238,6 +238,7 @@ function AutoPartes() {
                     parexito="Registro guardado con éxito"
                     className="modal__message003"
                     onClose={handleCloseModal}
+                    rutaDir="/agregar-auto-partes"
                 />
             )}
         </div>

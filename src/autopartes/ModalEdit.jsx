@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
+import axios from 'axios';
 import Input from './Input'
 import Label from './Label'
 import ModalExito from './ModalExito'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function ModalEdit() {
-    // const urlBase = "http://localhost:8080/serviteca/autopartes";
+    const urlBase = "http://localhost:8080/serviteca/autopartes";
 
     const navigate = useNavigate();
 
@@ -14,56 +14,70 @@ function ModalEdit() {
         navigate(-1);
     };
 
+    const { id } = useParams();
+
     const [error, setError] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const [inputs, setInputs] = useState({
-        input1: '',
-        input2: '',
-        input3: '',
-        dropdown1: '',
-        dropdown2: '',
-        input4: '',
-        input5: '',
+    const [autopartes, setAutopartes] = useState({
+        referencia: '',
+        siigo: '',
+        descripcion: '',
+        linea: '',
+        tipo: '',
+        marca: '',
+        modelo: '',
     });
+
+    const { referencia, siigo, descripcion, linea, tipo, marca, modelo } = autopartes
+
+    const cargarAutoPartes = async () => {
+        const resultado = await axios.get(`${urlBase}/${id}`)
+        setAutopartes(resultado.data)
+    };
+
+    useEffect(() => {
+        cargarAutoPartes();
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setInputs({
-            ...inputs,
+        setAutopartes({
+            ...autopartes,
             [name]: value,
         });
     };
 
-
     const handleDropdownChange1 = (e) => {
-        setInputs({
-            ...inputs,
-            dropdown1: e.target.value,
+        setAutopartes({
+            ...autopartes,
+            linea: e.target.value,
         });
     };
 
     const handleDropdownChange2 = (e) => {
-        setInputs({
-            ...inputs,
-            dropdown2: e.target.value,
+        setAutopartes({
+            ...autopartes,
+            tipo: e.target.value,
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        await axios.post(urlBase, autopartes)
+        // navegacion("/auto-partes")
 
         const requiredFields = [
-            'input1',
-            'input2',
-            'input3',
-            'dropdown1',
-            'dropdown2',
-            'input4',
-            'input5'
+            'referencia',
+            'siigo',
+            'descripcion',
+            'linea',
+            'tipo',
+            'marca',
+            'modelo'
         ];
 
-        const allFieldsFilled = requiredFields.every(field => inputs[field].trim() !== '');
+        const allFieldsFilled = requiredFields.every(field => autopartes[field].trim() !== '');
 
         if (allFieldsFilled) {
             setError('');
@@ -79,6 +93,16 @@ function ModalEdit() {
 
     return (
         <div>
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Autopartes</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Editar</li>
+                </ol>
+            </nav>
             <div id="demo-modal16" className='modal__message004'>
                 <div className="modal__content modal__shadow">
                     <div className='modal__title'>
@@ -86,7 +110,7 @@ function ModalEdit() {
                         <div className="linea002"></div>
                     </div>
                     <div>
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={(e) => handleSubmit(e)}>
                             <div className="container005" >
                                 <div className='column001'>
                                     <div className='div-col002'>
@@ -99,22 +123,22 @@ function ModalEdit() {
                                             className='input004'
                                             type="text"
                                             id="referencia"
-                                            name="input1"
+                                            name="referencia"
                                             placeholder="Referencia" required={true}
-                                            value={inputs.input1}
-                                            onChange={handleInputChange}
+                                            value={autopartes.referencia}
+                                            onChange={(e) => handleInputChange(e)}
                                         />
                                     </div>
                                     <div className='div-col002'>
-                                        <Label className='label006' htmlFor="codigoStISO" name="codigoStISO:"></Label>
+                                        <Label className='label006' htmlFor="siigo" name="codigoStISO:"></Label>
                                         <Input
                                             className='input004'
                                             type="text"
-                                            id="codigoStISO"
-                                            name="input2"
+                                            id="siigo"
+                                            name="siigo"
                                             required
-                                            value={inputs.input2}
-                                            onChange={handleInputChange}
+                                            value={autopartes.siigo}
+                                            onChange={(e) => handleInputChange(e)}
                                         />
                                     </div>
                                     <div className='div-col002'>
@@ -125,18 +149,18 @@ function ModalEdit() {
                                             cols={3}
                                             type="text"
                                             id="descripcion"
-                                            name="input3"
+                                            name="descripcion"
                                             required
-                                            value={inputs.input3}
-                                            onChange={handleInputChange}
+                                            value={autopartes.descripcion}
+                                            onChange={(e) => handleInputChange(e)}
                                         />
                                     </div>
                                     <div className='div-col002'>
                                         <Label className='label006' htmlFor="linea" name="Linea:"></Label>
                                         <div className="dropdown">
                                             <select className="dropdown-toggle"
-                                                name="dropdown1"
-                                                value={inputs.dropdown1}
+                                                name="linea"
+                                                value={autopartes.linea}
                                                 onChange={handleDropdownChange1}
                                                 required={true}
                                             >
@@ -152,10 +176,10 @@ function ModalEdit() {
                                         <Label className='label006' htmlFor="tipo" name="Tipo:"></Label>
                                         <div className="dropdown">
                                             <select className="dropdown-toggle"
-                                                name="dropdown2"
+                                                name="tipo"
                                                 required={true}
                                                 onChange={handleDropdownChange2}
-                                                value={inputs.dropdown2}                                            >
+                                                value={autopartes.tipo}                                            >
                                                 <option value="" disabled>Selecciona una opción</option>
                                                 <option>Filtro</option>
                                                 <option>Aceite</option>
@@ -169,10 +193,10 @@ function ModalEdit() {
                                             className='input004'
                                             type="text"
                                             id="marca"
-                                            name="input4"
+                                            name="marca"
                                             required
-                                            value={inputs.input4}
-                                            onChange={handleInputChange}
+                                            value={autopartes.marca}
+                                            onChange={(e) => handleInputChange(e)}
                                         />
                                     </div>
                                     <div className='div-col002'>
@@ -181,10 +205,10 @@ function ModalEdit() {
                                             className='input004'
                                             type="text"
                                             id="modelo"
-                                            name="input5"
+                                            name="modelo"
                                             required
-                                            value={inputs.input5}
-                                            onChange={handleInputChange}
+                                            value={autopartes.modelo}
+                                            onChange={(e) => handleInputChange(e)}
                                         />
                                     </div>
                                 </div>
@@ -198,12 +222,20 @@ function ModalEdit() {
                                         </div>
                                     </button>
                                 </div>
-                                <button onClick={goBack} className='btn007'>
+                                <div className='pos-btn007 div-btn007'>
+                                    <button onClick={goBack} className='btn007' type="submit">
+                                        <div className="sub-btn007">
+                                            <i className="fa-regular fa-circle-xmark"></i>
+                                            <span className="">Cancelar</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                {/* <button onClick={goBack} className='btn007'>
                                     <ul className="icons005">
                                         <li className="icons004"><i className="fa-regular fa-circle-xmark"></i></li>
                                         <li className="">Cancelar</li>
                                     </ul>
-                                </button>
+                                </button> */}
                             </div>
                         </form>
                     </div>
@@ -216,7 +248,7 @@ function ModalEdit() {
                         titlemodal="Editado"
                         parexito="Registro editado con exito"
                         className="modal__message003"
-                        rutaDir="/"
+                        rutaDir="/auto-partes"
                         onClose={handleCloseModal}
                     />
                 </div>

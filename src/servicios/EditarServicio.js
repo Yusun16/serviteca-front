@@ -10,7 +10,7 @@ export default function EditarServicio() {
     let navegacion = useNavigate();
 
     const { id } = useParams();
-const [servicio, setServicios] = useState({
+    const [servicio, setServicios] = useState({
         codigo: "",
         descripcion: "",
         valorServicio: "",
@@ -37,29 +37,29 @@ const [servicio, setServicios] = useState({
         e.preventDefault();
         await axios.post(urlBase, servicio)
         navegacion("/")
-    
+
 
     }
 
     return (
         <div className='container'>
             <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item">Inicio</li>
-          <li class="breadcrumb-item active" aria-current="page">Servicios</li>
-          <li class="breadcrumb-item active" aria-current="page">Editar</li>
-        </ol>
-      </nav>
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">Inicio</li>
+                    <li class="breadcrumb-item active" aria-current="page">Servicios</li>
+                    <li class="breadcrumb-item active" aria-current="page">Editar</li>
+                </ol>
+            </nav>
             <div className='container text-center' style={{ margin: "30px" }}>
                 <h2>Editar Servicio</h2>
             </div>
-            <form onSubmit={(e) => onSubmit(e)} className='container' style={{ width: "580px", position: "relative", height: "310px"}} >
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+            <form onSubmit={(e) => onSubmit(e)} className='container' style={{ width: "580px", position: "relative", height: "310px" }} >
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     <div className="col">
                         <div className="col">
                             <div className="mb-3">
-                            <label htmlFor="codigo" className="form-label">Código: *</label>
-                            <input type="number" className="form-control" id="codigo" name='codigo' value={codigo} readOnly   onChange={(e) => onInputCahnge(e)}  />
+                                <label htmlFor="codigo" className="form-label">Código: *</label>
+                                <input type="number" className="form-control" id="codigo" name='codigo' value={codigo} readOnly onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="col">
@@ -95,7 +95,7 @@ const [servicio, setServicios] = useState({
                 <div className='text-center'>
                     <button type="submit" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditar" ><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
                     <button type="submit" href='/' className='btn btn-danger btn-sm me-3 '><i class="fa-regular fa-circle-xmark"></i> Cancelar</button>
-                <ModalEditar/>
+                    <ModalEditar />
                 </div>
             </form>
         </div>
