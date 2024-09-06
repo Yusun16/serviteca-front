@@ -94,9 +94,9 @@ export default function AgregarServicio() {
     const exportarExcel = () => {
         const worksheet = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
             Codigo: servicio.codigo,
-            Descripción: servicio.descripcion,
+            Descripcion: servicio.descripcion,
             Valor_Servicio: servicio.valorServicio,
-            Año: servicio.ano,
+            Ano: servicio.ano,
             Porcentaje_Operario: servicio.porcentajeOperario
         })));
         const workbook = XLSX.utils.book_new();
