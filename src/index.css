@@ -40,6 +40,26 @@ body {
   font-size: 25px;
 }
 
+.th-tabla{
+  background-color: #002060 !important;
+  color: white !important;
+}
+
+.pag-num{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Del componente listachequeo */
+.tamano-chek {
+  font-size: 30px;
+}
+
+.listcehk{
+  margin-bottom: 50px !important;
+}
+
 /* Del componente AutoPartes */
 /* .container005 {
   display: grid;
@@ -66,10 +86,7 @@ body {
   justify-content: center!important;
 }
 
-.th-tabla{
-  background-color: #002060 !important;
-  color: white !important;
-}
+
 
 tr:nth-child(even) {
   background-color: #9DD3F4 !important;
@@ -79,11 +96,7 @@ tr:nth-child(even) {
   background-color: #9DD3F4 !important;
 }
 
-.pag-num{
-  display: flex;
-  gap: 20px;
-  align-items: center;
-} */
+ */
 
 /* Del componente AutoPartes */
 /* .barra001 {

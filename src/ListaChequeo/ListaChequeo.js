@@ -87,26 +87,28 @@ const CheckListComponent = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Descripción</th>
-                                            <th scope="col">Chequeo</th>
-                                            <th scope="col">Observación</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>parlantes</td>
-                                            <td>
-                                                <div class="form-check">
-                                                    <input class="form-check-input" style={{marginLeft:"1px"}} type="checkbox" value="" id="flexCheckDefault"/>
-                                                </div>
-                                            </td>
-                                            <td>6 parlantes</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                <div className='container'>
+                                    <table className="container">
+                                        <thead>
+                                            <tr className='tr001'>
+                                                <th className='colorthead' scope="col">Descripción</th>
+                                                <th className='colorthead' scope="col">Chequeo</th>
+                                                <th className='colorthead' scope="col">Observación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr className='tr001'>
+                                                <td>parlantes</td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                    </div>
+                                                </td>
+                                                <td>6 parlantes</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -121,19 +123,19 @@ const CheckListComponent = () => {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="table">
+                                <table className="container">
                                     <thead>
-                                        <tr>
-                                            <th scope="col">Fecha de Servicio</th>
-                                            <th scope="col">N° Kilometros</th>
-                                            <th scope="col">N° de Servicio</th>
-                                            <th scope="col">Nombre operario</th>
-                                            <th scope="col">N° Factura</th>
-                                            <th scope="col">Observacion</th>
+                                        <tr className='tr001'>
+                                            <th className='colorthead' scope="col">Fecha de Servicio</th>
+                                            <th className='colorthead' scope="col">N° Kilometros</th>
+                                            <th className='colorthead' scope="col">N° de Servicio</th>
+                                            <th className='colorthead' scope="col">Nombre operario</th>
+                                            <th className='colorthead' scope="col">N° Factura</th>
+                                            <th className='colorthead' scope="col">Observacion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">1</th>
                                             <td>Mark</td>
                                             <td>Otto</td>
@@ -142,23 +144,19 @@ const CheckListComponent = () => {
                                             <td>No se observa nada</td>
 
                                         </tr>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">2</th>
                                             <td>Jacob</td>
                                             <td>Thornton</td>
                                             <td>@fat</td>
                                         </tr>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">3</th>
                                             <td colSpan="2">Larry the Bird</td>
                                             <td>@twitter</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -348,68 +346,68 @@ const CheckListComponent = () => {
 
                     {/* formuario  */}
                     <div className='col-md-6 listcehk'>
-                    <div >
-                        <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
-                            <div className="form-group mt-2 d-flex flex-column">
-                                <div className=" d-flex flex-row" style={{ gap: "25px" }}>
-                                    <i className="fa-solid fa-gauge-simple-high " style={{ color: "#ff5733", fontSize: "50px" }}></i>
-                                    <div className="form-check d-flex flex-column align-items-center p-0">
-                                        <input
-                                            className="form-check-input m-0 tamano-chek"
-                                            type="radio"
-                                            id="fuelE"
-                                            name="fuel"
-                                            required
-                                            checked={combustible === 'fuelE'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label tamano-chek" htmlFor="fuelE">  E </label>
+                        <div >
+                            <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
+                                <div className="form-group mt-2 d-flex flex-column">
+                                    <div className=" d-flex flex-row" style={{ gap: "25px" }}>
+                                        <i className="fa-solid fa-gauge-simple-high " style={{ color: "#ff5733", fontSize: "50px" }}></i>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelE"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelE'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelE">  E </label>
+                                        </div>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelHalf"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelHalf'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelHalf"> 1/2 </label>
+                                        </div>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelF"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelF'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
+                                        </div>
                                     </div>
-                                    <div className="form-check d-flex flex-column align-items-center p-0">
-                                        <input
-                                            className="form-check-input m-0 tamano-chek"
-                                            type="radio"
-                                            id="fuelHalf"
-                                            name="fuel"
-                                            required
-                                            checked={combustible === 'fuelHalf'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label tamano-chek" htmlFor="fuelHalf"> 1/2 </label>
-                                    </div>
-                                    <div className="form-check d-flex flex-column align-items-center p-0">
-                                        <input
-                                            className="form-check-input m-0 tamano-chek"
-                                            type="radio"
-                                            id="fuelF"
-                                            name="fuel"
-                                            required
-                                            checked={combustible === 'fuelF'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
-                                    </div>
-                                </div>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div className='col-md-12'>
-                        <div className='d-flex align-items-center flex-row'>
-                            <label className="w-50 " htmlFor="indicadorCombustible">Observacion</label>
-                            <div className="form-group mt-2 w-50">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="observacionPosterior"
-                                    placeholder="Observación: *"
-                                    required
-                                    value={observaciones.observacionPosterior}
-                                    onChange={handleObservationChange}
-                                />
+                        <div className='col-md-12'>
+                            <div className='d-flex align-items-center flex-row'>
+                                <label className="w-50 " htmlFor="indicadorCombustible">Observacion</label>
+                                <div className="form-group mt-2 w-50">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="indicadorCombustible"
+                                        placeholder="Observación: *"
+                                        required
+                                        value={observaciones.observacionCombustible}
+                                        onChange={handleObservationChange}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
                     </div>
                 </div>
                 {/* Botón de Enviar */}
