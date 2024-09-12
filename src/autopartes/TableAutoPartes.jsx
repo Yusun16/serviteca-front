@@ -10,11 +10,16 @@ function TableAutoPartes() {
     const [autopartes, setAutopartes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
-    // const [data, setData] = useState([]);
+
 
     const cargarAutoPartes = async () => {
         const resultado = await axios.get(urlBase);
         setAutopartes(resultado.data);
+    };
+
+    const eliminarAutoPartes = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
+        cargarAutoPartes();
     };
 
     useEffect(() => {
@@ -53,7 +58,7 @@ function TableAutoPartes() {
                             <td className='td001'>{autopar.descripcion}</td>
                             <td className='td001'>{autopar.tipo}</td>
                             <td className='td001'>
-                                <Link to="/editar-auto-partes" className="btn-modal" id='demo-modal16'>
+                                <Link to={`/editar-auto-partes/${autopar.idAupartes}`} className="btn-modal" id='demo-modal16'>
                                     {/* <button type='submit' className="btn-modal" id='demo-modal16'> */}
                                     <i className="fa-solid fa-calendar"></i>
                                 </Link>
@@ -61,9 +66,11 @@ function TableAutoPartes() {
                                     <i className="fa-solid fa-calendar"></i>
                                 </Link> */}
                             </td>
-                            <td className='td001'><a href="#demo-modal2" className="btn-modal">
-                                <i className="fa-solid fa-trash-can"></i>
-                            </a></td>
+                            <td className='td001'>
+                                <a href="#demo-modal2" onClick={() => eliminarAutoPartes(autopar.idAupartes)} className="btn-modal">
+                                    <i className="fa-solid fa-trash-can"></i>
+                                </a>
+                            </td>
                         </tr>
                     ))}
                     <tr className='tr001'>
@@ -77,7 +84,7 @@ function TableAutoPartes() {
             </table>
             <div className="linea001"></div>
             <div className='container007'>
-                <div className="column001">
+                <div className="column010">
                     <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
                 </div>
                 <div className="column001">
@@ -97,7 +104,7 @@ function TableAutoPartes() {
                 titlemodal="Eliminar"
                 parexito="Registro eliminado"
                 className="modal003"
-                rutaDir="/"
+                rutaDir="/auto-partes"
             />
             <ModalExito
                 idmodal="demo-modal4"

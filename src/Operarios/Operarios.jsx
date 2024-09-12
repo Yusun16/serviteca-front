@@ -35,7 +35,10 @@ function Operarios() {
                 </ol>
             </nav>
             <div>
-                <h1 className='h1004'>Agregar operarios</h1>
+                <div className='column005'>
+                    <h6 className='text009 pos-text'>Agregar operarios</h6>
+                    <ul className="icons001 icons009"></ul>
+                </div>
                 <form className="container005 container005-width">
                     <div className='column001'>
                         <div className='div-col002'>

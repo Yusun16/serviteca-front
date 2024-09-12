@@ -15,7 +15,11 @@ function IniOperarios() {
                         <li className="breadcrumb-item active breadcrumb003" aria-current="page">Operarios</li>
                     </ol>
                 </nav>
-                <h1 className='h1004'>Operarios</h1>
+                <div className='column005'>
+                    <h6 className='text009 pos-text'>Operarios</h6>
+                    <ul className="icons001 icons009">
+                    </ul>
+                </div>
                 <div className='container004'>
                     <div className='column002'>
                         <Link className='btn004' to="/agregar-operarios">
