@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import ModalEliminar from './modalEliminar';
 
 export default function BuscarServicio() {
     const urlBase = "http://localhost:8080/serviteca/servicios";
@@ -144,9 +145,9 @@ export default function BuscarServicio() {
                             <tr>
                                 <th className='text-letras colorthead' scope="col">Codigo Servicio</th>
                                 <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
+                                <th className='text-letras colorthead' scope="col">Porcentaje</th>
                                 <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
-                                <th className='text-letras colorthead' scope="col">Año</th>
-                                <th className='text-letras colorthead' scope="col">Porcentaje del Operario</th>
+
                                 <th className='text-letras colorthead'>Editar</th>
                                 <th className='text-letras colorthead'>Borrar</th>
                             </tr>
@@ -158,6 +159,15 @@ export default function BuscarServicio() {
                                     <td>{servicio.descripcion}</td>
                                     <td>
                                         <NumericFormat
+                                            value={servicio.porcentajeOperario}
+                                            displayType={'text'}
+                                            thousandSeparator=","
+                                            decimalScale={2}
+                                            renderText={(value) => `${value}%`}
+                                        />
+                                    </td>
+                                    <td>
+                                        <NumericFormat
                                             value={servicio.valorServicio}
                                             displayType={'text'}
                                             thousandSeparator=","
@@ -165,25 +175,17 @@ export default function BuscarServicio() {
                                             decimalScale={2}
                                         />
                                     </td>
-                                    <td>{servicio.ano}</td>
-                                    <td>
-                                        <NumericFormat
-                                            value={servicio.porcentajeOperario}
-                                            displayType={'text'}
-                                            thousandSeparator=","
-                                            prefix='%'
-                                            decimalScale={2}
-                                        />
-                                    </td>
+
                                     <td className='text-center'>
                                         <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                         </Link>
                                     </td>
                                     <td>
-                                        <button onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
+                                        <button data-bs-toggle="modal" data-bs-target="#modaleliminar" onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
+                                        <ModalEliminar />
                                     </td>
                                 </tr>
                             ))}

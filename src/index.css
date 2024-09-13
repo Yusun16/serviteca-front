@@ -13,6 +13,33 @@ code {
     monospace;
 }
 
+
+
+.btnn-close {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 88%;
+  
+}
+
+.btnn-close::before {
+  content: "✖";
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.btnn-close:hover {
+  background-color: darkred;
+}
+
 .colonav {
   background-color: #D95447;
 }

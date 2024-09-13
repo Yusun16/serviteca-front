@@ -17,6 +17,7 @@ import ListadoVehiculo  from "./Registrar/listadoVehiculo";
 import AgregarVehiculo  from "./Registrar/agregarVehiculo";
 import BuscarVehiculo  from "./Registrar/buscarVehiculo";
 import EjecucionServicio from "./Orden Servicio/ejecucionServicio";
+import EditarCliente from "./Registrar/EditarCliente";
 
 
 
@@ -43,6 +44,7 @@ function App() {
       <Route exact path="/agregarvehiculo" element={<AgregarVehiculo/>}/>
       <Route exact path="/buscarvehiculo" element={<BuscarVehiculo/>}/>
       <Route exact path="/ejecucionservicio" element={<EjecucionServicio/>}/>
+      <Route exact path="/editarCliente/:id" element={<EditarCliente/>}/>
 
 
     </Routes>
