@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import imglist from "../img/imglist.png";
+import "../ListaChequeo/ListaChequeo.css"
 
 
 const CheckListComponent = () => {
@@ -60,7 +62,7 @@ const CheckListComponent = () => {
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/agregarorden"><i className="fa-solid fa-house"></i> Home</a>
+                                <a href="/agregarorden"><i className="fa-solid fa-house"></i> Inicio</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                             <li className="breadcrumb-item active" aria-current="page">Lista de Chequeo</li>
@@ -68,28 +70,45 @@ const CheckListComponent = () => {
                     </nav>
                 </div>
                 <div className='d-flex flex-row-reverse'>
-                    <button type="button" className="btn btn-light" data-bs-toggle="modal" data-bs-target="#inventario">
+                    <button type="button" className="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#inventario">
                         <i className="fa-solid fa-list"></i> Inventario
                     </button>
-                    <button type="button" className="btn btn-light" data-bs-toggle="modal" data-bs-target="#historia">
+                    <button type="button" className="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#historia">
                         <i className="fa-solid fa-clock-rotate-left"></i> Historial
                     </button>
                 </div>
 
                 {/* modal inventario */}
                 <div className="modal fade" id="inventario" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-xl">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Inventario</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                ...
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
+                                <div className='container'>
+                                    <table className="container">
+                                        <thead>
+                                            <tr className='tr001'>
+                                                <th className='colorthead' scope="col">Descripción</th>
+                                                <th className='colorthead' scope="col">Chequeo</th>
+                                                <th className='colorthead' scope="col">Observación</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr className='tr001'>
+                                                <td>parlantes</td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                    </div>
+                                                </td>
+                                                <td>6 parlantes</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -97,46 +116,47 @@ const CheckListComponent = () => {
 
                 {/* modal historia */}
                 <div className="modal fade" id="historia" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div className="modal-dialog">
+                    <div className="modal-dialog modal-xl">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de serivicio para abrir la ejecución</h1>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="table">
+                                <table className="container">
                                     <thead>
-                                        <tr>
-                                            <th scope="col">#</th>
-                                            <th scope="col">First</th>
-                                            <th scope="col">Last</th>
-                                            <th scope="col">Handle</th>
+                                        <tr className='tr001'>
+                                            <th className='colorthead' scope="col">Fecha de Servicio</th>
+                                            <th className='colorthead' scope="col">N° Kilometros</th>
+                                            <th className='colorthead' scope="col">N° de Servicio</th>
+                                            <th className='colorthead' scope="col">Nombre operario</th>
+                                            <th className='colorthead' scope="col">N° Factura</th>
+                                            <th className='colorthead' scope="col">Observacion</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">1</th>
                                             <td>Mark</td>
                                             <td>Otto</td>
                                             <td>@mdo</td>
+                                            <td>16</td>
+                                            <td>No se observa nada</td>
+
                                         </tr>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">2</th>
                                             <td>Jacob</td>
                                             <td>Thornton</td>
                                             <td>@fat</td>
                                         </tr>
-                                        <tr>
+                                        <tr className='tr001'>
                                             <th scope="row">3</th>
                                             <td colSpan="2">Larry the Bird</td>
                                             <td>@twitter</td>
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="button" className="btn btn-primary">Save changes</button>
                             </div>
                         </div>
                     </div>
@@ -148,16 +168,18 @@ const CheckListComponent = () => {
             <form onSubmit={handleSubmit}>
                 <div className="row mt-4">
                     {/* Foto Lateral Derecho */}
-                    <div className="col-md-6 d-flex align-items-center">
-                        <label className="w-50" htmlFor="fotoDerecha">Foto Lateral Derecho</label>
+                    <div className="col-md-6 d-flex align-items-center listcehk">
+                        <label className="w-50" htmlFor="fotoDerecha">Foto Lateral Derecho: *</label>
                         <div className="w-50">
                             <div className="card" style={{ width: '100%', height: '180px' }}>
                                 {images.fotoDerecha ? (
                                     <img src={images.fotoDerecha} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoDerecha" className="card-body text-center">
-                                        <i className="fa-solid fa-upload fa-2x"></i>
-                                        <p>Subir Foto Lateral Derecho</p>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
                                     </label>
                                 )}
                                 <input
@@ -165,6 +187,7 @@ const CheckListComponent = () => {
                                     className="form-control-file d-none"
                                     id="fotoDerecha"
                                     accept="image/*"
+                                    required
                                     onChange={(event) => handleImageChange(event, 'fotoDerecha')}
                                 />
                             </div>
@@ -174,6 +197,7 @@ const CheckListComponent = () => {
                                     className="form-control"
                                     id="observacionDerecha"
                                     placeholder="Observación: *"
+                                    required
                                     value={observaciones.observacionDerecha}
                                     onChange={handleObservationChange}
                                 />
@@ -182,7 +206,7 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Frontal */}
-                    <div className="col-md-6 d-flex align-items-center">
+                    <div className="col-md-6 d-flex align-items-center listcehk">
                         <label className="w-50" htmlFor="fotoFrontal">Foto Frontal</label>
                         <div className="w-50">
                             <div className="card" style={{ width: '100%', height: '180px' }}>
@@ -190,8 +214,10 @@ const CheckListComponent = () => {
                                     <img src={images.fotoFrontal} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoFrontal" className="card-body text-center">
-                                        <i className="fa-solid fa-upload fa-2x"></i>
-                                        <p>Subir Foto Frontal</p>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
                                     </label>
                                 )}
                                 <input
@@ -199,6 +225,7 @@ const CheckListComponent = () => {
                                     className="form-control-file d-none"
                                     id="fotoFrontal"
                                     accept="image/*"
+                                    required
                                     onChange={(event) => handleImageChange(event, 'fotoFrontal')}
                                 />
                             </div>
@@ -208,6 +235,7 @@ const CheckListComponent = () => {
                                     className="form-control"
                                     id="observacionFrontal"
                                     placeholder="Observación: *"
+                                    required
                                     value={observaciones.observacionFrontal}
                                     onChange={handleObservationChange}
                                 />
@@ -216,7 +244,7 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Lateral Izquierda */}
-                    <div className="col-md-6 d-flex align-items-center">
+                    <div className="col-md-6 d-flex align-items-center listcehk">
                         <label className="w-50" htmlFor="fotoIzquierda">Foto Lateral Izquierda</label>
                         <div className="w-50">
                             <div className="card" style={{ width: '100%', height: '180px' }}>
@@ -224,15 +252,17 @@ const CheckListComponent = () => {
                                     <img src={images.fotoIzquierda} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoIzquierda" className="card-body text-center">
-                                        <i className="fa-solid fa-upload fa-2x"></i>
-                                        <p>Subir Foto Lateral Izquierda</p>
-                                    </label>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>                                   </label>
                                 )}
                                 <input
                                     type="file"
                                     className="form-control-file d-none"
                                     id="fotoIzquierda"
                                     accept="image/*"
+                                    required
                                     onChange={(event) => handleImageChange(event, 'fotoIzquierda')}
                                 />
                             </div>
@@ -242,6 +272,7 @@ const CheckListComponent = () => {
                                     className="form-control"
                                     id="observacionIzquierda"
                                     placeholder="Observación: *"
+                                    required
                                     value={observaciones.observacionIzquierda}
                                     onChange={handleObservationChange}
                                 />
@@ -250,7 +281,7 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Posterior */}
-                    <div className="col-md-6 d-flex align-items-center">
+                    <div className="col-md-6 d-flex align-items-center listcehk">
                         <label className="w-50" htmlFor="fotoPosterior">Foto Posterior</label>
                         <div className="w-50">
                             <div className="card" style={{ width: '100%', height: '180px' }}>
@@ -258,8 +289,10 @@ const CheckListComponent = () => {
                                     <img src={images.fotoPosterior} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoPosterior" className="card-body text-center">
-                                        <i className="fa-solid fa-upload fa-2x"></i>
-                                        <p>Subir Foto Posterior</p>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
                                     </label>
                                 )}
                                 <input
@@ -267,6 +300,7 @@ const CheckListComponent = () => {
                                     className="form-control-file d-none"
                                     id="fotoPosterior"
                                     accept="image/*"
+                                    required
                                     onChange={(event) => handleImageChange(event, 'fotoPosterior')}
                                 />
                             </div>
@@ -276,56 +310,16 @@ const CheckListComponent = () => {
                                     className="form-control"
                                     id="observacionPosterior"
                                     placeholder="Observación: *"
+                                    required
                                     value={observaciones.observacionPosterior}
                                     onChange={handleObservationChange}
                                 />
-                            </div>
-
-                            {/* formuario  */}
-                            <div className="form-group mt-2">
-                                <label>Combustible</label>
-                                <div className="d-flex">
-                                <i className="fa-solid fa-gauge-simple-high" style={{color: "#ff5733"}}></i>
-                                    <div className="form-check">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            id="fuelE"
-                                            name="fuel"
-                                            checked={combustible === 'fuelE'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label" htmlFor="fuelE">  E </label>
-                                    </div>
-                                    <div className="form-check">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            id="fuelHalf"
-                                            name="fuel"
-                                            checked={combustible === 'fuelHalf'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label" htmlFor="fuelHalf"> 1/2 </label>
-                                    </div>
-                                    <div className="form-check">
-                                        <input
-                                            className="form-check-input"
-                                            type="radio"
-                                            id="fuelF"
-                                            name="fuel"
-                                            checked={combustible === 'fuelF'}
-                                            onChange={handleFuelChange}
-                                        />
-                                        <label className="form-check-label" htmlFor="fuelF"> F </label>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
 
                     {/* Indicador de Combustible */}
-                    <div className="col-md-6 d-flex align-items-center">
+                    <div className="col-md-6 d-flex align-items-center listcehk">
                         <label className="w-50" htmlFor="indicadorCombustible">Indicador de Combustible</label>
                         <div className="w-50">
                             <div className="card" style={{ width: '100%', height: '180px' }}>
@@ -333,8 +327,10 @@ const CheckListComponent = () => {
                                     <img src={images.indicadorCombustible} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="indicadorCombustible" className="card-body text-center">
-                                        <i className="fa-solid fa-upload fa-2x"></i>
-                                        <p>Subir Indicador de Combustible</p>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
                                     </label>
                                 )}
                                 <input
@@ -345,25 +341,78 @@ const CheckListComponent = () => {
                                     onChange={(event) => handleImageChange(event, 'indicadorCombustible')}
                                 />
                             </div>
-                            <div className="form-group mt-2">
-                                <label htmlFor="observacionCombustible">Observación: *</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="observacionCombustible"
-                                    placeholder="Observación: *"
-                                    value={observaciones.observacionCombustible}
-                                    onChange={handleObservationChange}
-                                />
-                            </div>
+                        </div>
+                    </div>
 
+                    {/* formuario  */}
+                    <div className='col-md-6 listcehk'>
+                        <div >
+                            <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
+                                <div className="form-group mt-2 d-flex flex-column">
+                                    <div className=" d-flex flex-row" style={{ gap: "25px" }}>
+                                        <i className="fa-solid fa-gauge-simple-high " style={{ color: "#ff5733", fontSize: "50px" }}></i>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelE"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelE'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelE">  E </label>
+                                        </div>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelHalf"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelHalf'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelHalf"> 1/2 </label>
+                                        </div>
+                                        <div className="form-check d-flex flex-column align-items-center p-0">
+                                            <input
+                                                className="form-check-input m-0 tamano-chek"
+                                                type="radio"
+                                                id="fuelF"
+                                                name="fuel"
+                                                required
+                                                checked={combustible === 'fuelF'}
+                                                onChange={handleFuelChange}
+                                            />
+                                            <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div className='col-md-12'>
+                            <div className='d-flex align-items-center flex-row'>
+                                <label className="w-50 " htmlFor="indicadorCombustible">Observacion</label>
+                                <div className="form-group mt-2 w-50">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="indicadorCombustible"
+                                        placeholder="Observación: *"
+                                        required
+                                        value={observaciones.observacionCombustible}
+                                        onChange={handleObservationChange}
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
                 {/* Botón de Enviar */}
                 <div className="text-center mt-4">
-                    <button type="submit" className="btn btn-success">Enviar <i class="fa-solid fa-check"></i></button>
+                    <button type="submit" className="btn btn-success">Enviar <i className="fa-solid fa-check"></i></button>
                 </div>
             </form>
         </div>
