@@ -72,6 +72,10 @@ body {
   color: white !important;
 }
 
+.tr-table-tr:nth-child(even) {
+  background-color: #9DD3F4 !important;
+}
+
 .pag-num{
   display: flex;
   gap: 20px;
