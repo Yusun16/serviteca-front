@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import imglist from "../img/imglist.png";
 import "../ListaChequeo/ListaChequeo.css"
+import LogoGasolina from "../img/LogoGasolina.svg";
+import axios from 'axios';
 
 
 const CheckListComponent = () => {
+
     const [images, setImages] = useState({
         fotoDerecha: null,
         fotoIzquierda: null,
@@ -69,11 +72,11 @@ const CheckListComponent = () => {
                         </ol>
                     </nav>
                 </div>
-                <div className='d-flex flex-row-reverse'>
-                    <button type="button" className="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#inventario">
+                <div className='d-flex flex-row-reverse  gap-0 column-gap-3'>
+                    <button type="button" className="btn text-primary" data-bs-toggle="modal" data-bs-target="#inventario">
                         <i className="fa-solid fa-list"></i> Inventario
                     </button>
-                    <button type="button" className="btn btn-light text-primary" data-bs-toggle="modal" data-bs-target="#historia">
+                    <button type="button" className="btn text-primary" data-bs-toggle="modal" data-bs-target="#historia">
                         <i className="fa-solid fa-clock-rotate-left"></i> Historial
                     </button>
                 </div>
@@ -84,7 +87,7 @@ const CheckListComponent = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h1 className="modal-title fs-5" id="exampleModalLabel">Inventario</h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 <div className='container'>
@@ -120,7 +123,7 @@ const CheckListComponent = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de serivicio para abrir la ejecución</h1>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 <table className="container">
@@ -350,7 +353,7 @@ const CheckListComponent = () => {
                             <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
                                 <div className="form-group mt-2 d-flex flex-column">
                                     <div className=" d-flex flex-row" style={{ gap: "25px" }}>
-                                        <i className="fa-solid fa-gauge-simple-high " style={{ color: "#ff5733", fontSize: "50px" }}></i>
+                                        <img src={LogoGasolina} style={{ color: "#ff5733", fontSize: "50px" }}/>
                                         <div className="form-check d-flex flex-column align-items-center p-0">
                                             <input
                                                 className="form-check-input m-0 tamano-chek"

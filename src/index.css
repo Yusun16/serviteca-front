@@ -1332,6 +1332,31 @@ tr:nth-child(even) {
   width: 160px;
 } */
 
+.btnn-close {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 93%;
+}
+
+.btnn-close::before {
+  content: "✖";
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.btnn-close:hover {
+  background-color: darkred;
+}
+
+
 .container-grafica {
   display: flex;
   flex-direction: column;
