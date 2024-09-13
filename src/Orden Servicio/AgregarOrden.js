@@ -14,22 +14,19 @@ export default function AgregarServicio() {
         fecha: ""
     });
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // Controla si se puede editar el formulario
 
     const { codigo, cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
 
-    useEffect(() => {
-        const obtenerCodigo = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/serviteca/generarcodigo');
-                setOrden(prevOrden => ({ ...prevOrden, codigo: response.data }));
-            } catch (error) {
-                console.error("Error al obtener el código", error);
-            }
-        };
-
-        obtenerCodigo();
-    }, []);
+    // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
+    const obtenerCodigo = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/generarcodigo');
+            setOrden(prevOrden => ({ ...prevOrden, codigo: response.data }));
+        } catch (error) {
+            console.error("Error al obtener el código", error);
+        }
+    };
 
     const onInputChange = (e) => {
         setOrden({ ...orden, [e.target.name]: e.target.value });
@@ -52,7 +49,8 @@ export default function AgregarServicio() {
     };
 
     const handleAgregarOrden = () => {
-        setIsEditing(true);
+        obtenerCodigo(); // Llama la función para obtener el código cuando el usuario presiona el botón
+        setIsEditing(true); // Habilita la edición del formulario
     };
 
     return (
@@ -64,13 +62,17 @@ export default function AgregarServicio() {
                 </ol>
             </nav>
 
-            <div className='text-center ' style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "4px" }} >
+            <div className='text-center' style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "4px" }} >
                 <div className='row mb-4'>
                     <div className='col'>
-                        <button type="button" className="btn btn-primary"  style={{width:"386px" , height:"60px"}} onClick={handleAgregarOrden}>Agregar Nueva Orden de Servicio</button>
+                        <button type="button" className="btn btn-primary" style={{width:"386px", height:"60px"}} onClick={handleAgregarOrden}>
+                            Agregar Nueva Orden de Servicio
+                        </button>
                     </div>
                     <div className='col'>
-                        <Link type="button" className="btn btn-primary"  style={{width:"386px" , height:"60px", display:"flex", alignItems:"center", justifyContent:"space-around" }} to="/buscarorden">Buscar Orden de Servicio</Link>
+                        <Link type="button" className="btn btn-primary" style={{width:"386px", height:"60px", display:"flex", alignItems:"center", justifyContent:"space-around" }} to="/buscarorden">
+                            Buscar Orden de Servicio
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -78,7 +80,7 @@ export default function AgregarServicio() {
             <h6 className='mb-3' style={{ textAlign: 'left' }}>Nueva Orden de Servicio</h6>
 
             <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "40px" }}>
-
+                
                 <div className="mb-3 row">
                     <label htmlFor="codigo" className="col-sm-3 col-form-label">Código:*</label>
                     <div className="col-sm-6">
@@ -87,13 +89,13 @@ export default function AgregarServicio() {
                             className="form-control"
                             id="codigo"
                             name='codigo'
-                            required
-                            value={codigo}
+                            value={codigo} // El código será asignado aquí tras pulsar "Agregar Nueva Orden"
                             onChange={onInputChange}
                             disabled
                         />
                     </div>
                 </div>
+
                 <div className="mb-3 row">
                     <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
                     <div className="col-sm-6">
@@ -189,12 +191,8 @@ export default function AgregarServicio() {
             </form>
 
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalLabel">Cambio de Aceite</h5>
-                            <button type="submit" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
                         <div className="modal-body">
                             <label htmlFor="tipoAceite" className="form-label">Tipo de Aceite:</label>
                             <select className="form-select" id="tipoAceite">
@@ -211,7 +209,7 @@ export default function AgregarServicio() {
                                 />
                             </div>
                         </div>
-                        <div className="modal-footer modal-display">
+                        <div className="modal-footer modal-display justify-content-center">
                             <button type="button" className="btn btn-success" data-bs-dismiss="modal"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                         </div>
                     </div>

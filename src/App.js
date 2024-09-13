@@ -17,6 +17,7 @@ import ListadoVehiculo from "./Registrar/listadoVehiculo";
 import AgregarVehiculo from "./Registrar/agregarVehiculo";
 import BuscarVehiculo from "./Registrar/buscarVehiculo";
 import EjecucionServicio from "./Orden Servicio/ejecucionServicio";
+<<<<<<< HEAD
 import IniAutPar from "./autopartes/IniAutPar";
 import AutoPartes from "./autopartes/AutoPartes";
 import BuscarAutPar from "./autopartes/BuscarAutPar";
@@ -28,11 +29,16 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
+=======
+import EditarCliente from "./Registrar/EditarCliente";
+
+>>>>>>> 0ab4325bbdaad23d809776525292bb3585e028d8
 
 
 function App() {
   return (
     <BrowserRouter>
+<<<<<<< HEAD
       <Navegacion />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
@@ -67,6 +73,29 @@ function App() {
         <Route path="/informe-servicios" element={<InfoServicios />} />
 
         {/* Rutas fin de Jefer */}
+=======
+        <Navegacion/> 
+    <Routes>
+    <Route exact path="/inicio" element={<VistaPrincipal/> }/>
+      <Route exact path="/login" element={<JefeTaller/>}/>
+      <Route exact path="/agregarservicio" element={<AgregarServicio/>}/>
+      <Route exact path="/buscarservicio/" element={<BuscarServicio/>}/>
+      <Route exact path="/" element={<ListadoServicios/>}/>
+      <Route exact path="/editar/:id" element={<EditarServicio/>}/>
+      <Route exact path="/ordenservicio/" element={<ListadoOrden/>}/>
+      <Route exact path="/agregarorden/" element={<AgregarOrden/>}/>
+      <Route exact path="/buscarorden/" element={<BuscarOrden/>}/>
+      <Route exact path="/jefetaller/" element={<JefeTaller/>}/>
+      <Route exact path="/listachequeo/" element={<ListaChequeo/>}/>
+      <Route exact path="/listadocliente/" element={<ListadoCliente/>}/>
+      <Route exact path="/agregarCliente/" element={<AgregarCliente/>}/>
+      <Route exact path="/buscarCliente/" element={<BuscarCliente/>}/>
+      <Route exact path="/listadovehiculo" element={<ListadoVehiculo/>}/>
+      <Route exact path="/agregarvehiculo" element={<AgregarVehiculo/>}/>
+      <Route exact path="/buscarvehiculo" element={<BuscarVehiculo/>}/>
+      <Route exact path="/ejecucionservicio" element={<EjecucionServicio/>}/>
+      <Route exact path="/editarCliente/:id" element={<EditarCliente/>}/>
+>>>>>>> 0ab4325bbdaad23d809776525292bb3585e028d8
 
 
       </Routes>

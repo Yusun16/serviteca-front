@@ -31,14 +31,14 @@ export default function ListadoOrden() {
         </div>
 
         <table class="table table-striped table-hover align-middel">
-            <thead className='table-dark'>
+            <thead className='table'>
                 <tr>
-                <th scope="col">Codigo</th>
-                <th scope="col">Cliente</th>
-                <th scope="col">Tipo de servicio</th>
-                <th scope="col">Placa del vehiculo</th>
-                <th scope="col">Kilometraje del Vehiculo</th>
-                <th scope="col">Fecha</th>
+                <th scope="col colorthead">Codigo</th>
+                <th scope="col colorthead">Cliente</th>
+                <th scope="col colorthead">Tipo de servicio</th>
+                <th scope="col colorthead">Placa del vehiculo</th>
+                <th scope="col colorthead">Kilometraje del Vehiculo</th>
+                <th scope="col colorthead">Fecha</th>
 
 
 

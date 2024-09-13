@@ -8,6 +8,33 @@ body {
   background-color: #F0F0F0;
 }
 
+
+
+.btnn-close {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 88%;
+  
+}
+
+.btnn-close::before {
+  content: "✖";
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.btnn-close:hover {
+  background-color: darkred;
+}
+
 .colonav {
   background-color: #D95447;
 }
@@ -39,6 +66,30 @@ body {
   font-size: 25px;
 }
 
+.th-tabla{
+  background-color: #002060 !important;
+  color: white !important;
+}
+
+.tr-table-tr:nth-child(even) {
+  background-color: #9DD3F4 !important;
+}
+
+.pag-num{
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Del componente listachequeo */
+.tamano-chek {
+  font-size: 30px;
+}
+
+.listcehk{
+  margin-bottom: 50px !important;
+}
+
 /* Del componente AutoPartes */
 /* .container005 {
   display: grid;
@@ -65,10 +116,7 @@ body {
   justify-content: center!important;
 }
 
-.th-tabla{
-  background-color: #002060 !important;
-  color: white !important;
-}
+
 
 tr:nth-child(even) {
   background-color: #9DD3F4 !important;
@@ -78,11 +126,7 @@ tr:nth-child(even) {
   background-color: #9DD3F4 !important;
 }
 
-.pag-num{
-  display: flex;
-  gap: 20px;
-  align-items: center;
-} */
+ */
 
 /* Del componente AutoPartes */
 /* .barra001 {
@@ -1335,6 +1379,31 @@ tr:nth-child(even) {
   height: 37px;
   width: 160px;
 } */
+
+.btnn-close {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 93%;
+}
+
+.btnn-close::before {
+  content: "✖";
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.btnn-close:hover {
+  background-color: darkred;
+}
+
 
 .container-grafica {
   display: flex;

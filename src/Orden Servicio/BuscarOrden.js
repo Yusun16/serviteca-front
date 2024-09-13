@@ -111,32 +111,34 @@ export default function BuscarOrden() {
 
             {/* Tabla con resultados */}
             {ordenes.length > 0 && (
-                <div className='container' style={{ margin: "30px" }}>
+                <div className='container' style={{ margin: "30px 0px" }}>
                     <h5>Seleccione el N° de servicio para abrir la ejecución</h5>
-                    <table className="table table-striped table-hover align-middle">
-                        <thead>
-                            <tr>
-                                <th className='th-tabla' scope="col">Orden de servicio</th>
-                                <th className='th-tabla' scope="col">Cliente</th>
-                                <th className='th-tabla' scope="col">Tipo de servicio</th>
-                                <th className='th-tabla' scope="col">Placa del vehículo</th>
-                                <th className='th-tabla' scope="col">Kilometraje del Vehículo</th>
-                                <th className='th-tabla' scope="col">Fecha de Servicio</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {currentItems.map((orden, indice) => (
-                                <tr key={indice}>
-                                    <th>{orden.codigo}</th>
-                                    <td>{orden.cliente}</td>
-                                    <td>{orden.tipoServicio}</td>
-                                    <td>{orden.placaVehiculo}</td>
-                                    <td>{orden.kilometraje}</td>
-                                    <td>{orden.fecha}</td>
+                    <div className="container" style={{}}>
+                        <table className="container">
+                            <thead>
+                                <tr className='tr001'>
+                                    <th className='th-tabla colorthead' scope="col">Orden de servicio</th>
+                                    <th className='th-tabla colorthead' scope="col">Cliente</th>
+                                    <th className='th-tabla colorthead' scope="col">Tipo de servicio</th>
+                                    <th className='th-tabla colorthead' scope="col">Placa del vehículo</th>
+                                    <th className='th-tabla colorthead' scope="col">Kilometraje del Vehículo</th>
+                                    <th className='th-tabla colorthead' scope="col">Fecha de Servicio</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {currentItems.map((orden, indice) => (
+                                    <tr className='tr001' key={indice}>
+                                        <th>{orden.codigo}</th>
+                                        <td>{orden.cliente}</td>
+                                        <td>{orden.tipoServicio}</td>
+                                        <td>{orden.placaVehiculo}</td>
+                                        <td>{orden.kilometraje}</td>
+                                        <td>{orden.fecha}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
                     <div class="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
