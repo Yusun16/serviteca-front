@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ModalExito from './ModalExito';
-// import ModalEdit from './ModalEdit';
 import { Link } from 'react-router-dom';
+import CheckReady from '../img/check-ready.png'
 
 function TableAutoPartes() {
     const urlBase = "http://localhost:8080/serviteca/autopartes";
@@ -44,7 +44,7 @@ function TableAutoPartes() {
             <table className='table001'>
                 <thead>
                     <tr className='tr001'>
-                        <th className='th001'>Codigo Auto-Partes</th>
+                        <th className='th001'>Codigo</th>
                         <th className='th001'>Descripcion</th>
                         <th className='th001'>Tipo</th>
                         <th className='th001'>Editar</th>
@@ -67,7 +67,7 @@ function TableAutoPartes() {
                                 </Link> */}
                             </td>
                             <td className='td001'>
-                                <a href="#demo-modal2" onClick={() => eliminarAutoPartes(autopar.idAupartes)} className="btn-modal">
+                                <a href="#demo-modal22" onClick={() => eliminarAutoPartes(autopar.idAupartes)} className="btn-modal">
                                     <i className="fa-solid fa-trash-can"></i>
                                 </a>
                             </td>
@@ -100,13 +100,12 @@ function TableAutoPartes() {
                 nameText="Ha sido editado con éxito"
             /> */}
             <ModalExito
-                idmodal="demo-modal2"
-                titlemodal="Eliminar"
+                idmodal="demo-modal22"
                 parexito="Registro eliminado"
                 className="modal003"
-                rutaDir="/auto-partes"
+                buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
             />
-            <ModalExito
+            {/* <ModalExito
                 idmodal="demo-modal4"
                 titlemodal="Editado"
                 parexito="Registro editado con exito"
@@ -117,7 +116,7 @@ function TableAutoPartes() {
                 titlemodal="Eliminado"
                 parexito="Registro eliminado con exito"
                 className="modal003"
-            />
+            /> */}
         </div>
     )
 }

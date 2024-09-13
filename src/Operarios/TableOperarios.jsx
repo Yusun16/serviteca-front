@@ -1,41 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import ModalEditOpe from './ModalEditOpe';
+import axios from 'axios';
 import ModalExito from '../autopartes/ModalExito';
-
+import { Link } from 'react-router-dom';
+import CheckReady from '../img/check-ready.png'
 // import ModalExito from './ModalExito';
 
 function TableOperarios() {
+    const urlBase = "http://localhost:8080/serviteca/operarios";
+
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
-    const [data, setData] = useState([]);
+    const [operarios, setOperarios] = useState([]);
+
+    const cargarOperarios = async () => {
+        const resultado = await axios.get(urlBase);
+        setOperarios(resultado.data);
+    };
+
+    const eliminarOperarios = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
+        cargarOperarios();
+    };
+
+    useEffect(() => {
+        cargarOperarios();
+    }, []);
+
 
     // Total de filas
-    const totalRows = data.length;
+    const totalRows = operarios.length;
     const totalPages = Math.ceil(totalRows / itemsPerPage);
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
-
-    useEffect(() => {
-        setData([
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3' },
-        ]);
-    }, []);
 
     return (
         <div>
@@ -56,17 +53,21 @@ function TableOperarios() {
                     </tr>
                 </thead>
                 <tbody>
-                    {data.slice(startIndex, endIndex).map((item, index) => (
-                        <tr className='tr001'>
-                            <td className='td001'>{item.col1}</td>
-                            <td className='td001'>{item.col2}</td>
-                            <td className='td001'>{item.col3}</td>
-                            <td className='td001'><a href="#demo-modal11" className="btn-modal" >
-                                <i className="fa-solid fa-calendar"></i>
-                            </a></td>
-                            <td className='td001'><a href="#demo-modal13" className="btn-modal">
-                                <i className="fa-solid fa-trash-can"></i>
-                            </a></td>
+                    {operarios.slice(startIndex, endIndex).map((operar, indice) => (
+                        <tr key={indice} className='tr001'>
+                            <td className='td001'>{operar.cedula}</td>
+                            <td className='td001'>{operar.nombre}</td>
+                            <td className='td001'>{operar.telefono}</td>
+                            <td className='td001'>
+                                <Link to={`/editar-operarios/${operar.id}`} className="btn-modal" id='demo-modal11'>
+                                    <i className="fa-solid fa-calendar"></i>
+                                </Link>
+                            </td>
+                            <td className='td001'>
+                                <a href="#demo-modal13" onClick={() => eliminarOperarios(operar.id)} className="btn-modal">
+                                    <i className="fa-solid fa-trash-can"></i>
+                                </a>
+                            </td>
                         </tr>
                     ))}
                     <tr className='tr001'>
@@ -80,7 +81,7 @@ function TableOperarios() {
             </table>
             <div className="linea001"></div>
             <div className='container007'>
-                <div className="column001">
+                <div className="column010">
                     <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
                 </div>
                 <div className="column001">
@@ -92,7 +93,6 @@ function TableOperarios() {
                 </div>
             </div>
             {/*  */}
-            <ModalEditOpe />
             <ModalExito
                 idmodal="demo-modal12"
                 titlemodal="Editado"
@@ -102,9 +102,9 @@ function TableOperarios() {
             {
                 <ModalExito
                     idmodal="demo-modal13"
-                    titlemodal="Eliminar"
                     parexito="Registro eliminado"
-                    className="modal003"
+                    className="modal003 modal003-z-index"
+                    buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
                 />
             /*<ModalExito
                 idmodal="demo-modal2"

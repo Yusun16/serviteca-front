@@ -1,15 +1,99 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Label from '../autopartes/Label'
 import Input from '../autopartes/Input'
+import { useNavigate, useParams } from 'react-router-dom';
+import ModalExito from '../autopartes/ModalExito'
 
 function ModalEditOpe() {
+
+    const urlBase = "http://localhost:8080/serviteca/operarios";
+
+    const navigate = useNavigate();
+
+    const goBack = () => {
+        navigate(-1);
+    };
+
+    const [operarios, setOperarios] = useState({
+        cedula: '',
+        nombre: '',
+        apellido: '',
+        correo: '',
+        direccion: '',
+        telefono: '',
+    });
+    const { id } = useParams();
+    const [error, setError] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const cargarOperarios = async () => {
+        const resultado = await axios.get(`${urlBase}/${id}`);
+        setOperarios(resultado.data);
+    };
+
+    useEffect(() => {
+        cargarOperarios();
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setOperarios({
+            ...operarios,
+            [name]: value,
+        });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        await axios.post(urlBase, operarios)
+        // navegacion("/auto-partes")
+
+        const requiredFields = [
+            'cedula',
+            'nombre',
+            'apellido',
+            'correo',
+            'direccion',
+            'telefono',
+            'acudiente',
+            'telefonoAcudiente',
+        ];
+
+        const allFieldsFilled = requiredFields.every(field => operarios[field].trim() !== '');
+
+        if (allFieldsFilled) {
+            setError('');
+            setIsModalOpen(true);
+        } else {
+            setError('Por favor, completa todos los campos obligatorios.');
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div>
-            <div id="demo-modal11" className="modal001">
-                <div className="modal__content">
-                    <h1>Editar Operario</h1>
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Operarios</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Editar</li>
+                </ol>
+            </nav>
+            <div id="demo-modal11" className="modal__message004">
+                <div className="modal__content modal__shadow">
+                    <div className='modal__title'>
+                        <h1>Editar Operario</h1>
+                        <div className="linea002"></div>
+                    </div>
                     <div>
-                        <form>
+                        <form onSubmit={(e) => handleSubmit(e)}>
                             <div className="container005">
                                 <div className='column001'>
                                     <div className='div-col001'>
@@ -22,12 +106,11 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="cedula"
-                                            name="input1"
-                                            placeholder="Referencia"
-                                            onChange={(e) => console.log(e.target.value)}
-                                        // value={inputs.input1}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input1}
+                                            name="cedula"
+                                            placeholder="N° Cedula"
+                                            value={operarios.cedula}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
@@ -36,10 +119,10 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="nombre"
-                                            name="input2"
-                                        // value={inputs.input2}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input2}
+                                            name="nombre"
+                                            value={operarios.nombre}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
@@ -48,10 +131,10 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="apellido"
-                                            name="input2"
-                                        // value={inputs.input2}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input2}
+                                            name="apellido"
+                                            value={operarios.apellido}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
@@ -60,10 +143,10 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="correo"
-                                            name="input2"
-                                        // value={inputs.input2}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input2}
+                                            name="correo"
+                                            value={operarios.correo}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -74,10 +157,10 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="direccion"
-                                            name="input2"
-                                        // value={inputs.input2}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input2}
+                                            name="direccion"
+                                            value={operarios.direccion}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
@@ -86,34 +169,34 @@ function ModalEditOpe() {
                                             className='input006'
                                             type="text"
                                             id="telefono"
-                                            name="input4"
-                                        // value={inputs.input4}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input4}
+                                            name="telefono"
+                                            value={operarios.telefono}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
-                                        <Label htmlFor="departamento" name="Departamento: *" ></Label>
+                                        <Label htmlFor="acudiente" name="Acudiente: *" ></Label>
                                         <Input
                                             className='input006'
                                             type="text"
-                                            id="departamento"
-                                            name="input5"
-                                        // value={inputs.input5}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input5}
+                                            id="acudiente"
+                                            name="acudiente"
+                                            value={operarios.acudiente}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                     <div className='div-col001'>
-                                        <Label htmlFor="ciudad" name="Ciudad: *" ></Label>
+                                        <Label htmlFor="telefonoAcudiente" name="Telefono acu.: *" ></Label>
                                         <Input
                                             className='input006'
                                             type="text"
-                                            id="ciudad"
-                                            name="input5"
-                                        // value={inputs.input5}
-                                        // onChange={handleInputChange}
-                                        // disabled={!isInputEnabled.input5}
+                                            id="telefonoAcudiente"
+                                            name="telefonoAcudiente"
+                                            value={operarios.telefonoAcudiente}
+                                            onChange={(e) => handleInputChange(e)}
+                                            required
                                         />
                                     </div>
                                 </div>
@@ -125,26 +208,56 @@ function ModalEditOpe() {
                                         <li className="">Guardar</li>
                                     </ul>
                                 </a> */}
-                                <a href="#demo-modal12" className='btn009' type="submit">
+                                {/* 10/09/2024 */}
+                                {/* <a href="#demo-modal12" className='btn009' type="submit">
                                     <ul className="icons005">
                                         <li className="icons004"><i className="fa-solid fa-floppy-disk"></i></li>
                                         <li className="">Guardar</li>
                                     </ul>
-                                </a>
-
+                                </a> 
                                 <button className='btn007' type="reset">
                                     <ul className="icons005">
                                         <li className="icons004"><i className="fa-regular fa-circle-xmark"></i></li>
                                         <li className="">Cancelar</li>
                                     </ul>
-                                </button>
-
+                                </button>*/}
+                                <div className='pos-btn009 div-btn009'>
+                                    <button className='btn009' type="submit">
+                                        <div className="sub-btn009">
+                                            <i className="fa-solid fa-floppy-disk"></i>
+                                            <span className="">Guardar</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div className='pos-btn007 div-btn007'>
+                                    <button type="button" onClick={goBack} className='btn007'>
+                                        <div className="sub-btn007">
+                                            <i className="fa-regular fa-circle-xmark"></i>
+                                            <span className="">Cancelar</span>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
-                    <a href="#" className="modal__close">&times;</a>
                 </div>
             </div>
+            {isModalOpen && (
+                <div>
+                    <ModalExito
+                        idmodal="demo-modal25"
+                        titlemodal="Editado"
+                        lineado="linea002"
+                        parexito="Registro editado con exito"
+                        className="modal__message003"
+                        rutaDir="/operarios"
+                        onClose={handleCloseModal}
+                        btnclassName="btn0010"
+                        buttonContent="OK"
+                    />
+                </div>
+            )}
+            {error && <div className="error-message">{error}</div>}
         </div>
     )
 }

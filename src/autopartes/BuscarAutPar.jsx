@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ModalExito from './ModalExito'
 import { Link } from 'react-router-dom';
+import CheckReady from '../img/check-ready.png'
 
 function BuscarAutPar() {
     const urlBase = "http://localhost:8080/serviteca/autopartes";
@@ -19,6 +20,11 @@ function BuscarAutPar() {
     const cargarAutoPartes = async () => {
         const resultado = await axios.get(urlBase);
         setAutopartes(resultado.data);
+    };
+
+    const eliminarAutoPartes = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
+        cargarAutoPartes();
     };
 
     useEffect(() => {
@@ -110,7 +116,6 @@ function BuscarAutPar() {
                                         className='input009'
                                         id="descripcion"
                                         name="descripcion"
-                                        required
                                         value={descripcion}
                                         onChange={(e) => setDescripcion(e.target.value)}
                                         type="text" />
@@ -147,7 +152,7 @@ function BuscarAutPar() {
                                 <table className='table001'>
                                     <thead>
                                         <tr className='tr001'>
-                                            <th className='th001'>Codigo Auto-Partes</th>
+                                            <th className='th001'>Codigo</th>
                                             <th className='th001'>Descripcion</th>
                                             <th className='th001'>Tipo</th>
                                             <th className='th001'>Editar</th>
@@ -169,9 +174,11 @@ function BuscarAutPar() {
                                                         <i className="fa-solid fa-calendar"></i>
                                                     </Link>
                                                 </td>
-                                                <td className='td001'><a href="#demo-modal9" className="btn-modal">
-                                                    <i className="fa-solid fa-trash-can"></i>
-                                                </a></td>
+                                                <td className='td001'>
+                                                    <a href="#demo-modal9" onClick={() => eliminarAutoPartes(autopar.idAupartes)} className="btn-modal">
+                                                        <i className="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                </td>
                                                 {/*  */}
 
                                             </tr>
@@ -187,7 +194,7 @@ function BuscarAutPar() {
                                 </table>
                                 <div className="linea001"></div>
                                 <div className='container007'>
-                                    <div className="column001">
+                                    <div className="column010">
                                         <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
                                     </div>
                                     <div className="column001">
@@ -334,17 +341,18 @@ function BuscarAutPar() {
                                 </div>
                             </div>
                         </div> */}
-                        <ModalExito
+                        {/* <ModalExito
                             idmodal="demo-modal8"
                             titlemodal="Editado"
                             parexito="Registro editado con exito"
                             className="modal003"
-                        />
+                        /> */}
                         <ModalExito
                             idmodal="demo-modal9"
-                            titlemodal="Eliminado"
-                            parexito="Registro eliminado con exito"
+                            parexito="Registro eliminado"
                             className="modal003"
+                            rutaDir="/auto-partes"
+                            buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
                         />
                     </div>
 

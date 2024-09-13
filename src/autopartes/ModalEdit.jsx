@@ -246,10 +246,13 @@ function ModalEdit() {
                     <ModalExito
                         idmodal="demo-modal15"
                         titlemodal="Editado"
+                        lineado="linea002"
                         parexito="Registro editado con exito"
                         className="modal__message003"
                         rutaDir="/auto-partes"
                         onClose={handleCloseModal}
+                        btnclassName="btn0010"
+                        buttonContent="OK"
                     />
                 </div>
             )}

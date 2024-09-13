@@ -27,6 +27,7 @@ import InfoServicios from "./Informes/InfoServicios";
 import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
+import ModalEditOpe from "./Operarios/ModalEditOpe";
 
 
 function App() {
@@ -56,11 +57,11 @@ function App() {
         <Route path="/auto-partes" element={<IniAutPar />} />
         <Route path="/agregar-auto-partes" element={<AutoPartes />} />
         <Route path="/buscar-auto-partes" element={<BuscarAutPar />} />
-        {/* <Route path="/editar-auto-partes" element={<ModalEdit />} /> */}
         <Route path="/editar-auto-partes/:id" element={<ModalEdit />} />
         <Route path="/operarios" element={<IniOperarios />} />
         <Route path="/agregar-operarios" element={<Operarios />} />
         <Route path="/buscar-operarios" element={<BuscarOperarios />} />
+        <Route path="/editar-operarios/:id" element={<ModalEditOpe />} />
         <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
         <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
         <Route path="/informe-servicios" element={<InfoServicios />} />

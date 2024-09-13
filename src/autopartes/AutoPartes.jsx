@@ -235,10 +235,13 @@ function AutoPartes() {
                 <ModalExito
                     idmodal="demo-modal3"
                     titlemodal="Guardado"
+                    lineado="linea002"
                     parexito="Registro guardado con éxito"
                     className="modal__message003"
                     onClose={handleCloseModal}
                     rutaDir="/agregar-auto-partes"
+                    btnclassName="btn0010"
+                    buttonContent="OK"
                 />
             )}
         </div>

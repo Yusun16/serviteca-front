@@ -24,7 +24,6 @@ body {
 
 .btncolor:hover {
   background-color: #F2B3B3;
-  ;
   color: white;
 }
 
@@ -222,6 +221,8 @@ tr:nth-child(even) {
 }
 
 .column001 .input005,
+.column001 .dropdown-toggle,
+.column001 .dropdown-toggle002,
 .column001 .btn005 {
   margin-bottom: 10px;
 }
@@ -336,18 +337,20 @@ tr:nth-child(even) {
 
 .dropdown-toggle {
   font-size: 16px;
-  /* padding: 10px 20px; */
+  padding: 0px 7px;
   height: 40px;
-  width: 272px;
+  width: 250px;
   cursor: pointer;
+  text-align: start;
 }
 
 .dropdown-toggle002 {
   font-size: 16px;
-  /* padding: 10px 20px; */
+  padding: 0px 20px;
   height: 40px;
-  width: 275px;
+  width: 252px;
   cursor: pointer;
+  text-align: start;
 }
 
 .dropdown-menu {
@@ -455,7 +458,7 @@ tr:nth-child(even) {
 
 .modal__title {
   position: relative;
-  bottom: 25px;
+  bottom: 15px;
   font-size: 15px;
   font-weight: 400;
 }
@@ -484,7 +487,11 @@ tr:nth-child(even) {
   font-size: 30px;
   width: 40px;
   height: 40px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .modal003 {
@@ -505,6 +512,10 @@ tr:nth-child(even) {
 .modal003:target {
   visibility: visible;
   opacity: 1;
+}
+
+.modal003-z-index {
+  z-index: 10;
 }
 
 .modal__message003 {
@@ -564,8 +575,7 @@ tr:nth-child(even) {
   line-height: 37px;
   font-weight: 300;
   text-align: center;
-  margin: 0px;
-  margin-bottom: 50px;
+  margin: 35px 0px;
 }
 
 
@@ -581,7 +591,7 @@ tr:nth-child(even) {
 .td001 {
   border: 1px solid #ddd;
   padding: 3px;
-  text-align: left;
+  text-align: center;
 }
 
 .th001 {
@@ -648,6 +658,7 @@ tr:nth-child(even) {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 }
 
 .btn0010 {
@@ -718,6 +729,11 @@ tr:nth-child(even) {
   width: 450px;
 }
 
+.img-ready {
+  width: 140px;
+  height: 145px;
+}
+
 /* Del componente BuscarAutPar */
 .container006 {
   display: grid;
@@ -747,8 +763,8 @@ tr:nth-child(even) {
 }
 
 .btn008 {
-  width: 50%;
-  padding: 15px;
+  width: 40%;
+  padding: 10px;
   color: white;
   background: #002060;
   font-size: 20px;
@@ -938,9 +954,9 @@ tr:nth-child(even) {
 
 .dropdown-toggle003 {
   font-size: 16px;
-  /* padding: 10px 20px; */
+  padding: 0px 5px;
   height: 40px;
-  width: 263px;
+  width: 240px;
   cursor: pointer;
 }
 
@@ -1107,7 +1123,8 @@ tr:nth-child(even) {
 
 /* Del componente Operarios */
 .container005-width {
-  height: 500px;
+  /* height: 500px; */
+  height: 400px;
 }
 
 .container008 {
@@ -1215,7 +1232,7 @@ tr:nth-child(even) {
 
 .foto-container {
   position: relative;
-  width: 260px;
+  width: 240px;
   height: 150px;
   border: 2px solid #ddd;
   border-radius: 5px;
@@ -1239,7 +1256,7 @@ tr:nth-child(even) {
 
 .foto-label {
   position: absolute;
-  width: 235px;
+  width: 215px;
   height: 140px;
   display: flex;
   align-items: flex-end;
