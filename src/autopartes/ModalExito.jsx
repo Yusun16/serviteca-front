@@ -8,7 +8,7 @@ function ModalExito(props) {
                 <div className="modal__content modal__shadow modal__height">
                     <div className='modal__title'>
                         <h1 className='modal__subtitle'>{props.titlemodal}</h1>
-                        <div className="linea002"></div>
+                        <div className={props.lineado}></div>
                     </div>
                     <form action="" method='' className="form009 form010">
                         <p className='modal__parraf'>{props.parexito}</p>
@@ -16,8 +16,8 @@ function ModalExito(props) {
                             {/* <button className='btn0010' onClick={props.onClose}>
                                 OK
                             </button> */}
-                            <Link to={props.rutaDir} className='btn0010' onClick={props.onClose}>
-                                OK
+                            <Link to={props.rutaDir} className={props.btnclassName} onClick={props.onClose}>
+                                {props.buttonContent}
                             </Link>
                         </div>
                     </form>

@@ -1,27 +1,92 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 import TableOperarios from './TableOperarios'
 import ModalExito from '../autopartes/ModalExito';
 import Foto001 from '../img/fotoup.jpeg';
 
 function Operarios() {
     const [isOn, setIsOn] = useState(false);
-
     const [image, setImage] = useState(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [formData, setFormData] = useState({
+        cedula: '',
+        nombre: '',
+        apellido: '',
+        correo: '',
+        telefono: '',
+        direccion: '',
+        acudiente: '',
+        telefonoAcudiente: '',
+        especialidad: '',
+    });
 
     const toggleSwitch = () => {
         setIsOn(prevState => !prevState);
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
+            setImage(file);
         }
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const data = new FormData();
+        Object.keys(formData).forEach(key => {
+            data.append(key, formData[key]);
+        });
+        if (image) {
+            data.append('file', image);
+        }
+        if (!formData.id) {
+            console.error('El campo id es obligatorio.');
+            return;
+        }
+        data.append('id', formData.id);
+
+        try {
+            const response = await axios.put('http://localhost:8080/serviteca/operarios/photo', data, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+            console.log('Respuesta del servidor:', response.data);
+            // Aquí puedes manejar la respuesta del servidor como quieras
+        } catch (error) {
+            if (error.response) {
+                console.error('Error en la respuesta del servidor:', error.response.data);
+                console.error('Código de estado:', error.response.status);
+                try {
+                    // Intenta imprimir los encabezados en formato JSON
+                    console.error('Encabezados:', JSON.stringify(error.response.headers, null, 2));
+                } catch (e) {
+                    // Si JSON.stringify falla, muestra un mensaje de error
+                    console.error('Error al convertir los encabezados a JSON:', e.message);
+                }
+            } else if (error.request) {
+                console.error('Error en la solicitud:', error.request);
+            } else {
+                console.error('Error al configurar la solicitud:', error.message);
+            }
+        }
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
         <div>
             <nav aria-label="breadcrumb" className='breadcrumb002'>
@@ -39,7 +104,7 @@ function Operarios() {
                     <h6 className='text009 pos-text'>Agregar operarios</h6>
                     <ul className="icons001 icons009"></ul>
                 </div>
-                <form className="container005 container005-width">
+                <form className="container005 container005-width" onSubmit={handleSubmit}>
                     <div className='column001'>
                         <div className='div-col002'>
                             <label className='label006' htmlFor="cedula">Cedula: *</label>
@@ -47,7 +112,10 @@ function Operarios() {
                                 className='input005 input011'
                                 type="text"
                                 id="cedula"
-                                name="input1"
+                                name="cedula"
+                                value={formData.cedula}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
@@ -56,7 +124,10 @@ function Operarios() {
                                 className='input005 input011'
                                 type="text"
                                 id="nombre"
-                                name="input2"
+                                name="nombre"
+                                value={formData.nombre}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
@@ -66,7 +137,10 @@ function Operarios() {
                                 rows={3}
                                 type="text"
                                 id="apellido"
-                                name="input3"
+                                name="apellido"
+                                value={formData.apellido}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
@@ -76,7 +150,10 @@ function Operarios() {
                                 rows={3}
                                 type="text"
                                 id="correo"
-                                name="input4"
+                                name="correo"
+                                value={formData.correo}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
@@ -86,7 +163,10 @@ function Operarios() {
                                 rows={3}
                                 type="text"
                                 id="telefono"
-                                name="input5"
+                                name="telefono"
+                                value={formData.telefono}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
@@ -96,7 +176,10 @@ function Operarios() {
                                 rows={3}
                                 type="text"
                                 id="direccion"
-                                name="input6"
+                                name="direccion"
+                                value={formData.direccion}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                     </div>
@@ -105,25 +188,34 @@ function Operarios() {
 
                             {/* <div className="filter "> */}
                             <label className='label-switch' htmlFor="todos-indi">Estado (Inactivo/Activo): *</label>
-                            <div id="todos-indi" className={`switch-state ${isOn ? 'on' : 'off'}`} onClick={toggleSwitch}>
+                            <div
+                                id="todos-indi"
+                                className={`switch-state ${isOn ? 'on' : 'off'}`}
+                                onClick={toggleSwitch}
+                                role="switch"
+                            // aria-checked={isOn}
+                            // tabIndex="0"
+                            >
                                 <div className="slider"></div>
                             </div>
                             {/* </div> */}
 
                         </div>
                         <div className='div-col002 '>
-                            <label className='label006' htmlFor="foto">Foto: *</label>
+                            <label className='label006' htmlFor="fotoUrl">Foto: *</label>
                             <div className='foto001'>
                                 <div className='foto-container'>
-                                    {image && <img src={image} className='img-foto' alt="Foto-subida" />}
+                                    {image && <img src={URL.createObjectURL(image)} className='img-foto' alt="Foto-subida" />}
                                     <input
                                         type="file"
                                         className='input-foto'
                                         accept="image/*"
                                         onChange={handleImageChange}
-                                        id="foto"
+                                        id="fotoUrl"
+                                        name='fotoUrl'
+                                        required
                                     />
-                                    <label htmlFor="foto" className="foto-label">
+                                    <label htmlFor="fotoUrl" className="foto-label">
                                         Examinar
                                         <img src={Foto001} alt='examinar-foto' className="foto-image" />
                                     </label>
@@ -137,32 +229,39 @@ function Operarios() {
                                 className='input005 input011'
                                 type="text"
                                 id="acudiente"
-                                name="input9"
+                                name="acudiente"
+                                value={formData.acudiente}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
-                            <label className='label006' htmlFor="telefono-acu">Telefono acu.: *</label>
+                            <label className='label006' htmlFor="telefonoAcudiente">Telefono acu.: *</label>
                             <input
                                 className='input005 input011'
                                 type="text"
-                                id="telefono-acu"
-                                name="input10"
+                                id="telefonoAcudiente"
+                                name="telefonoAcudiente"
+                                value={formData.telefonoAcudiente}
+                                onChange={handleChange}
+                                required
                             />
                         </div>
                         <div className='div-col002'>
                             <label className='label006' htmlFor="linea">Especialidad: *</label>
                             <div className="dropdown">
-                                <select className="dropdown-toggle003"
-                                    name="dropdown1"
-                                // value={inputs.dropdown1}
-                                // onChange={handleDropdownChange}
-                                // disabled={!isInputEnabled.dropdown1}
+                                <select
+                                    className="dropdown-toggle003"
+                                    name="especialidad"
+                                    value={formData.especialidad}
+                                    onChange={handleChange}
+                                    required
                                 >
                                     <option value="" disabled>Selecciona una opción</option>
-                                    <option >Tecnico</option>
-                                    <option >Tecnologo</option>
-                                    <option >Estudiante</option>
-                                    <option >Pasante</option>
+                                    <option value="Tecnico" >Tecnico</option>
+                                    <option value="Tecnologo" >Tecnologo</option>
+                                    <option value="Estudiante" >Estudiante</option>
+                                    <option value="Pasante" >Pasante</option>
                                 </select>
                             </div>
                         </div>
@@ -193,14 +292,20 @@ function Operarios() {
                         <a href="#" className="modal__close">&times;</a>
                     </div>
                 </div> */}
-                <ModalExito
-                    idmodal="demo-modal10"
-                    titlemodal="Guardado"
-                    parexito="Registro guardado con exito"
-                    // className="modal__message003"
-                    className="modal003"
-                // onClose={handleCloseModal}
-                />
+                {isModalOpen && (
+                    <ModalExito
+                        idmodal="demo-modal10"
+                        titlemodal="Guardado"
+                        lineado="linea002"
+                        parexito="Registro guardado con exito"
+                        className="modal__message003"
+                        onClose={handleCloseModal}
+                        rutaDir="/agregar-operarios"
+                        btnclassName="btn0010"
+                        buttonContent="OK"
+                    //    className="modal003 modal003-z-index"
+                    />
+                )}
             </div>
         </div>
     )

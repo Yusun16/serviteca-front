@@ -1,7 +1,65 @@
-import React from 'react'
-// import ModalExito from './ModalExito'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import ModalExito from '../autopartes/ModalExito';
+import { Link } from 'react-router-dom';
+import CheckReady from '../img/check-ready.png'
 
 function BuscarOperarios() {
+    const urlBase = "http://localhost:8080/serviteca/operarios";
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [showTable, setShowTable] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [operarios, setOperarios] = useState([]);
+    const [cedula, setCedula] = useState('');
+    const [correo, setCorreo] = useState('');
+    const [telefono, setTelefono] = useState('');
+
+    const cargarOperarios = async () => {
+        const resultado = await axios.get(urlBase);
+        setOperarios(resultado.data);
+    };
+
+    const eliminarOperarios = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
+        cargarOperarios();
+    };
+
+    useEffect(() => {
+        cargarOperarios();
+    }, []);
+
+    // Total de filas
+    const totalRows = operarios.length;
+    const totalPages = Math.ceil(totalRows / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const queryParams = new URLSearchParams();
+        if (cedula) queryParams.append('cedula', cedula);
+        if (correo) queryParams.append('correo', correo);
+        if (telefono) queryParams.append('telefono', telefono);
+
+        try {
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
+            if (response.data.length === 0) {
+                // Colocar un modal para el aviso de: "Búsqueda no encontrada."
+                setErrorMessage('Búsqueda no encontrada.');
+            } else {
+                setOperarios(response.data);
+                setErrorMessage('');
+                setShowTable(true); // Mostrar la tabla después de realizar la búsqueda
+            }
+        } catch (error) {
+            console.error('Error al buscar operarios:', error);
+            setErrorMessage('Hubo un error en la búsqueda. Por favor, inténtelo de nuevo.');
+        }
+    };
+
     return (
         <div>
             <nav aria-label="breadcrumb" className='breadcrumb002'>
@@ -28,19 +86,28 @@ function BuscarOperarios() {
                     </div>
                     <div className='container006'>
                         <div className=''>
-                            <form action="" className='column003'>
+                            <form onSubmit={handleSubmit} className='column003'>
                                 <div className='div-col002 div-col003'>
                                     <label htmlFor="cedula">Cedula:</label>
                                     <input
                                         className='input009'
                                         id="cedula"
-                                        type="text" />
+                                        name='cedula'
+                                        value={cedula}
+                                        onChange={(e) => setCedula(e.target.value)}
+                                        required
+                                        type="text"
+                                    />
                                 </div>
                                 <div className='div-col002 div-col003'>
                                     <label htmlFor="correo">Correo:</label>
                                     <input
                                         className='input009'
                                         id="correo"
+                                        name='correo'
+                                        value={correo}
+                                        onChange={(e) => setCorreo(e.target.value)}
+                                        required
                                         type="text" />
                                 </div>
                                 <div className='div-col002 div-col003'>
@@ -48,6 +115,10 @@ function BuscarOperarios() {
                                     <input
                                         className='input009'
                                         id="telefono"
+                                        name='telefono'
+                                        value={telefono}
+                                        onChange={(e) => setTelefono(e.target.value)}
+                                        required
                                         type="text" />
                                 </div>
                                 <div className='pos-btn008'>
@@ -58,51 +129,74 @@ function BuscarOperarios() {
                                         </div>
                                     </button>
                                 </div>
+                                {errorMessage && <div className='container'>{errorMessage}</div>}
                             </form>
                         </div>
                     </div>
                     <div>
                     </div>
                     <div>
-                        <div>
-                            <ul className="icons001">
-                                <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
-                                <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
-                            </ul>
-                        </div>
-                        <table className='table001'>
-                            <thead>
-                                <tr className='tr001'>
-                                    <th className='th001'>Codigo Auto-Partes</th>
-                                    <th className='th001'>Descripcion</th>
-                                    <th className='th001'>Tipo</th>
-                                    <th className='th001'>Editar</th>
-                                    <th className='th001'>Borrar</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr className='tr001'>
-                                    <td className='td001'>Data 1</td>
-                                    <td className='td001'>Data 1</td>
-                                    <td className='td001'>Data 1</td>
-                                    <td className='td001'><a href="#demo-modal6" className="btn-modal" >
-                                        <i className="fa-solid fa-calendar"></i>
-                                    </a></td>
-                                    <td className='td001'><a href="#demo-modal9" className="btn-modal">
-                                        <i className="fa-solid fa-trash-can"></i>
-                                    </a></td>
-                                    {/*  */}
+                        {showTable && (
+                            <div>
+                                <ul className="icons001">
+                                    <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
+                                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
+                                </ul>
 
-                                </tr>
-                                <tr className='tr001'>
-                                    <th className='th001'> </th>
-                                    <th className='th001'> </th>
-                                    <th className='th001'> </th>
-                                    <th className='th001'> </th>
-                                    <th className='th001'> </th>
-                                </tr>
-                            </tbody>
-                        </table>
+                                <table className='table001'>
+                                    <thead>
+                                        <tr className='tr001'>
+                                            <th className='th001'>Cedula</th>
+                                            <th className='th001'>Nombre</th>
+                                            <th className='th001'>Telefono</th>
+                                            <th className='th001'>Editar</th>
+                                            <th className='th001'>Borrar</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {operarios.slice(startIndex, endIndex).map((operar, indice) => (
+                                            <tr key={indice} className='tr001'>
+                                                <td className='td001'>{operar.cedula}</td>
+                                                <td className='td001'>{operar.nombre}</td>
+                                                <td className='td001'>{operar.telefono}</td>
+                                                <td className='td001'>
+                                                    <Link to={`/editar-operarios/${operar.id}`} className="btn-modal" id='demo-modal6'>
+                                                        <i className="fa-solid fa-calendar"></i>
+                                                    </Link>
+                                                </td>
+                                                <td className='td001'>
+                                                    <a href="#demo-modal9" onClick={() => eliminarOperarios(operar.id)} className="btn-modal">
+                                                        <i className="fa-solid fa-trash-can"></i>
+                                                    </a>
+                                                </td>
+                                                {/*  */}
+
+                                            </tr>
+                                        ))}
+                                        <tr className='tr001'>
+                                            <th className='th001'> </th>
+                                            <th className='th001'> </th>
+                                            <th className='th001'> </th>
+                                            <th className='th001'> </th>
+                                            <th className='th001'> </th>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div className="linea001"></div>
+                                <div className='container007'>
+                                    <div className="column010">
+                                        <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
+                                    </div>
+                                    <div className="column001">
+                                        <div className="pagination001">
+                                            <button className="button006" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>Anterior</button>
+                                            <span className='span006'>{currentPage}</span>
+                                            <button className="button006" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>Siguiente</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
                         <div id="demo-modal6" className="modal001">
                             <div className="modal__content">
                                 <h1>Editar Auto-Partes</h1>
@@ -240,13 +334,14 @@ function BuscarOperarios() {
                             titlemodal="Editado"
                             parexito="Registro editado con exito"
                             className="modal003"
-                        />
-                        <ModalExito
-                            idmodal="demo-modal9"
-                            titlemodal="Eliminado"
-                            parexito="Registro eliminado con exito"
-                            className="modal003"
-                        /> */}
+                        />*/
+                            <ModalExito
+                                idmodal="demo-modal9"
+                                parexito="Registro eliminado"
+                                className="modal003"
+                                rutaDir="/operarios"
+                                buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
+                            />}
                     </div>
 
 
