@@ -90,6 +90,7 @@ export default function EditarServicio() {
                         </div>
                     </div>
                 </div>
+                
 
 
                 <div className='text-center'>
@@ -97,6 +98,7 @@ export default function EditarServicio() {
                     <button type="submit" href='/' className='btn btn-danger btn-sm me-3 '><i class="fa-regular fa-circle-xmark"></i> Cancelar</button>
                     <ModalEditar />
                 </div>
+                
             </form>
         </div>
     )
