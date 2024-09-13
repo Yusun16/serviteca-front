@@ -10,7 +10,7 @@ body {
 
 
 
-.btnn-close {
+.equis-close {
   background-color: red;
   width: 30px;
   height: 30px;
@@ -21,17 +21,16 @@ body {
   justify-content: center;
   position: absolute;
   left: 88%;
-  
 }
 
-.btnn-close::before {
+.equis-close::before {
   content: "✖";
   color: white;
   font-weight: bold;
   font-size: 18px;
 }
 
-.btnn-close:hover {
+.equis-close:hover {
   background-color: darkred;
 }
 
