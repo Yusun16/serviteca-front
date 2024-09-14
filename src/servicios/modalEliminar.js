@@ -8,7 +8,7 @@ export default function () {
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div className="modal-body text-center" style={{color: "black"}} >
                             Registro eliminado

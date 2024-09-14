@@ -143,18 +143,18 @@ export default function BuscarServicio() {
                     <table className="container" style={{ marginTop: "5px" }}>
                         <thead className=''>
                             <tr>
-                                <th className='text-letras colorthead' scope="col">Codigo Servicio</th>
-                                <th className='text-letras colorthead' scope="col">Descripción Servicio</th>
-                                <th className='text-letras colorthead' scope="col">Porcentaje</th>
-                                <th className='text-letras colorthead' scope="col">Valor del Servicio</th>
+                                <th className='text-letras colorthead text-center' scope="col">Codigo Servicio</th>
+                                <th className='text-letras colorthead text-center' scope="col">Descripción Servicio</th>
+                                <th className='text-letras colorthead text-center' scope="col">Porcentaje</th>
+                                <th className='text-letras colorthead text-center' scope="col">Valor del Servicio</th>
 
-                                <th className='text-letras colorthead'>Editar</th>
-                                <th className='text-letras colorthead'>Borrar</th>
+                                <th className='text-letras colorthead text-center'>Editar</th>
+                                <th className='text-letras colorthead text-center'>Borrar</th>
                             </tr>
                         </thead>
                         <tbody>
                             {currentItems.map((servicio, indice) => (
-                                <tr className='tr-table-tr' key={indice}>
+                                <tr className='tr-table-tr text-center' key={indice}>
                                     <td>{servicio.codigo}</td>
                                     <td>{servicio.descripcion}</td>
                                     <td>
