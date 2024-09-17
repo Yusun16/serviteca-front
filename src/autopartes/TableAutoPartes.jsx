@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ModalExito from './ModalExito';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import ModalExito from './ModalExito';
 import CheckReady from '../img/check-ready.png'
 
 function TableAutoPartes() {
@@ -33,12 +37,53 @@ function TableAutoPartes() {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
 
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        const tableColumn = ["Referencia", "Codigo SIIGO", "Descripcion", "Linea", "Tipo", "Marca", "Modelo"];
+        const tableRows = [];
+
+        autopartes.forEach(autopart => {
+            const autopartData = [
+                autopart.referencia,
+                autopart.siigo,
+                autopart.descripcion,
+                autopart.linea,
+                autopart.tipo,
+                autopart.marca,
+                autopart.modelo,
+
+            ];
+            tableRows.push(autopartData);
+        });
+
+        doc.autoTable(tableColumn, tableRows, { startY: 20 });
+        doc.text("Listado de Auto-partes", 14, 15);
+        doc.save("Listado_de_auto-partes.pdf");
+    };
+
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(autopartes.map(autopart => ({
+            "Referencia": autopart.referencia,
+            "Codigo SIIGO": autopart.siigo,
+            "Descripción": autopart.descripcion,
+            "Linea": autopart.linea,
+            "Tipo": autopart.tipo,
+            "Marca": autopart.marca,
+            "Modelo": autopart.modelo,
+        })));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Auto-partes");
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "listado_de_auto-partes.xlsx");
+    };
+
     return (
         <div>
             <div>
                 <ul className="icons001">
-                    <li className="icons002"><i class="fa-solid fa-file-pdf"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
+                    <li className="icons002"><i onClick={exportToPDF} className="fa-solid fa-file-pdf"></i></li>
+                    <li className="icons002"><i onClick={exportToExcel} className="fa-solid fa-file-excel"></i></li>
                 </ul>
             </div>
             <table className='table001'>

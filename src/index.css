@@ -8,9 +8,8 @@ body {
   background-color: #F0F0F0;
 }
 
-
-
-.equis-close {
+/* Diseños de Yusun y Manuel */
+.btnn-close {
   background-color: red;
   width: 30px;
   height: 30px;
@@ -32,8 +31,8 @@ body {
   font-size: 18px;
 }
 
-.equis-close:hover {
-  background-color: darkred;
+.btnn-close:hover {
+  background-color: darkred;
 }
 
 .colonav {
@@ -92,7 +91,7 @@ body {
   font-size: 25px;
 }
 
-.th-tabla{
+.th-tabla {
   background-color: #002060 !important;
   color: white !important;
 }
@@ -101,7 +100,7 @@ body {
   background-color: #9DD3F4 !important;
 }
 
-.pag-num{
+.pag-num {
   display: flex;
   gap: 20px;
   align-items: center;
@@ -112,48 +111,11 @@ body {
   font-size: 30px;
 }
 
-.listcehk{
+.listcehk {
   margin-bottom: 50px !important;
 }
 
-/* Del componente AutoPartes */
-/* .container005 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
- */
-
-/*  */
-
-/* .tbbody {
-  background-color: #9DD3F4;
-} */
-
-/* .botonposicion {
-  display: flex !important;
-  justify-content: center  !important;
-} */
-
-/* .modal-display{
-  display: flex!important;
-  justify-content: center!important;
-}
-
-
-
-tr:nth-child(even) {
-  background-color: #9DD3F4 !important;
-}
-
-.tb-tabla{
-  background-color: #9DD3F4 !important;
-}
-
- */
-
+/* Fin de diseños de Yusun y Manuel */
 /* Del componente AutoPartes */
 /* .barra001 {
   overflow: hidden;
@@ -259,16 +221,6 @@ tr:nth-child(even) {
   background: #002060;
 }
 
-/* .pos-btn004 {
-  position: relative;
-  right: 66px;
-} */
-
-/* .pos2-btn004 {
-  position: relative;
-  right: 66px;
-} */
-
 .btn004:hover {
   background-color: #F2B3B3;
 }
@@ -325,8 +277,6 @@ tr:nth-child(even) {
   height: 80px;
   width: 252px;
 }
-
-
 
 .btn005 {
   display: flex;
@@ -618,14 +568,6 @@ tr:nth-child(even) {
   transition: all .4s;
 }
 
-/* 
-.modal__message004:target {
-  visibility: visible;
-  opacity: 1;
-} */
-
-
-
 .modal__shadow {
   box-shadow: 10px 9px 11px 8px rgba(138, 135, 138, 1);
   -webkit-box-shadow: 10px 9px 11px 8px rgba(138, 135, 138, 1);
@@ -647,7 +589,6 @@ tr:nth-child(even) {
   text-align: center;
   margin: 35px 0px;
 }
-
 
 /* Del componente TableAutoPartes */
 .table001 {
@@ -736,12 +677,17 @@ tr:nth-child(even) {
   padding: 15px;
   color: white;
   background: #0CC243;
+  opacity: 75%;
   font-size: 20px;
   cursor: pointer;
   border: none;
   border-radius: 5px;
   text-decoration: none;
   text-align: center;
+}
+
+.btn0010:hover {
+  opacity: 100%;
 }
 
 .btn0011 {
@@ -1046,7 +992,7 @@ background-color: #F0F0F0 ;
   position: relative;
   top: 0px;
   bottom: 0px;
-  left: 50%;
+  /* left: 50%; */
   width: 20px;
   height: 20px;
 }

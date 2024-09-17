@@ -10,8 +10,6 @@ const LoginForm = () => {
     setActiveRole(role);
   };
 
-    
-
   return (
     <div className="body-login">
       <div className="login-container">

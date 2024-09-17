@@ -14,22 +14,22 @@ function TableServInfo() {
 
     useEffect(() => {
         setData([
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 2', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
-            { col1: 'Data 1', col2: 'Data 4', col3: 'Data 3', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 2', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 2', col3: '1', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 2', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '4', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '4', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '2', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '3', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '5', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '3', col4: 'Data4', },
+            { col1: 'Data 1', col2: 'Data 4', col3: '1', col4: 'Data4', },
         ]);
     }, []);
     return (
@@ -64,7 +64,7 @@ function TableServInfo() {
             </table>
             <div className="linea001"></div>
             <div className='container007'>
-                <div className="column001">
+                <div className="column010">
                     <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
                 </div>
                 <div className="column001">

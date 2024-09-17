@@ -1,9 +1,13 @@
-// import React from 'react';
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import ModalExito from './ModalExito'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import ModalExito from './ModalExito'
 import CheckReady from '../img/check-ready.png'
+import CheckSearch from '../img/check-search.png'
 
 function BuscarAutPar() {
     const urlBase = "http://localhost:8080/serviteca/autopartes";
@@ -16,6 +20,7 @@ function BuscarAutPar() {
     const [autopartes, setAutopartes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const cargarAutoPartes = async () => {
         const resultado = await axios.get(urlBase);
@@ -49,16 +54,66 @@ function BuscarAutPar() {
             const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
             if (response.data.length === 0) {
                 // Colocar un modal para el aviso de: "Búsqueda no encontrada."
-                setErrorMessage('Búsqueda no encontrada.');
+                // setErrorMessage(
+                //     <span>
+                //         <strong>Búsqueda no encontrada.</strong> Intenta con otros parámetros.
+                //     </span>);
+                setIsModalOpen(true);
             } else {
                 setAutopartes(response.data);
                 setErrorMessage('');
-                setShowTable(true); // Mostrar la tabla después de realizar la búsqueda
+                // Mostrar la tabla después de realizar la búsqueda
+                setShowTable(true);
             }
         } catch (error) {
             console.error('Error al buscar autopartes:', error);
             setErrorMessage('Hubo un error en la búsqueda. Por favor, inténtelo de nuevo.');
         }
+    };
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        const tableColumn = ["Referencia", "Codigo SIIGO", "Descripcion", "Linea", "Tipo", "Marca", "Modelo"];
+        const tableRows = [];
+
+        autopartes.forEach(autopart => {
+            const autopartData = [
+                autopart.referencia,
+                autopart.siigo,
+                autopart.descripcion,
+                autopart.linea,
+                autopart.tipo,
+                autopart.marca,
+                autopart.modelo,
+
+            ];
+            tableRows.push(autopartData);
+        });
+
+        doc.autoTable(tableColumn, tableRows, { startY: 20 });
+        doc.text("Listado de Auto-partes", 14, 15);
+        doc.save("Listado_de_auto-partes.pdf");
+    };
+
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(autopartes.map(autopart => ({
+            "Referencia": autopart.referencia,
+            "Codigo SIIGO": autopart.siigo,
+            "Descripción": autopart.descripcion,
+            "Linea": autopart.linea,
+            "Tipo": autopart.tipo,
+            "Marca": autopart.marca,
+            "Modelo": autopart.modelo,
+        })));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Auto-partes");
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "listado_de_auto-partes.xlsx");
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
     };
 
     return (
@@ -120,12 +175,6 @@ function BuscarAutPar() {
                                         onChange={(e) => setDescripcion(e.target.value)}
                                         type="text" />
                                 </div>
-                                {/* <a className='btn008' type="submit">
-                                    <ul className="icons003">
-                                        <li className="icons004"><i className="fa-solid fa-magnifying-glass"></i></li>
-                                        <li className="icons005">Buscar</li>
-                                    </ul>
-                                </a> */}
                                 <div className='pos-btn008'>
                                     <button className='btn008' type='submit'>
                                         <div className="sub-btn008">
@@ -134,21 +183,27 @@ function BuscarAutPar() {
                                         </div>
                                     </button>
                                 </div>
-                                {errorMessage && <div className='container'>{errorMessage}</div>}
+                                {isModalOpen &&
+                                    <ModalExito
+                                        idmodal="demo-modal39"
+                                        titlemodal="Busqueda"
+                                        lineado="linea002"
+                                        parexito="¡Parametros no encontrados!"
+                                        className="modal__message003"
+                                        onClose={handleCloseModal}
+                                        buttonContent={<img src={CheckSearch} alt="busqueda-fallida" className='img-ready' />}
+                                    />
+                                }
                             </form>
                         </div>
-                    </div>
-                    <div>
                     </div>
                     <div>
                         {showTable && (
                             <div>
                                 <ul className="icons001">
-                                    <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
-                                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
+                                    <li className="icons002"><i onClick={exportToPDF} className="fa-solid fa-file-pdf"></i></li>
+                                    <li className="icons002"><i onClick={exportToExcel} className="fa-solid fa-file-excel"></i></li>
                                 </ul>
-
-
                                 <table className='table001'>
                                     <thead>
                                         <tr className='tr001'>
@@ -341,12 +396,6 @@ function BuscarAutPar() {
                                 </div>
                             </div>
                         </div> */}
-                        {/* <ModalExito
-                            idmodal="demo-modal8"
-                            titlemodal="Editado"
-                            parexito="Registro editado con exito"
-                            className="modal003"
-                        /> */}
                         <ModalExito
                             idmodal="demo-modal9"
                             parexito="Registro eliminado"
@@ -355,8 +404,6 @@ function BuscarAutPar() {
                             buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
                         />
                     </div>
-
-
                 </div>
             </div>
         </div>
