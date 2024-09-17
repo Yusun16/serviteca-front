@@ -88,6 +88,15 @@ function AutoPartes() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        setInputs({
+            referencia: '',
+            siigo: '',
+            descripcion: '',
+            linea: '',
+            tipo: '',
+            marca: '',
+            modelo: '',
+        });
     };
 
     // Fetch autopartes from the backend

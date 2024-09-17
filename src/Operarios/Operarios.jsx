@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import TableOperarios from './TableOperarios'
 import ModalExito from '../autopartes/ModalExito';
@@ -8,6 +9,7 @@ function Operarios() {
     const [isOn, setIsOn] = useState(false);
     const [image, setImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         cedula: '',
@@ -25,14 +27,6 @@ function Operarios() {
         setIsOn(prevState => !prevState);
     };
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
-
     const handleImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -40,51 +34,63 @@ function Operarios() {
         }
     };
 
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const data = new FormData();
-        Object.keys(formData).forEach(key => {
-            data.append(key, formData[key]);
-        });
-        if (image) {
-            data.append('file', image);
-        }
-        if (!formData.id) {
-            console.error('El campo id es obligatorio.');
-            return;
-        }
-        data.append('id', formData.id);
-
+        // Guardando datos del Formulario
         try {
-            const response = await axios.put('http://localhost:8080/serviteca/operarios/photo', data, {
+            const response = await axios.post('http://localhost:8080/serviteca/operarios', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data',
+                    'Content-Type': 'application/json',
                 },
             });
-            console.log('Respuesta del servidor:', response.data);
-            // Aquí puedes manejar la respuesta del servidor como quieras
-        } catch (error) {
-            if (error.response) {
-                console.error('Error en la respuesta del servidor:', error.response.data);
-                console.error('Código de estado:', error.response.status);
-                try {
-                    // Intenta imprimir los encabezados en formato JSON
-                    console.error('Encabezados:', JSON.stringify(error.response.headers, null, 2));
-                } catch (e) {
-                    // Si JSON.stringify falla, muestra un mensaje de error
-                    console.error('Error al convertir los encabezados a JSON:', e.message);
-                }
-            } else if (error.request) {
-                console.error('Error en la solicitud:', error.request);
-            } else {
-                console.error('Error al configurar la solicitud:', error.message);
+            // Response para conectar el id
+            const operarioId = response.data.id;
+            // Formulario guardado. Guardar imagen.
+            // Condicional para subir la imagen
+            if (image) {
+                const imageFormData = new FormData();
+                imageFormData.append('id', operarioId);
+                imageFormData.append('file', image);
+
+                await axios.put('http://localhost:8080/serviteca/operarios/photo', imageFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
             }
+            setIsModalOpen(true);
+            navigate("/agregar-operarios")
+            // alert('Operario y foto subidos correctamente');
+        } catch (error) {
+            console.error('Error al enviar los datos', error);
+            alert('Hubo un problema al enviar los datos');
         }
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        navigate('/agregar-operarios');
+        setFormData({
+            cedula: '',
+            nombre: '',
+            apellido: '',
+            correo: '',
+            telefono: '',
+            direccion: '',
+            acudiente: '',
+            telefonoAcudiente: '',
+            especialidad: '',
+        });
+        setImage(null);
     };
 
     return (
@@ -185,8 +191,6 @@ function Operarios() {
                     </div>
                     <div className='column001'>
                         <div className='div-col002 div-col-switch'>
-
-                            {/* <div className="filter "> */}
                             <label className='label-switch' htmlFor="todos-indi">Estado (Inactivo/Activo): *</label>
                             <div
                                 id="todos-indi"
@@ -198,7 +202,6 @@ function Operarios() {
                             >
                                 <div className="slider"></div>
                             </div>
-                            {/* </div> */}
 
                         </div>
                         <div className='div-col002 '>
@@ -215,7 +218,7 @@ function Operarios() {
                                         name='fotoUrl'
                                         required
                                     />
-                                    <label htmlFor="fotoUrl" className="foto-label">
+                                    <label htmlFor="fotoImg" className="foto-label">
                                         Examinar
                                         <img src={Foto001} alt='examinar-foto' className="foto-image" />
                                     </label>
@@ -278,32 +281,17 @@ function Operarios() {
                 <div>
                     <TableOperarios />
                 </div>
-                {/* <div id="demo-modal10" className="modal003">
-                    <div className="modal__content modal__shadow">
-                        <h1>Guardado</h1>
-                        <form action="" method='' className="form009">
-                            <p>Registro guardado con exito</p>
-                            <div className="">
-                                <button className='btn0010' type="submit">
-                                    OK
-                                </button>
-                            </div>
-                        </form>
-                        <a href="#" className="modal__close">&times;</a>
-                    </div>
-                </div> */}
                 {isModalOpen && (
                     <ModalExito
                         idmodal="demo-modal10"
                         titlemodal="Guardado"
                         lineado="linea002"
                         parexito="Registro guardado con exito"
-                        className="modal__message003"
+                        className="modal__message003 modal003-z-index"
                         onClose={handleCloseModal}
                         rutaDir="/agregar-operarios"
                         btnclassName="btn0010"
                         buttonContent="OK"
-                    //    className="modal003 modal003-z-index"
                     />
                 )}
             </div>

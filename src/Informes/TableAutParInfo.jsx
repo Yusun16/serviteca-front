@@ -70,7 +70,7 @@ function TableAutParInfo() {
             </table>
             <div className="linea001"></div>
             <div className='container007'>
-                <div className="column001">
+                <div className="column010">
                     <h4><span>Mostrando {currentPage} de {totalPages}</span></h4>
                 </div>
                 <div className="column001">
