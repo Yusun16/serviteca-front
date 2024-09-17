@@ -9,7 +9,7 @@ export default function () {
           <div className="modal-content">
             <div className="modal-header">
               <h1 className="modal-title fs-5" id="exampleModalLabel">Guardado</h1>
-              <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
               Registro guardado con exito
