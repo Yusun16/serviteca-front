@@ -28,10 +28,7 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
-<<<<<<< HEAD
 import EditarCliente from "./Registrar/EditarCliente";
-=======
->>>>>>> 009306575875e5536edb1d6f1f2d46cb445503b1
 
 
 function App() {

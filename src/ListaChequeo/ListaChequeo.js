@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import imglist from "../img/imglist.png";
-import "../ListaChequeo/ListaChequeo.css"
+import "../ListaChequeo/ListaChequeo.css";
 import LogoGasolina from "../img/LogoGasolina.svg";
 import axios from 'axios';
 
-
 const CheckListComponent = () => {
-
     const [images, setImages] = useState({
         fotoDerecha: null,
         fotoIzquierda: null,
@@ -15,7 +13,7 @@ const CheckListComponent = () => {
         indicadorCombustible: null,
     });
 
-    const [observaciones, setObservaciones] = useState({
+    const [formData, setFormData] = useState({
         observacionDerecha: '',
         observacionIzquierda: '',
         observacionFrontal: '',
@@ -25,25 +23,24 @@ const CheckListComponent = () => {
 
     const [combustible, setCombustible] = useState('');
 
-    const handleImageChange = (event, key) => {
+    const handleImageChange = (event, fieldName) => {
         const file = event.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImages(prevState => ({
-                    ...prevState,
-                    [key]: reader.result,
-                }));
-            };
-            reader.readAsDataURL(file);
+            const imageUrl = URL.createObjectURL(file);
+            setImages(prevImages => ({
+                ...prevImages,
+                [fieldName]: imageUrl
+            }));
+            // No olvides liberar el objeto URL cuando ya no lo necesites
+            return () => URL.revokeObjectURL(imageUrl);
         }
     };
 
     const handleObservationChange = (event) => {
-        const { id, value } = event.target;
-        setObservaciones(prevState => ({
+        const { name, value } = event.target;
+        setFormData(prevState => ({
             ...prevState,
-            [id]: value,
+            [name]: value,
         }));
     };
 
@@ -51,11 +48,35 @@ const CheckListComponent = () => {
         setCombustible(event.target.id);
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        // Aquí puedes agregar la lógica para enviar los datos del formulario
-        console.log('Formulario enviado con observaciones:', observaciones);
-        console.log('Combustible seleccionado:', combustible);
+
+        // Crear un objeto FormData para enviar archivos y datos de formulario
+        try {
+            // Realizar la solicitud POST al backend
+            const response = await axios.post('http://localhost:8080/serviteca/revisiones', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            const listacheckId = response.data.id;
+            if (images) {
+                const imagesFormData = new FormData();
+                imagesFormData.append("id", listacheckId);
+                imagesFormData.append("files", images);
+                await axios.put('http://localhost:8080/serviteca/revisiones/uploadFotos', imagesFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
+            formData.append('combustible', combustible);
+            console.log(response.data); // Maneja la respuesta del servidor
+            // Aquí podrías manejar la respuesta del servidor, mostrar un mensaje de éxito, etc.
+        } catch (error) {
+            console.error('Error al enviar los datos:', error);
+            // Aquí podrías manejar el error, mostrar un mensaje de error, etc.
+        }
     };
 
     return (
@@ -103,8 +124,8 @@ const CheckListComponent = () => {
                                             <tr className='tr001'>
                                                 <td>parlantes</td>
                                                 <td>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                    <div className="form-check">
+                                                        <input className="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
                                                     </div>
                                                 </td>
                                                 <td>6 parlantes</td>
@@ -122,7 +143,7 @@ const CheckListComponent = () => {
                     <div className="modal-dialog modal-xl">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de serivicio para abrir la ejecución</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de servicio para abrir la ejecución</h1>
                                 <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
@@ -134,7 +155,7 @@ const CheckListComponent = () => {
                                             <th className='colorthead' scope="col">N° de Servicio</th>
                                             <th className='colorthead' scope="col">Nombre operario</th>
                                             <th className='colorthead' scope="col">N° Factura</th>
-                                            <th className='colorthead' scope="col">Observacion</th>
+                                            <th className='colorthead' scope="col">Observación</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -145,7 +166,6 @@ const CheckListComponent = () => {
                                             <td>@mdo</td>
                                             <td>16</td>
                                             <td>No se observa nada</td>
-
                                         </tr>
                                         <tr className='tr001'>
                                             <th scope="row">2</th>
@@ -179,8 +199,8 @@ const CheckListComponent = () => {
                                     <img src={images.fotoDerecha} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoDerecha" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
                                     </label>
@@ -201,7 +221,7 @@ const CheckListComponent = () => {
                                     id="observacionDerecha"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionDerecha}
+                                    value={formData.observacionDerecha}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -217,8 +237,8 @@ const CheckListComponent = () => {
                                     <img src={images.fotoFrontal} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoFrontal" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
                                     </label>
@@ -239,7 +259,7 @@ const CheckListComponent = () => {
                                     id="observacionFrontal"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionFrontal}
+                                    value={formData.observacionFrontal}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -255,10 +275,11 @@ const CheckListComponent = () => {
                                     <img src={images.fotoIzquierda} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoIzquierda" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
-                                        </div>                                   </label>
+                                        </div>
+                                    </label>
                                 )}
                                 <input
                                     type="file"
@@ -276,7 +297,7 @@ const CheckListComponent = () => {
                                     id="observacionIzquierda"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionIzquierda}
+                                    value={formData.observacionIzquierda}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -292,8 +313,8 @@ const CheckListComponent = () => {
                                     <img src={images.fotoPosterior} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="fotoPosterior" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
                                     </label>
@@ -314,7 +335,7 @@ const CheckListComponent = () => {
                                     id="observacionPosterior"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionPosterior}
+                                    value={formData.observacionPosterior}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -330,8 +351,8 @@ const CheckListComponent = () => {
                                     <img src={images.indicadorCombustible} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="indicadorCombustible" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
                                     </label>
@@ -347,13 +368,13 @@ const CheckListComponent = () => {
                         </div>
                     </div>
 
-                    {/* formuario  */}
+                    {/* Combustible */}
                     <div className='col-md-6 listcehk'>
-                        <div >
-                            <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
+                        <div>
+                            <div className='d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
                                 <div className="form-group mt-2 d-flex flex-column">
-                                    <div className=" d-flex flex-row" style={{ gap: "25px" }}>
-                                        <img src={LogoGasolina} style={{ color: "#ff5733", fontSize: "50px" }}/>
+                                    <div className="d-flex flex-row" style={{ gap: "25px" }}>
+                                        <img src={LogoGasolina} style={{ color: "#ff5733", fontSize: "50px" }} alt="Logo Gasolina" />
                                         <div className="form-check d-flex flex-column align-items-center p-0">
                                             <input
                                                 className="form-check-input m-0 tamano-chek"
@@ -391,21 +412,20 @@ const CheckListComponent = () => {
                                             <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                         <div className='col-md-12'>
                             <div className='d-flex align-items-center flex-row'>
-                                <label className="w-50 " htmlFor="indicadorCombustible">Observacion</label>
+                                <label className="w-50" htmlFor="observacionCombustible">Observación</label>
                                 <div className="form-group mt-2 w-50">
                                     <input
                                         type="text"
                                         className="form-control"
-                                        id="indicadorCombustible"
+                                        id="observacionCombustible"
                                         placeholder="Observación: *"
                                         required
-                                        value={observaciones.observacionCombustible}
+                                        value={formData.observacionCombustible}
                                         onChange={handleObservationChange}
                                     />
                                 </div>
