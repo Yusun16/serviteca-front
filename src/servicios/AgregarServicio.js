@@ -37,14 +37,22 @@ export default function AgregarServicio() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const urlBase = "http://localhost:8080/serviteca/servicios";
-            await axios.post(urlBase, servicio); 
-            // descomentariar la linea en caso de no agregar en la misma vista 
-            // navigate("/");     
-        } catch (error) {
-            console.error("Error al agregar servicio", error);
-        }
+
+
+
+            try {
+                const urlBase = "http://localhost:8080/serviteca/servicios";
+                await axios.post(urlBase, servicio);
+
+
+            } catch (error) {
+                console.error("Error al agregar servicio", error);
+            }
+
+
+
+
+
     };
 
     const cargarServicios = async () => {
@@ -139,7 +147,7 @@ export default function AgregarServicio() {
                     <div className="col">
                         <div className="mb-3">
                             <label htmlFor="codigo" className="form-label">Código: *</label>
-                            <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} readOnly />
+                            <input type="text" className="form-control" id="codigo" required name='codigo' value={servicio.codigo} readOnly />
                         </div>
                         <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción: *</label>
@@ -150,7 +158,7 @@ export default function AgregarServicio() {
                                 id="descripcion"
                                 name='descripcion'
                                 required={true}
-                                value={descripcion}
+                                value={servicio.descripcion}
                                 onChange={onInputChange}
                             />
                         </div>
@@ -164,7 +172,7 @@ export default function AgregarServicio() {
                                 id="ano"
                                 name='ano'
                                 required={true}
-                                value={ano}
+                                value={servicio.ano}
                                 onChange={onInputChange}
                             />
                         </div>
@@ -175,8 +183,8 @@ export default function AgregarServicio() {
                                 className="form-control"
                                 id="porcentajeOperario"
                                 name='porcentajeOperario'
-                                required={true}
-                                value={porcentajeOperario}
+                                required
+                                value={servicio.porcentajeOperario}
                                 onChange={onInputChange}
                             />
                         </div>
@@ -188,8 +196,8 @@ export default function AgregarServicio() {
                                 className="form-control"
                                 id="valorServicio"
                                 name='valorServicio'
-                                required={true}
-                                value={valorServicio}
+                                required
+                                value={servicio.valorServicio}
                                 onChange={onInputChange}
                             />
                         </div>
@@ -197,10 +205,12 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className='text-center'>
-                    <button type="submit"   className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
+                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
                         <i className="fa-regular fa-floppy-disk"></i> Guardar
                     </button>
-                    <Modal/>
+
+                        <Modal />
+
                 </div>
             </form>
 
@@ -221,56 +231,55 @@ export default function AgregarServicio() {
                         ></button>
                     </div>
                     <table className="container" >
-          <thead className=''>
-            <tr>
-              <th className='text-letras colorthead' scope="col"> Codigo Servicio</th>
+                        <thead className=''>
+                            <tr>
+                                <th className='text-letras colorthead text-center' scope="col"> Codigo Servicio</th>
+                                <th className='text-letras colorthead text-center' scope="col">Descripción Servicio</th>
+                                <th className='text-letras colorthead text-center' scope="col">Porcentaje </th>
+                                <th className='text-letras colorthead text-center' scope="col">Valor total de los Servicio</th>
+                                <th className='text-letras colorthead text-center'>Editar</th>
+                                <th className='text-letras colorthead text-center'>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {currentItems.map((servicio, indice) => (
+                                <tr className='tr-table-tr text-center' key={indice}>
+                                    <td>{servicio.codigo}</td>
+                                    <td>{servicio.descripcion}</td>
+                                    <td>
+                                        <NumericFormat
+                                            value={servicio.porcentajeOperario}
+                                            displayType={'text'}
+                                            thousandSeparator=","
+                                            decimalScale={2}
+                                            renderText={(value) => `${value}%`}
+                                        />
+                                    </td>
+                                    <td>
+                                        <NumericFormat
+                                            value={servicio.valorServicio}
+                                            displayType={'text'}
+                                            thousandSeparator=","
+                                            prefix='$'
+                                            decimalScale={2}
+                                        />
+                                    </td>
 
-              <th className='text-letras colorthead text-center' scope="col">Descripción Servicio</th>
-              <th className='text-letras colorthead text-center' scope="col">Porcentaje </th>
-              <th className='text-letras colorthead text-center' scope="col">Valor total de los Servicio</th>
-              <th className='text-letras colorthead text-center'>Editar</th>
-              <th className='text-letras colorthead text-center'>Borrar</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentItems.map((servicio, indice) => (
-              <tr className='tr-table-tr text-center' key={indice}>
-                <td>{servicio.codigo}</td>
-                <td>{servicio.descripcion}</td>
-                <td>
-                  <NumericFormat
-                    value={servicio.porcentajeOperario}
-                    displayType={'text'}
-                    thousandSeparator=","
-                    decimalScale={2}
-                    renderText={(value) => `${value}%`}
-                  />
-                </td>
-                <td>
-                  <NumericFormat
-                    value={servicio.valorServicio}
-                    displayType={'text'}
-                    thousandSeparator=","
-                    prefix='$'
-                    decimalScale={2}
-                  />
-                </td>
-                
-              
-                <td className='text-center'>
-                  <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
-                    <i className="fa-solid fa-pen-to-square"></i>
-                  </Link>
-                </td>
-                <td>
-                  <button data-bs-toggle="modal" data-bs-target="#modaleliminar" onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
-                    <i className="fa-solid fa-trash-can"></i>
-                  </button>
-                  <ModalEliminar />
-                </td>
-              </tr>
-            ))}
-               <tr className='container'>
+
+                                    <td className='text-center'>
+                                        <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
+                                            <i className="fa-solid fa-pen-to-square"></i>
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <button data-bs-toggle="modal" data-bs-target="#modaleliminar" onClick={() => eliminarServicio(servicio.idServicio)} className='btn btn-sm'>
+                                            <i className="fa-solid fa-trash-can"></i>
+                                        </button>
+                                        <ModalEliminar />
+                                    </td>
+                                </tr>
+                            ))}
+                            <tr className='container'>
                                 <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
@@ -278,8 +287,8 @@ export default function AgregarServicio() {
                                 <th className='text-letras colorthead' scope="col">  </th>
                                 <th className='text-letras colorthead'></th>
                             </tr>
-          </tbody>
-        </table>
+                        </tbody>
+                    </table>
 
 
                     {/* Paginación */}
