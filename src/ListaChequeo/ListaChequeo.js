@@ -1,49 +1,36 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import imglist from "../img/imglist.png";
-import "../ListaChequeo/ListaChequeo.css"
 import LogoGasolina from "../img/LogoGasolina.svg";
+import "../ListaChequeo/ListaChequeo.css";
 import axios from 'axios';
 
-
 const CheckListComponent = () => {
-
-    const [images, setImages] = useState({
-        fotoDerecha: null,
-        fotoIzquierda: null,
-        fotoFrontal: null,
-        fotoPosterior: null,
-        indicadorCombustible: null,
+    const [images, setImages] = useState([null, null, null, null, null]);
+    const [formData, setFormData] = useState({
+        observationsRight: '',
+        observationsLeft: '',
+        observationsFrontal: '',
+        observationsBack: '',
+        observationsIndicador: '',
     });
-
-    const [observaciones, setObservaciones] = useState({
-        observacionDerecha: '',
-        observacionIzquierda: '',
-        observacionFrontal: '',
-        observacionPosterior: '',
-        observacionCombustible: '',
-    });
-
     const [combustible, setCombustible] = useState('');
+    const navigate = useNavigate();
 
-    const handleImageChange = (event, key) => {
-        const file = event.target.files[0];
+    const handleImageChange = (e, index) => {
+        const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImages(prevState => ({
-                    ...prevState,
-                    [key]: reader.result,
-                }));
-            };
-            reader.readAsDataURL(file);
+            const updatedImages = [...images];
+            updatedImages[index] = file;
+            setImages(updatedImages);
         }
     };
 
-    const handleObservationChange = (event) => {
-        const { id, value } = event.target;
-        setObservaciones(prevState => ({
-            ...prevState,
-            [id]: value,
+    const handleObservationChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prevData => ({
+            ...prevData,
+            [name]: value,
         }));
     };
 
@@ -51,11 +38,45 @@ const CheckListComponent = () => {
         setCombustible(event.target.id);
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        // Aquí puedes agregar la lógica para enviar los datos del formulario
-        console.log('Formulario enviado con observaciones:', observaciones);
-        console.log('Combustible seleccionado:', combustible);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            // Enviar los datos del formulario para agregar los campos de observacion
+            const response = await axios.post('http://localhost:8080/serviteca/revisiones', formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            const revisionId = response.data.id;
+
+            // Preparar FormData para la solicitud PUT para cargar las imagenes x5
+            const formDataWithFiles = new FormData();
+            formDataWithFiles.append('id', revisionId);
+
+            images.forEach(image => {
+                if (image) {
+                    formDataWithFiles.append('files', image);
+                }
+            });
+
+            Object.keys(formData).forEach(key => {
+                formDataWithFiles.append(key, formData[key]);
+            });
+
+            // Enviar FormData que incluye las imágenes
+            await axios.put('http://localhost:8080/serviteca/revisiones/uploadFotos', formDataWithFiles, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            navigate("/chequeo");
+        } catch (error) {
+            console.error('Error al enviar los datos', error);
+            alert('Hubo un problema al enviar los datos');
+        }
     };
 
     return (
@@ -65,7 +86,7 @@ const CheckListComponent = () => {
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
                             <li className="breadcrumb-item">
-                                <a href="/agregarorden"><i className="fa-solid fa-house"></i> Inicio</a>
+                                <a href="/listachequeo"><i className="fa-solid fa-house"></i> Inicio</a>
                             </li>
                             <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                             <li className="breadcrumb-item active" aria-current="page">Lista de Chequeo</li>
@@ -81,7 +102,7 @@ const CheckListComponent = () => {
                     </button>
                 </div>
 
-                {/* modal inventario */}
+                {/* Modal Inventario */}
                 <div className="modal fade" id="inventario" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-xl">
                         <div className="modal-content">
@@ -103,8 +124,8 @@ const CheckListComponent = () => {
                                             <tr className='tr001'>
                                                 <td>parlantes</td>
                                                 <td>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                    <div className="form-check">
+                                                        <input className="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
                                                     </div>
                                                 </td>
                                                 <td>6 parlantes</td>
@@ -117,12 +138,12 @@ const CheckListComponent = () => {
                     </div>
                 </div>
 
-                {/* modal historia */}
+                {/* Modal Historia */}
                 <div className="modal fade" id="historia" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div className="modal-dialog modal-xl">
                         <div className="modal-content">
                             <div className="modal-header">
-                                <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de serivicio para abrir la ejecución</h1>
+                                <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de servicio para abrir la ejecución</h1>
                                 <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
@@ -145,7 +166,6 @@ const CheckListComponent = () => {
                                             <td>@mdo</td>
                                             <td>16</td>
                                             <td>No se observa nada</td>
-
                                         </tr>
                                         <tr className='tr001'>
                                             <th scope="row">2</th>
@@ -169,16 +189,16 @@ const CheckListComponent = () => {
             <h3 className='mb-3 text-center' style={{ width: "296px", height: "34px" }}>Lista de Chequeo</h3>
 
             <form onSubmit={handleSubmit}>
-                <div className="row mt-4">
+                <div className="" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: "5%", justifyItems: "center" }}>
                     {/* Foto Lateral Derecho */}
-                    <div className="col-md-6 d-flex align-items-center listcehk">
-                        <label className="w-50" htmlFor="fotoDerecha">Foto Lateral Derecho: *</label>
-                        <div className="w-50">
-                            <div className="card" style={{ width: '100%', height: '180px' }}>
-                                {images.fotoDerecha ? (
-                                    <img src={images.fotoDerecha} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="imageRight">Foto Lateral Derecho: *</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[2] ? (
+                                    <img src={URL.createObjectURL(images[2])} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
-                                    <label htmlFor="fotoDerecha" className="card-body text-center">
+                                    <label htmlFor="imageRight" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
                                         <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
@@ -188,10 +208,11 @@ const CheckListComponent = () => {
                                 <input
                                     type="file"
                                     className="form-control-file d-none"
-                                    id="fotoDerecha"
+                                    id="imageRight"
+                                    name="imageRight"
                                     accept="image/*"
                                     required
-                                    onChange={(event) => handleImageChange(event, 'fotoDerecha')}
+                                    onChange={(e) => handleImageChange(e, 2)}
                                 />
                             </div>
                             <div className="form-group mt-2">
@@ -201,7 +222,8 @@ const CheckListComponent = () => {
                                     id="observacionDerecha"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionDerecha}
+                                    name="observationsRight"
+                                    value={formData.observationsRight}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -209,14 +231,14 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Frontal */}
-                    <div className="col-md-6 d-flex align-items-center listcehk">
-                        <label className="w-50" htmlFor="fotoFrontal">Foto Frontal</label>
-                        <div className="w-50">
-                            <div className="card" style={{ width: '100%', height: '180px' }}>
-                                {images.fotoFrontal ? (
-                                    <img src={images.fotoFrontal} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="imageFrontal">Foto Frontal</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[0] ? (
+                                    <img src={URL.createObjectURL(images[0])} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
-                                    <label htmlFor="fotoFrontal" className="card-body text-center">
+                                    <label htmlFor="imageFrontal" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
                                         <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
@@ -226,10 +248,11 @@ const CheckListComponent = () => {
                                 <input
                                     type="file"
                                     className="form-control-file d-none"
-                                    id="fotoFrontal"
+                                    id="imageFrontal"
                                     accept="image/*"
                                     required
-                                    onChange={(event) => handleImageChange(event, 'fotoFrontal')}
+                                    onChange={(e) => handleImageChange(e, 0)}
+                                    name="imageFrontal"
                                 />
                             </div>
                             <div className="form-group mt-2">
@@ -239,7 +262,8 @@ const CheckListComponent = () => {
                                     id="observacionFrontal"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionFrontal}
+                                    name="observationsFrontal"
+                                    value={formData.observationsFrontal}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -247,51 +271,14 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Lateral Izquierda */}
-                    <div className="col-md-6 d-flex align-items-center listcehk">
-                        <label className="w-50" htmlFor="fotoIzquierda">Foto Lateral Izquierda</label>
-                        <div className="w-50">
-                            <div className="card" style={{ width: '100%', height: '180px' }}>
-                                {images.fotoIzquierda ? (
-                                    <img src={images.fotoIzquierda} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="imageLeft">Foto Lateral Izquierda</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[3] ? (
+                                    <img src={URL.createObjectURL(images[3])} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
-                                    <label htmlFor="fotoIzquierda" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
-                                            Examinar
-                                        </div>                                   </label>
-                                )}
-                                <input
-                                    type="file"
-                                    className="form-control-file d-none"
-                                    id="fotoIzquierda"
-                                    accept="image/*"
-                                    required
-                                    onChange={(event) => handleImageChange(event, 'fotoIzquierda')}
-                                />
-                            </div>
-                            <div className="form-group mt-2">
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="observacionIzquierda"
-                                    placeholder="Observación: *"
-                                    required
-                                    value={observaciones.observacionIzquierda}
-                                    onChange={handleObservationChange}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Foto Posterior */}
-                    <div className="col-md-6 d-flex align-items-center listcehk">
-                        <label className="w-50" htmlFor="fotoPosterior">Foto Posterior</label>
-                        <div className="w-50">
-                            <div className="card" style={{ width: '100%', height: '180px' }}>
-                                {images.fotoPosterior ? (
-                                    <img src={images.fotoPosterior} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
-                                ) : (
-                                    <label htmlFor="fotoPosterior" className="card-body text-center">
+                                    <label htmlFor="imageLeft" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
                                         <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
@@ -301,10 +288,51 @@ const CheckListComponent = () => {
                                 <input
                                     type="file"
                                     className="form-control-file d-none"
-                                    id="fotoPosterior"
+                                    id="imageLeft"
                                     accept="image/*"
                                     required
-                                    onChange={(event) => handleImageChange(event, 'fotoPosterior')}
+                                    onChange={(e) => handleImageChange(e, 3)}
+                                    name="imageLeft"
+                                />
+                            </div>
+                            <div className="form-group mt-2">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="observacionIzquierda"
+                                    placeholder="Observación: *"
+                                    required
+                                    name="observationsLeft"
+                                    value={formData.observationsLeft}
+                                    onChange={handleObservationChange}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Foto Posterior */}
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="imageBack">Foto Posterior</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[1] ? (
+                                    <img src={URL.createObjectURL(images[1])} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="imageBack" className="card-body text-center">
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="imageBack"
+                                    accept="image/*"
+                                    required
+                                    onChange={(e) => handleImageChange(e, 1)}
+                                    name="imageBack"
                                 />
                             </div>
                             <div className="form-group mt-2">
@@ -314,7 +342,8 @@ const CheckListComponent = () => {
                                     id="observacionPosterior"
                                     placeholder="Observación: *"
                                     required
-                                    value={observaciones.observacionPosterior}
+                                    name="observationsBack"
+                                    value={formData.observationsBack}
                                     onChange={handleObservationChange}
                                 />
                             </div>
@@ -322,12 +351,12 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Indicador de Combustible */}
-                    <div className="col-md-6 d-flex align-items-center listcehk">
-                        <label className="w-50" htmlFor="indicadorCombustible">Indicador de Combustible</label>
-                        <div className="w-50">
-                            <div className="card" style={{ width: '100%', height: '180px' }}>
-                                {images.indicadorCombustible ? (
-                                    <img src={images.indicadorCombustible} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[4] ? (
+                                    <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="indicadorCombustible" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
@@ -341,76 +370,77 @@ const CheckListComponent = () => {
                                     className="form-control-file d-none"
                                     id="indicadorCombustible"
                                     accept="image/*"
-                                    onChange={(event) => handleImageChange(event, 'indicadorCombustible')}
+                                    onChange={(e) => handleImageChange(e, 4)}
+                                    name="imageIndicador"
                                 />
                             </div>
                         </div>
                     </div>
 
                     {/* formuario  */}
-                    <div className='col-md-6 listcehk'>
-                        <div >
-                            <div className=' d-flex align-items-center flex-column' style={{ display: "flex", alignContent: "flex-start", flexWrap: "wrap" }}>
-                                <div className="form-group mt-2 d-flex flex-column">
-                                    <div className=" d-flex flex-row" style={{ gap: "25px" }}>
-                                        <img src={LogoGasolina} style={{ color: "#ff5733", fontSize: "50px" }}/>
-                                        <div className="form-check d-flex flex-column align-items-center p-0">
-                                            <input
-                                                className="form-check-input m-0 tamano-chek"
-                                                type="radio"
-                                                id="fuelE"
-                                                name="fuel"
-                                                required
-                                                checked={combustible === 'fuelE'}
-                                                onChange={handleFuelChange}
-                                            />
-                                            <label className="form-check-label tamano-chek" htmlFor="fuelE">  E </label>
-                                        </div>
-                                        <div className="form-check d-flex flex-column align-items-center p-0">
-                                            <input
-                                                className="form-check-input m-0 tamano-chek"
-                                                type="radio"
-                                                id="fuelHalf"
-                                                name="fuel"
-                                                required
-                                                checked={combustible === 'fuelHalf'}
-                                                onChange={handleFuelChange}
-                                            />
-                                            <label className="form-check-label tamano-chek" htmlFor="fuelHalf"> 1/2 </label>
-                                        </div>
-                                        <div className="form-check d-flex flex-column align-items-center p-0">
-                                            <input
-                                                className="form-check-input m-0 tamano-chek"
-                                                type="radio"
-                                                id="fuelF"
-                                                name="fuel"
-                                                required
-                                                checked={combustible === 'fuelF'}
-                                                onChange={handleFuelChange}
-                                            />
-                                            <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
-                                        </div>
+                    <div className="listcehk" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", alignContent: "space-between", width: "80%" }}>
+                        <div className=' d-flex align-items-center flex-column'>
+                            <div className="form-group mt-2 d-flex flex-column">
+                                <div className=" d-flex flex-row" style={{ gap: "25px" }}>
+                                    <img src={LogoGasolina} style={{ color: "#ff5733", fontSize: "50px" }} />
+                                    <div className="form-check d-flex flex-column align-items-center p-0">
+                                        <input
+                                            className="form-check-input m-0 tamano-chek"
+                                            type="radio"
+                                            id="fuelE"
+                                            name="fuel"
+                                            required
+                                            checked={combustible === 'fuelE'}
+                                            onChange={handleFuelChange}
+                                        />
+                                        <label className="form-check-label tamano-chek" htmlFor="fuelE">  E </label>
                                     </div>
-
+                                    <div className="form-check d-flex flex-column align-items-center p-0">
+                                        <input
+                                            className="form-check-input m-0 tamano-chek"
+                                            type="radio"
+                                            id="fuelHalf"
+                                            name="fuel"
+                                            required
+                                            checked={combustible === 'fuelHalf'}
+                                            onChange={handleFuelChange}
+                                        />
+                                        <label className="form-check-label tamano-chek" htmlFor="fuelHalf"> 1/2 </label>
+                                    </div>
+                                    <div className="form-check d-flex flex-column align-items-center p-0">
+                                        <input
+                                            className="form-check-input m-0 tamano-chek"
+                                            type="radio"
+                                            id="fuelF"
+                                            name="fuel"
+                                            required
+                                            checked={combustible === 'fuelF'}
+                                            onChange={handleFuelChange}
+                                        />
+                                        <label className="form-check-label tamano-chek" htmlFor="fuelF"> F </label>
+                                    </div>
                                 </div>
+
                             </div>
                         </div>
                         <div className='col-md-12'>
                             <div className='d-flex align-items-center flex-row'>
-                                <label className="w-50 " htmlFor="indicadorCombustible">Observacion</label>
-                                <div className="form-group mt-2 w-50">
+                                <label className="" style={{ marginRight: "125px" }} htmlFor="indicadorCombustible">Observacion</label>
+                                <div className="form-group mt-2 ">
                                     <input
                                         type="text"
                                         className="form-control"
                                         id="indicadorCombustible"
                                         placeholder="Observación: *"
                                         required
-                                        value={observaciones.observacionCombustible}
+                                        name="observationsIndicador"
+                                        value={formData.observationsIndicador}
                                         onChange={handleObservationChange}
                                     />
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
                 {/* Botón de Enviar */}
@@ -423,3 +453,29 @@ const CheckListComponent = () => {
 };
 
 export default CheckListComponent;
+
+{/* <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                        <label className="" style={{ marginRight: "115px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
+                        <div className="">
+                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                                {images[4] ? (
+                                    <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                ) : (
+                                    <label htmlFor="indicadorCombustible" className="card-body text-center">
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
+                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                            Examinar
+                                        </div>
+                                    </label>
+                                )}
+                                <input
+                                    type="file"
+                                    className="form-control-file d-none"
+                                    id="indicadorCombustible"
+                                    accept="image/*"
+                                    onChange={(e) => handleImageChange(e, 4)}
+                                    name="imageIndicador"
+                                />
+                            </div>
+                        </div>
+                    </div> */}

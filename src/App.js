@@ -28,6 +28,7 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
+import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
 
 
 function App() {
@@ -65,6 +66,7 @@ function App() {
         <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
         <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
         <Route path="/informe-servicios" element={<InfoServicios />} />
+        <Route path="/chequeo" element={<ListadoChequeo />} />
 
         {/* Rutas fin de Jefer */}
 
