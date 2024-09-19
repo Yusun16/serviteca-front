@@ -114,21 +114,30 @@ const CheckListComponent = () => {
                                 <div className='container'>
                                     <table className="container">
                                         <thead>
-                                            <tr className='tr001'>
+                                            <tr className='tr001 text-center'>
                                                 <th className='colorthead' scope="col">Descripción</th>
                                                 <th className='colorthead' scope="col">Chequeo</th>
                                                 <th className='colorthead' scope="col">Observación</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                        <tbody className='text-center'>
                                             <tr className='tr001'>
                                                 <td>parlantes</td>
                                                 <td>
                                                     <div className="form-check">
-                                                        <input className="form-check-input" style={{ marginLeft: "1px" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                        <input className="form-check-input" style={{ marginLeft: "1px", float:"initial" }} type="checkbox" value="" id="flexCheckDefault" />
                                                     </div>
                                                 </td>
                                                 <td>6 parlantes</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Radio</td>
+                                                <td>
+                                                    <div className="form-check flex-center">
+                                                        <input className="form-check-input" style={{ marginLeft: "1px", float:"initial" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                    </div>
+                                                </td>
+                                                <td>Sony</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -147,36 +156,37 @@ const CheckListComponent = () => {
                                 <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
-                                <table className="container">
+                                <table className="container text-center">
                                     <thead>
                                         <tr className='tr001'>
                                             <th className='colorthead' scope="col">Fecha de Servicio</th>
                                             <th className='colorthead' scope="col">N° Kilometros</th>
                                             <th className='colorthead' scope="col">N° de Servicio</th>
                                             <th className='colorthead' scope="col">Nombre operario</th>
-                                            <th className='colorthead' scope="col">N° Factura</th>
                                             <th className='colorthead' scope="col">Observación</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody className='text-center'>
                                         <tr className='tr001'>
                                             <th scope="row">1</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>16</td>
+                                            <td>15000 km</td>
+                                            <td>0504</td>
+                                            <td>edmundo</td>
                                             <td>No se observa nada</td>
                                         </tr>
                                         <tr className='tr001'>
                                             <th scope="row">2</th>
-                                            <td>Jacob</td>
-                                            <td>Thornton</td>
-                                            <td>@fat</td>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                            <td>No se observa nada</td>
                                         </tr>
                                         <tr className='tr001'>
                                             <th scope="row">3</th>
-                                            <td colSpan="2">Larry the Bird</td>
-                                            <td>@twitter</td>
+                                            <td>Mark</td>
+                                            <td>Otto</td>
+                                            <td>@mdo</td>
+                                            <td>No se observa nada</td>
                                         </tr>
                                     </tbody>
                                 </table>
