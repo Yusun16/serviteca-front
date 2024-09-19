@@ -12,12 +12,11 @@ export default function () {
               <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body">
-              Registro guardado con exito
-            </div>
-            <div className="botonposicion modal-footer" >
-              <a type="" href='/agregarservicio' className="btn btn-success">Ok</a >
+            <h6> Registro guardado con exito</h6>
 
+            <a type="" href='/agregarservicio' className="btnn-color-modal">Ok</a >
             </div>
+          
           </div>
         </div>
       </div>

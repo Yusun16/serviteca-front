@@ -131,7 +131,7 @@ export default function ListadoCliente() {
                 <td>{cliente.nombre}</td>
                 <td>{cliente.ciudad}</td>
                 <td className='text-center'>
-                  <Link to={`/editarCliente/${cliente.idCliente}`} className='btn btn-sm me-3'>
+                  <Link to={`/EditarCliente/${cliente.idCliente}`} className='btn btn-sm me-3'>
                     <i className="fa-solid fa-pen-to-square"></i>
                   </Link>
                 </td>

@@ -20,6 +20,8 @@ body {
   justify-content: center;
   position: absolute;
   left: 88%;
+  top: 5% ;
+  left: 90%;
 }
 
 .equis-close::before {
@@ -40,6 +42,31 @@ body {
 .colorthead {
   background-color: #002060;
   color: white;
+}
+
+.btnncolor {
+  background-color: #0CC243;
+  text-decoration: none;
+  color: white;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  
+}
+.btnncolor:hover {
+  opacity: 50%;
+}
+
+.btnn-color-modal {
+  background-color: #2ECC71;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  padding: 5px;
+  top: 50px;
+}
+.btnn-color-modal:hover {
+  background-color: #0CC243;
 }
 
 .btncolor {
@@ -721,6 +748,18 @@ body {
 .img-ready {
   width: 140px;
   height: 145px;
+
+}
+
+.ready-position {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.colorr-modal {
+background-color: #F0F0F0 ;
 }
 
 /* Del componente BuscarAutPar */

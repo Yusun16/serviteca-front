@@ -53,7 +53,10 @@ function App() {
         <Route exact path="/listadovehiculo" element={<ListadoVehiculo />} />
         <Route exact path="/agregarvehiculo" element={<AgregarVehiculo />} />
         <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
-        <Route exact path="/ejecucionservicio" element={<EjecucionServicio />} />
+        <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
+        <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
+
+
         {/* Rutas de Jefer */}
         <Route path="/auto-partes" element={<IniAutPar />} />
         <Route path="/agregar-auto-partes" element={<AutoPartes />} />

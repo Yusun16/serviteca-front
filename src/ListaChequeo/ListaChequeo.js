@@ -155,7 +155,7 @@ const CheckListComponent = () => {
                                             <th className='colorthead' scope="col">N° de Servicio</th>
                                             <th className='colorthead' scope="col">Nombre operario</th>
                                             <th className='colorthead' scope="col">N° Factura</th>
-                                            <th className='colorthead' scope="col">Observacion</th>
+                                            <th className='colorthead' scope="col">Observación</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -359,8 +359,8 @@ const CheckListComponent = () => {
                                     <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="indicadorCombustible" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
+                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
                                     </label>
@@ -430,7 +430,7 @@ const CheckListComponent = () => {
                                     <input
                                         type="text"
                                         className="form-control"
-                                        id="indicadorCombustible"
+                                        id="observacionCombustible"
                                         placeholder="Observación: *"
                                         required
                                         name="observationsIndicador"
