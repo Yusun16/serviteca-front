@@ -29,6 +29,7 @@ import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
 import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
+import EditarCliente from "./Registrar/EditarCliente";
 
 
 function App() {
