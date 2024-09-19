@@ -28,7 +28,7 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
-import EditarCliente from "./Registrar/EditarCliente";
+import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
 
 
 function App() {
@@ -55,8 +55,8 @@ function App() {
         <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
-   
-        
+
+
         {/* Rutas de Jefer */}
         <Route path="/auto-partes" element={<IniAutPar />} />
         <Route path="/agregar-auto-partes" element={<AutoPartes />} />
@@ -69,7 +69,7 @@ function App() {
         <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
         <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
         <Route path="/informe-servicios" element={<InfoServicios />} />
-        
+        <Route path="/chequeo" element={<ListadoChequeo />} />
 
         {/* Rutas fin de Jefer */}
 
