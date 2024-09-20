@@ -72,7 +72,7 @@ const CheckListComponent = () => {
                 },
             });
 
-            navigate("/chequeo");
+            navigate("/ejecucionservicio");
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
@@ -125,16 +125,16 @@ const CheckListComponent = () => {
                                                 <td>parlantes</td>
                                                 <td>
                                                     <div className="form-check">
-                                                        <input className="form-check-input" style={{ marginLeft: "1px", float:"initial" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                        <input className="form-check-input" style={{ marginLeft: "1px", float: "initial" }} type="checkbox" value="" id="flexCheckDefault" />
                                                     </div>
                                                 </td>
                                                 <td>6 parlantes</td>
                                             </tr>
                                             <tr>
-                                            <td>Radio</td>
+                                                <td>Radio</td>
                                                 <td>
                                                     <div className="form-check flex-center">
-                                                        <input className="form-check-input" style={{ marginLeft: "1px", float:"initial" }} type="checkbox" value="" id="flexCheckDefault" />
+                                                        <input className="form-check-input" style={{ marginLeft: "1px", float: "initial" }} type="checkbox" value="" id="flexCheckDefault" />
                                                     </div>
                                                 </td>
                                                 <td>Sony</td>
@@ -196,17 +196,17 @@ const CheckListComponent = () => {
                 </div>
             </div>
 
-            <h3 className='mb-3 text-center' style={{ width: "296px", height: "34px" }}>Lista de Chequeo</h3>
+            <h3 className='mb-3 text-center' style={{ width: "353px", height: "62px" }}>Lista de Chequeo</h3>
 
             <form onSubmit={handleSubmit}>
                 <div className="" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", columnGap: "5%", justifyItems: "center" }}>
                     {/* Foto Lateral Derecho */}
-                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
-                        <label className="" style={{ marginRight: "115px" }} htmlFor="imageRight">Foto Lateral Derecho: *</label>
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
+                        <label className="" style={{ marginRight: "107px" }} htmlFor="imageRight">Foto Lateral Derecho: *</label>
                         <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                            <div className="card" style={{ width: '367px', height: '180px' }}>
                                 {images[2] ? (
-                                    <img src={URL.createObjectURL(images[2])} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                    <img src={URL.createObjectURL(images[2])} alt="Foto Lateral Derecho" className="card-img-top" style={{ height: '100%', width: '-webkit-fill-available', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="imageRight" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
@@ -241,12 +241,12 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Frontal */}
-                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
                         <label className="" style={{ marginRight: "115px" }} htmlFor="imageFrontal">Foto Frontal</label>
                         <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                            <div className="card" style={{ width: '367px', height: '180px' }}>
                                 {images[0] ? (
-                                    <img src={URL.createObjectURL(images[0])} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                    <img src={URL.createObjectURL(images[0])} alt="Foto Frontal" className="card-img-top" style={{ height: '180px', width: '-webkit-fill-available', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="imageFrontal" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
@@ -281,12 +281,12 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Lateral Izquierda */}
-                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
                         <label className="" style={{ marginRight: "115px" }} htmlFor="imageLeft">Foto Lateral Izquierda</label>
                         <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                            <div className="card" style={{ width: '367px', height: '180px' }}>
                                 {images[3] ? (
-                                    <img src={URL.createObjectURL(images[3])} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                    <img src={URL.createObjectURL(images[3])} alt="Foto Lateral Izquierda" className="card-img-top" style={{ height: '180px', width: '-webkit-fill-available', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="imageLeft" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
@@ -321,12 +321,12 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Foto Posterior */}
-                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
                         <label className="" style={{ marginRight: "115px" }} htmlFor="imageBack">Foto Posterior</label>
                         <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                            <div className="card" style={{ width: '367px', height: '180px' }}>
                                 {images[1] ? (
-                                    <img src={URL.createObjectURL(images[1])} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                    <img src={URL.createObjectURL(images[1])} alt="Foto Posterior" className="card-img-top" style={{ height: '180px', width: '-webkit-fill-available', maxWidth: '145%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="imageBack" className="card-body text-center">
                                         <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
@@ -361,15 +361,15 @@ const CheckListComponent = () => {
                     </div>
 
                     {/* Indicador de Combustible */}
-                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
-                        <label className="" style={{ marginRight: "115px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
+                    <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
+                        <label className="" style={{ marginRight: "86px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
                         <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
+                            <div className="card" style={{ width: '367px', height: '180px', left:"2%" }}>
                                 {images[4] ? (
-                                    <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
+                                    <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (
                                     <label htmlFor="indicadorCombustible" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }} alt="Examinar" />
+                                        <img src={imglist} style={{ width: "117px", position: "relative", right: "35px" }} alt="Examinar" />
                                         <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
                                             Examinar
                                         </div>
@@ -463,29 +463,3 @@ const CheckListComponent = () => {
 };
 
 export default CheckListComponent;
-
-{/* <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "80%" }}>
-                        <label className="" style={{ marginRight: "115px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
-                        <div className="">
-                            <div className="card" style={{ width: '145%', height: '180px' }}>
-                                {images[4] ? (
-                                    <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '145%', objectFit: 'fill' }} />
-                                ) : (
-                                    <label htmlFor="indicadorCombustible" className="card-body text-center">
-                                        <img src={imglist} style={{ width: "117.86px", position: "relative", right: "35px" }}></img>
-                                        <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "150px", width: "95px" }}>
-                                            Examinar
-                                        </div>
-                                    </label>
-                                )}
-                                <input
-                                    type="file"
-                                    className="form-control-file d-none"
-                                    id="indicadorCombustible"
-                                    accept="image/*"
-                                    onChange={(e) => handleImageChange(e, 4)}
-                                    name="imageIndicador"
-                                />
-                            </div>
-                        </div>
-                    </div> */}
