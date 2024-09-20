@@ -40,15 +40,15 @@ export default function EjecucionServicio() {
                     <li className="breadcrumb-item active" aria-current="page">Ejecución del servicio</li>
                 </ol>
             </nav>
-            <div class="container text-center">
-                <div class="row align-items-start">
-                    <div class="col">
+            <div className="container text-center">
+                <div className="row align-items-start">
+                    <div className="col">
                         Placa: 40H
                     </div>
-                    <div class="col">
+                    <div className="col">
                         Placa: 28H
                     </div>
-                    <div class="col">
+                    <div className="col">
                         <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
                             style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
                             onClick={exportToPDF}>
@@ -57,17 +57,17 @@ export default function EjecucionServicio() {
                 </div>
             </div>
 
-            <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+            <div className="h4 pb-2 mb-4  border-bottom border-black"></div>
 
-            <form class="container text-center">
-                <div class="row align-items-start">
-                    <div class="col">
+            <form className="container text-center">
+                <div className="row align-items-start">
+                    <div className="col">
 
-                        <div class="col" style={{ display: "flex", flexDirection: "row" }}>
+                        <div className="col" style={{ display: "flex", flexDirection: "row" }}>
 
-                            <div className='col-2'>operarios: *</div>
+                            <div className='col-2'>operario: *</div>
                             <div className='col-6'>
-                                <select class="form-select" aria-label="Default select example">
+                                <select className="form-select" aria-label="Default select example">
                                     <option selected>Open this select menu</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
@@ -78,118 +78,145 @@ export default function EjecucionServicio() {
 
                         <div className='text-start' style={{ margin: "10px" }}>Servicios asignados:</div>
 
-                        <table class="table">
+                        <table className="container">
                             <thead>
                                 <tr>
-                                    <th scope="col">Servicio</th>
-                                    <th scope="col">Inicio</th>
-                                    <th scope="col">Terminado</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Servicio</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Inicio</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr className='tr-table-tr text-center'>
                                     <td>Cambio de pastillas</td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
                                 </tr>
-                                <tr>
+                                <tr className='tr-table-tr text-center' >
                                     <td>Cambio de aceite</td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
                                 </tr>
-                                <tr>
+                                <tr className='tr-table-tr text-center'>
                                     <td>Lavado</td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
                                 </tr>
-                                <tr>
+                                <tr className='tr-table-tr text-center'>
                                     <td>Cambio filtro de aire</td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                    <td> <input class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                    <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
+                                </tr>
+                                <tr  >
+                                    <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
+                                    <th className='text-letras colorthead' scope="col"></th>
+                                    <th className='text-letras colorthead' scope="col"></th>
+
                                 </tr>
                             </tbody>
                         </table>
-                        <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                        <div className="h4 pb-2 mb-4  border-bottom border-black"></div>
 
-                        <div class="col" style={{ display: "flex", flexDirection: "row" }}>
+                        <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                             <div className='col-4'>Productos según servicio:</div>
                             <div className='col-5'>
-                                <select class="form-select" aria-label="Default select example">
+                                <select className="form-select" aria-label="Default select example">
                                     <option selected>Open this select menu</option>
                                     <option value="1">One</option>
                                     <option value="2">Two</option>
                                     <option value="3">Three</option>
                                 </select>
                             </div>
-                            <Link className='col-4'>Agregar</Link>
+                            <div className=' col-4'>
+                            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
+                              Agregar
+                            </button>
+                            <modalAgregarEjecucion />
+                            </div>
+
+                            
                         </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Referencia</th>
-                                    <th scope="col">Cantidad</th>
-                                    <th scope="col">Terminado</th>
+                        <table className="container" style={{ marginTop: "15px" }}>
+                            <thead >
+                                <tr className='tr-table-tr text-center'>
+                                    <th className='text-letras colorthead text-center' scope="col">Referencia</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Cantidad</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr className='tr-table-tr text-center'>
                                     <td>Mark</td>
                                     <td>Otto</td>
                                     <td>@mdo</td>
                                 </tr>
-                                <tr>
+                                <tr className='tr-table-tr text-center'>
                                     <td>Jacob</td>
                                     <td>Thornton</td>
                                     <td>@fat</td>
+                                </tr>
+                                <tr className='tr-table-tr text-center'>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                </tr>
+                                <tr className='tr-table-tr text-center'>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                </tr>
+                                <tr  >
+                                    <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
+                                    <th className='text-letras colorthead' scope="col"></th>
+                                    <th className='text-letras colorthead' scope="col"></th>
+
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="col">
-                        <div class="col" style={{ display: "flex", flexDirection: "row" }}>
+                    <div className="col">
+                        <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                             <div className='col-3'>Fecha Inicio:</div>
                             <div className='col-3'>
-                                <input type="date" class="form-control" id="date" />
+                                <input type="date" className="form-control" id="date" />
                             </div>
                             <div className='col-3'>Fecha Final:</div>
                             <div className='col-3'>
-                                <input type="date" class="form-control" id="date" />
+                                <input type="date" className="form-control" id="date" />
                             </div>
                         </div>
 
                         <div>
-                            <div class="col">
-                                <div class="col" style={{ display: "flex", flexDirection: "row" }}>
+                            <div className="col">
+                                <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                                     <div className='col-3'>Hora Inicio:</div>
                                     <div className='col-3'>
-                                        <input type="time" class="form-control" id="start-time" />
+                                        <input type="time" className="form-control" id="start-time" />
                                     </div>
                                     <div className='col-3'>Hora Final:</div>
                                     <div className='col-3'>
-                                        <input type="time" class="form-control" id="end-time" />
+                                        <input type="time" className="form-control" id="end-time" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className='container'>
-                            <div class="container text-center">
-                                <div class="row align-items-start">
-                                    <div class="col">
+                        <div className='container' style={{ marginTop: "25px" }}>
+                            <div className="container text-center">
+                                <div className="row align-items-start">
+                                    <div className="col">
                                         Antes
                                     </div>
-                                    <div class="col">
+                                    <div className="col" >
                                         Despues
                                     </div>
                                 </div>
                             </div>
 
-
-
-                            <div class="col" style={{ display: "flex", flexDirection: "row", alignItems:"center", gap:"20px" }}>
+                            <div className="col" style={{ display: "flex", flexDirection: "row", alignItems: "center", columnGap: "50px", marginBottom: "15px" }}>
                                 <div className='col-3'>Foto frontal:</div>
                                 <div className='col-3'>
-                                    <div className="card" style={{ width: '100px', height: '100px', overflow: "hidden" }}>
+                                    <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
                                         {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
                                         <input
                                             type="file"
@@ -200,15 +227,15 @@ export default function EjecucionServicio() {
                                         />
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px", }} />
+                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
                                         </label>
                                     </div>
                                 </div>
                                 <div className='col-3'>
-                                    <div className="card" style={{ width: '100px', height: '100px', overflow: "hidden" }}>
+                                    <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
                                         {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
                                         <input
                                             type="file"
@@ -219,18 +246,18 @@ export default function EjecucionServicio() {
                                         />
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px", }} />
+                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col" style={{ display: "flex", flexDirection: "row", alignItems:"center", gap:"20px" }}>
+                            <div className="col" style={{ display: "flex", flexDirection: "row", alignItems: "center", columnGap: "50px", marginBottom: "15px" }}>
                                 <div className='col-3'>Foto posterior:</div>
                                 <div className='col-3'>
-                                    <div className="card" style={{ width: '194px', height: '104px', overflow: "hidden" }}>
+                                    <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
                                         {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
                                         <input
                                             type="file"
@@ -241,15 +268,15 @@ export default function EjecucionServicio() {
                                         />
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px", }} />
+                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
                                         </label>
                                     </div>
                                 </div>
                                 <div className='col-3'>
-                                    <div className="card"style={{ display: "flex", flexDirection: "row", alignItems:"center", gap:"20px" }}>
+                                    <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
                                         {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
                                         <input
                                             type="file"
@@ -260,23 +287,23 @@ export default function EjecucionServicio() {
                                         />
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px", }} />
+                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
                                         </label>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col" style={{ display: "flex", flexDirection: "row" }}>
+                            <div className="col" style={{ display: "flex", flexDirection: "row", columnGap: "50px", marginBottom: "15px" }}>
 
-                                <div className='col-4' >Observaciones: </div>
-                                <div className='col-6'>
-                                    <input type="observaciones" class="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} />
+                                <div className='col-3' >Observaciones: </div>
+                                <div className='col-9'>
+                                    <input type="observaciones" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} />
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-success">Guardar</button>
+                            <button type="button" className="btn btn-success">Guardar</button>
                         </div>
                     </div>
                 </div>

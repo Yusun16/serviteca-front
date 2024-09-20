@@ -28,10 +28,8 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
-<<<<<<< HEAD
 import EditarCliente from "./Registrar/EditarCliente";
-=======
->>>>>>> 009306575875e5536edb1d6f1f2d46cb445503b1
+import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion";
 
 
 function App() {
@@ -58,6 +56,7 @@ function App() {
         <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
+        <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
    
         
         {/* Rutas de Jefer */}

@@ -22,9 +22,10 @@ export default function AgregarCliente() {
         ciudad: "",
         razonSocial: "",
         nit: "",
+       
     });
 
-    const { cedula, nombre, apellido, correo, direccion, telefono, departamento, ciudad } = cliente;
+    const { cedula, nombre, apellido, correo, direccion, telefono, departamento, ciudad, nit, razonSocial } = cliente;
 
     const onInputChange = (e) => {
         setCliente({ ...cliente, [e.target.name]: e.target.value });
@@ -115,12 +116,12 @@ export default function AgregarCliente() {
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
             <div className="col">
                 <div className="mb-3">
-                    <label htmlFor="cedula" className="form-label">NIT: *</label>
-                    <input type="number" className="form-control" id="cedula" name='cedula' required style={{ width: "320px" }}  value={cedula} onChange={(e) => onInputChange(e)}  />
+                    <label htmlFor="nit" className="form-label">NIT: *</label>
+                    <input type="number" className="form-control" id="nit" name='nit' required style={{ width: "320px" }}  value={nit} onChange={(e) => onInputChange(e)}  />
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="nombre" className="form-label">Razón social: *</label>
-                    <input type="text" className="form-control" required id="nombre" name='nombre'  value={nombre} onChange={(e) => onInputChange(e)}   />
+                    <label htmlFor="razonSocial" className="form-label">Razón social: *</label>
+                    <input type="text" className="form-control" required id="razonSocial" name='razonSocial'  value={razonSocial} onChange={(e) => onInputChange(e)}   />
                 </div>
                 <div className="mb-3">
                     <label htmlFor="correo" className="form-label">Correo: *</label>
