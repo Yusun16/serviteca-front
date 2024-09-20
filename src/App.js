@@ -72,7 +72,7 @@ function App() {
         <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
         <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
         <Route path="/informe-servicios" element={<InfoServicios />} />
-        <Route path="/chequeo" element={<ListadoChequeo />} />
+        <Route path="/chequeo" element={<ListaChequeo />} />
 
         {/* Rutas fin de Jefer */}
 
