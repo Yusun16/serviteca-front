@@ -30,7 +30,7 @@ import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
 import EditarCliente from "./Registrar/EditarCliente";
 import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion";
-
+import ClienteNatural from "./Registrar/clienteNatural";
 
 function App() {
   return (
@@ -38,7 +38,7 @@ function App() {
       <Navegacion />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
-        <Route exact path="/login" element={<JefeTaller />} />
+        <Route exact path="/loginnn" element={<JefeTaller />} />
         <Route exact path="/agregarservicio" element={<AgregarServicio />} />
         <Route exact path="/buscarservicio/" element={<BuscarServicio />} />
         <Route exact path="/" element={<ListadoServicios />} />
@@ -57,6 +57,7 @@ function App() {
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
         <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
+        <Route exact path="/clienteNatural/" element={<ClienteNatural />} />
    
         
         {/* Rutas de Jefer */}

@@ -1,11 +1,10 @@
 import React from 'react';
-import ModalEjecucionBuscar from './modalEjecucionBuscar';
 
 export default function () {
     return (
         <div>
-            <div className="modal fade" id="modalagregarejecucion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
-                <div className="modal-dialog modal-lg modal-dialog-centered">
+            <div className="modal fade" id="modalbuscarejecucion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                <div className="modal-dialog modal-xl modal-dialog-centered">
                     <div className="modal-content colorr-modal">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="exampleModalLabel" style={{ color: "black" }}></h1>
@@ -13,7 +12,7 @@ export default function () {
                         </div>
                         <div className="modal-body text-center" >
                         <div className="col" style={{ display: "flex", flexDirection: "row" }}>
-                            <div className='col-4'>Agregar Productos:</div>
+                            <div className='col-4'>Productos según servicio:</div>
                             <div className='col-5'>
                                 <select className="form-select" aria-label="Default select example">
                                     <option selected>Open this select menu</option>
@@ -23,10 +22,10 @@ export default function () {
                                 </select>
                             </div>
                             <div className=' col-4'>
-                            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalbuscarejecucion">
+                            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
                               Buscar
                             </button>
-                        <ModalEjecucionBuscar/>
+                        
                             </div>
 
                             
@@ -35,8 +34,8 @@ export default function () {
                             <thead >
                                 <tr className='tr-table-tr text-center'>
                                     <th className='text-letras colorthead text-center' scope="col">Referencia</th>
-                                    <th className='text-letras colorthead text-center' scope="col">Agregar</th>
                                     <th className='text-letras colorthead text-center' scope="col">Cantidad</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -72,7 +71,7 @@ export default function () {
 
                         </div>
                         <div className="botonposicion modal-footer" >
-                            <a type="submit" href='/' className="btn btn-success btn-center">Ok</a >
+                            <a type="submit" href='/' className="btn btn-success">Ok</a >
 
                         </div>
                     </div>

@@ -3,6 +3,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { Link } from 'react-router-dom';
 import fotoimage from '../img/fotoup.jpeg';
+import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 
 export default function EjecucionServicio() {
 
@@ -131,7 +132,7 @@ export default function EjecucionServicio() {
                             <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
                               Agregar
                             </button>
-                            <modalAgregarEjecucion />
+                            <ModalAgregarEjecucion />
                             </div>
 
                             
