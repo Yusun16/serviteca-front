@@ -37,7 +37,7 @@ function App() {
       <Navegacion />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
-        <Route exact path="/login" element={<JefeTaller />} />
+        <Route exact path="/loginnn" element={<JefeTaller />} />
         <Route exact path="/agregarservicio" element={<AgregarServicio />} />
         <Route exact path="/buscarservicio/" element={<BuscarServicio />} />
         <Route exact path="/" element={<ListadoServicios />} />
@@ -55,6 +55,8 @@ function App() {
         <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
+        <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
+
 
 
         {/* Rutas de Jefer */}
@@ -69,7 +71,7 @@ function App() {
         <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
         <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
         <Route path="/informe-servicios" element={<InfoServicios />} />
-        <Route path="/chequeo" element={<ListadoChequeo />} />
+        <Route path="/chequeo" element={<ListaChequeo />} />
 
         {/* Rutas fin de Jefer */}
 

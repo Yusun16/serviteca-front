@@ -79,7 +79,7 @@ export default function AgregarServicio() {
 
             <h6 className='mb-3' style={{ textAlign: 'left' }}>Nueva Orden de Servicio</h6>
 
-            <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "40px" }}>
+            <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "29%", top: "40px" }}>
                 
                 <div className="mb-3 row">
                     <label htmlFor="codigo" className="col-sm-3 col-form-label">Código:*</label>

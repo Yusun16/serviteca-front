@@ -23,6 +23,20 @@ body {
   top: 5% ;
   left: 90%;
 }
+.equis-close {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  border-radius: 20%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 88%;
+  top: 5% ;
+  left: 90%;
+}
 
 .equis-close::before {
   content: "✖";
