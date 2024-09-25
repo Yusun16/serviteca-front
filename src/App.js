@@ -30,6 +30,7 @@ import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
 import EditarCliente from "./Registrar/EditarCliente";
 import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion";
+import EditarVehiculo from "./Registrar/EditarVehiculo";
 
 
 function App() {
@@ -57,6 +58,7 @@ function App() {
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
         <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
+        <Route exact path="/EditarVehiculo/:id/" element={<EditarVehiculo />} />
         
    
         
