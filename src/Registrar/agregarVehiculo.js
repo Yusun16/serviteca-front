@@ -118,7 +118,7 @@ export default function AgregarVehiculo() { // Cambia la primera letra a mayúsc
                                 </div>
                             </div>
                             <div className="col">
-                            <label htmlFor="clente" className="form-label">Cliente: *</label>
+                            <label htmlFor="clente" className="form-label">Foto: *</label>
                                 <div className="col-md-6 d-flex align-items-center">
                                     <div className="w-50">
                                         <div className="card" style={{ width: '329px', height: '130px', overflow: "hidden" }}>
@@ -142,7 +142,7 @@ export default function AgregarVehiculo() { // Cambia la primera letra a mayúsc
                                 </div>
                                 <div className="col">
                                     <div className="mb-3">
-                                        <label htmlFor="descripcion" className="form-label" style={{ resize: "none" }} >Descripción: *</label>
+                                        <label htmlFor="descripcion" className="form-label" style={{ resize: "none" }} >Observaciones: *</label>
                                         <textarea style={{ resize: "none" }} className="form-control" rows={5} id="descripcion" required name='descripcion' />
                                     </div>
                                 </div>

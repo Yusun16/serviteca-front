@@ -19,9 +19,11 @@ export default function EjecucionServicio() {
 
     // Estado para manejar la imagen
     const [image, setImage] = useState(null);
+    const [imageBackAfter, setImageBackAfter] = useState(null);
+    const [imageFrontAfter, setImageFrontAfter] = useState(null);
 
     // Función para manejar el cambio de la imagen
-    const handleImageChange = (e) => {
+    const handleImageChange = (e, setImage) => {
         const file = e.target.files[0];
         if (file) {
             const reader = new FileReader();
@@ -31,6 +33,7 @@ export default function EjecucionServicio() {
             reader.readAsDataURL(file);
         }
     };
+
 
     return (
         <div className='container'>
@@ -129,13 +132,13 @@ export default function EjecucionServicio() {
                                 </select>
                             </div>
                             <div className=' col-4'>
-                            <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
-                              Agregar
-                            </button>
-                            <ModalAgregarEjecucion />
+                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
+                                    Agregar
+                                </button>
+                                <ModalAgregarEjecucion />
                             </div>
 
-                            
+
                         </div>
                         <table className="container" style={{ marginTop: "15px" }}>
                             <thead >
@@ -235,23 +238,24 @@ export default function EjecucionServicio() {
                                         </label>
                                     </div>
                                 </div>
-                                <div className='col-3'>
-                                    <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
-                                        <input
-                                            type="file"
-                                            className="form-control-file d-none"
-                                            id="fotoimg"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                        />
-
-                                        <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
-                                                Examinar
-                                            </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
-                                        </label>
+                                <div className='container'>
+                                    <div className='col-3'>
+                                        <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
+                                            {imageFrontAfter && (<img src={imageFrontAfter} className='' alt="Foto Frontal Después" style={{ objectFit: "fill", zIndex: "2", width: "155px", height: "120px", top: "15px", left: "15px", position: "relative" }} /> )}
+                                            <input
+                                                type="file"
+                                                className="form-control-file d-none"
+                                                id="fotoFrontAfter"
+                                                accept="image/*"
+                                                onChange={(e) => handleImageChange(e, setImageFrontAfter)}
+                                            />
+                                            <label htmlFor='fotoFrontAfter' style={{ width: "50%", height: "100%", }}>
+                                                <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
+                                                    Examinar
+                                                </div>
+                                                <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -278,16 +282,16 @@ export default function EjecucionServicio() {
                                 </div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "50px", top: "10px", left: "80px", position: "relative" }} />}
+                                        {imageBackAfter && <img src={imageBackAfter} className='' alt="Foto-Foto Posterior Después" style={{ objectFit: "fill", zIndex: "2", width: "155px", height: "120px", top: "15px", left: "15px", position: "relative" }} />}
                                         <input
                                             type="file"
                                             className="form-control-file d-none"
-                                            id="fotoimg"
+                                            id="fotoBackAfter"
                                             accept="image/*"
-                                            onChange={handleImageChange}
+                                            onChange={(e) => handleImageChange(e, setImageBackAfter)}
                                         />
 
-                                        <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
+                                        <label htmlFor='fotoBackAfter' style={{ width: "50%", height: "100%", }}>
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
