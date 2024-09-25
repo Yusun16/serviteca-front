@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function AgregarServicio() {
@@ -54,56 +54,56 @@ export default function AgregarServicio() {
     };
 
     return (
-        <div className='container'>
+        <div className="container my-5 ">
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item"><a href="/agregarorden"><i className="fa-solid fa-house"></i> Inicio</a></li>
+                    
+                    <li className="breadcrumb-item"><i className="fa-solid fa-house"></i><a href="/agregarorden"> Inicio</a></li>
                     <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                 </ol>
             </nav>
 
-            <div className='text-center' style={{ height: '60px', width: "880px", position: "relative", left: "332px", top: "4px" }} >
-                <div className='row mb-4'>
-                    <div className='col'>
-                        <button type="button" className="btn btn-primary" style={{width:"386px", height:"60px"}} onClick={handleAgregarOrden}>
+            <div className="text-center mb-4">
+                <div className="row" style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+                    <div className="col-4">
+                        <button type="button" className="btn btn-primary w-100" onClick={handleAgregarOrden}>
                             Agregar Nueva Orden de Servicio
                         </button>
                     </div>
-                    <div className='col'>
-                        <Link type="button" className="btn btn-primary" style={{width:"386px", height:"60px", display:"flex", alignItems:"center", justifyContent:"space-around" }} to="/buscarorden">
+                    <div className="col-4">
+                        <Link type="button" className="btn btn-primary w-100" to="/buscarorden">
                             Buscar Orden de Servicio
                         </Link>
                     </div>
                 </div>
             </div>
+            <h6 className="mb-3 ">Nueva Orden de Servicio</h6>
 
-            <h6 className='mb-3' style={{ textAlign: 'left' }}>Nueva Orden de Servicio</h6>
 
-            <form onSubmit={onSubmit} className="form-horizontal" style={{ height: '60px', width: "880px", position: "relative", left: "29%", top: "40px" }}>
-                
-                <div className="mb-3 row">
-                    <label htmlFor="codigo" className="col-sm-3 col-form-label">Código:*</label>
-                    <div className="col-sm-6">
+            <form onSubmit={onSubmit} style={{ display: "flex", flexDirection: "column", flexWrap: "wrap", alignContent: "center" }}>
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="codigo" className="col-4 col-form-label">Código:*</label>
+                    <div className="col-8">
                         <input
                             type="text"
                             className="form-control"
                             id="codigo"
-                            name='codigo'
-                            value={codigo} // El código será asignado aquí tras pulsar "Agregar Nueva Orden"
+                            name="codigo"
+                            value={codigo}
                             onChange={onInputChange}
                             disabled
                         />
                     </div>
                 </div>
 
-                <div className="mb-3 row">
-                    <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
-                    <div className="col-sm-6">
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="cliente" className="col-4 col-form-label">Cliente:*</label>
+                    <div className="col-8">
                         <input
                             type="text"
                             className="form-control"
                             id="cliente"
-                            name='cliente'
+                            name="cliente"
                             required
                             value={cliente}
                             onChange={onInputChange}
@@ -112,14 +112,14 @@ export default function AgregarServicio() {
                     </div>
                 </div>
 
-                <div className="mb-3 row">
-                    <label htmlFor="placaVehiculo" className="col-sm-3 col-form-label">Placa:*</label>
-                    <div className="col-sm-6">
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="placaVehiculo" className="col-4 col-form-label">Placa:*</label>
+                    <div className="col-8">
                         <input
                             type="text"
                             className="form-control"
                             id="placaVehiculo"
-                            name='placaVehiculo'
+                            name="placaVehiculo"
                             required
                             value={placaVehiculo}
                             onChange={onInputChange}
@@ -128,13 +128,13 @@ export default function AgregarServicio() {
                     </div>
                 </div>
 
-                <div className="mb-3 row">
-                    <label htmlFor="tipoServicio" className="col-sm-3 col-form-label">Servicio:*</label>
-                    <div className="col-sm-6">
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="tipoServicio" className="col-4 col-form-label">Servicio:*</label>
+                    <div className="col-8">
                         <select
                             className="form-select"
                             id="tipoServicio"
-                            name='tipoServicio'
+                            name="tipoServicio"
                             required
                             value={tipoServicio}
                             onChange={onInputChange}
@@ -148,35 +148,35 @@ export default function AgregarServicio() {
                     </div>
                 </div>
 
-                <div className="mb-3 row">
-                    <label htmlFor="kilometraje" className="col-sm-3 col-form-label">Kilometraje Vehículo:*</label>
-                    <div className="col-sm-3">
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="kilometraje" className="col-4 col-form-label">Kilometraje Vehículo:*</label>
+                    <div className="col-4">
                         <input
                             type="number"
                             className="form-control"
                             id="kilometraje"
-                            name='kilometraje'
+                            name="kilometraje"
                             required
                             value={kilometraje}
                             onChange={onInputChange}
                             disabled={!isEditing}
                         />
                     </div>
-                    <div className="col-sm-3">
+                    <div className="col-4" style={{ textAlignLast: "left" }}>
                         <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#exampleModal" disabled={!isEditing}>
                             Cambio de Aceite
                         </button>
                     </div>
                 </div>
 
-                <div className="mb-3 row">
-                    <label htmlFor="fecha" className="col-sm-3 col-form-label">Fecha Ingreso:*</label>
-                    <div className="col-sm-6">
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="fecha" className="col-4 col-form-label">Fecha Ingreso:*</label>
+                    <div className="col-8">
                         <input
                             type="date"
                             className="form-control"
                             id="fecha"
-                            name='fecha'
+                            name="fecha"
                             required
                             value={fecha}
                             onChange={onInputChange}
@@ -186,10 +186,13 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className="text-center">
-                    <button type="submit" className="btn btn-success" disabled={!isEditing}>Siguiente <i className="fa-solid fa-check" /></button>
+                    <button type="submit" className="btn btn-success" disabled={!isEditing}>
+                        Siguiente <i className="fa-solid fa-check" />
+                    </button>
                 </div>
             </form>
 
+            {/* Modal */}
             <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content">
@@ -205,12 +208,14 @@ export default function AgregarServicio() {
                                     type="number"
                                     className="form-control"
                                     id="kilometros"
-                                    name='kilometros'
+                                    name="kilometros"
                                 />
                             </div>
                         </div>
-                        <div className="modal-footer modal-display justify-content-center">
-                            <button type="button" className="btn btn-success" data-bs-dismiss="modal"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-success" data-bs-dismiss="modal">
+                                <i className="fa-solid fa-floppy-disk"></i> Guardar
+                            </button>
                         </div>
                     </div>
                 </div>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import imglist from "../img/imglist.png";
 import LogoGasolina from "../img/LogoGasolina.svg";
-import "../ListaChequeo/ListaChequeo.css";
 import axios from 'axios';
 
 const CheckListComponent = () => {
@@ -85,9 +84,7 @@ const CheckListComponent = () => {
                 <div>
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item">
-                                <a href="/listachequeo"><i className="fa-solid fa-house"></i> Inicio</a>
-                            </li>
+                            <li className="breadcrumb-item"><a href="/ordenservicio"><i className="fa-solid fa-house"></i> Inicio</a></li>
                             <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                             <li className="breadcrumb-item active" aria-current="page">Lista de Chequeo</li>
                         </ol>
@@ -168,7 +165,7 @@ const CheckListComponent = () => {
                                     </thead>
                                     <tbody className='text-center'>
                                         <tr className='tr001'>
-                                            <th scope="row">1</th>
+                                            <th scope="row">23-09-2024</th>
                                             <td>15000 km</td>
                                             <td>0504</td>
                                             <td>edmundo</td>
