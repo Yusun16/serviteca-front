@@ -28,20 +28,10 @@ import IniOperarios from "./Operarios/IniOperarios";
 import Operarios from "./Operarios/Operarios";
 import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
-import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
-import EditarCliente from './Registrar/EditarCliente';
+import EditarCliente from "./Registrar/EditarCliente";
 import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion";
+import EditarVehiculo from "./Registrar/EditarVehiculo";
 
-// Este es el nuevo componente para manejar la visibilidad del nav
-function NavBarVisibility() {
-  const location = useLocation();
-
-  // Definimos las rutas donde no queremos que se muestre el nav
-  const noNavRoutes = ["/login", "/jefetaller"];
-
-  // Renderizamos el componente Navegacion solo si la ruta actual no está en noNavRoutes
-  return !noNavRoutes.includes(location.pathname) ? <Navegacion /> : null;
-}
 
 function App() {
   return (
@@ -69,7 +59,10 @@ function App() {
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
         <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
-
+        <Route exact path="/EditarVehiculo/:id/" element={<EditarVehiculo />} />
+        
+   
+        
         {/* Rutas de Jefer */}
         <Route path="/auto-partes" element={<IniAutPar />} />
         <Route path="/agregar-auto-partes" element={<AutoPartes />} />
