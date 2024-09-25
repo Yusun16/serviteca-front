@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navegacion from "./plantilla/Navegacion";
 import ListadoServicios from "./servicios/ListadoServicios";
 import AgregarServicio from "./servicios/AgregarServicio";
@@ -36,7 +36,8 @@ import EditarVehiculo from './Registrar/EditarVehiculo'
 function App() {
   return (
     <BrowserRouter>
-      <Navegacion />
+      {/* Usamos el nuevo componente dentro del BrowserRouter */}
+      <NavBarVisibility />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
         <Route exact path="/login" element={<JefeTaller />} />
@@ -58,9 +59,6 @@ function App() {
         <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
         <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
         <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
-        <Route exact path="/EditarVehiculo/:id/" element={<EditarVehiculo />} />
-
-
 
         {/* Rutas de Jefer */}
         <Route path="/auto-partes" element={<IniAutPar />} />
@@ -77,13 +75,8 @@ function App() {
         <Route path="/chequeo" element={<ListaChequeo />} />
 
         {/* Rutas fin de Jefer */}
-
-
       </Routes>
     </BrowserRouter>
-
-
-
   );
 }
 
