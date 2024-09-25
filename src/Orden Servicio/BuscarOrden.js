@@ -117,23 +117,23 @@ export default function BuscarOrden() {
                         <table className="container">
                             <thead>
                                 <tr className='tr-table-tr'>
-                                    <th className='th-tabla colorthead text-center' scope="col">Orden de servicio</th>
+                                    <th className='th-tabla colorthead text-center' scope="col">Fecha de Servicio</th>
+                                    <th className='th-tabla colorthead text-center' scope="col">N° Kilometros</th>
+                                    <th className='th-tabla colorthead text-center' scope="col">N° de Servicio</th>
                                     <th className='th-tabla colorthead text-center' scope="col">Cliente</th>
                                     <th className='th-tabla colorthead text-center' scope="col">Tipo de servicio</th>
                                     <th className='th-tabla colorthead text-center' scope="col">Placa del vehículo</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">Kilometraje del Vehículo</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">Fecha de Servicio</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {currentItems.map((orden, indice) => (
                                     <tr className='tr-table-tr text-center' key={indice}>
+                                        <td>{orden.fecha}</td>
+                                        <td>{orden.kilometraje}</td>
                                         <th>{orden.codigo}</th>
                                         <td>{orden.cliente}</td>
                                         <td>{orden.tipoServicio}</td>
                                         <td>{orden.placaVehiculo}</td>
-                                        <td>{orden.kilometraje}</td>
-                                        <td>{orden.fecha}</td>
                                     </tr>
                                 ))}
                             </tbody>

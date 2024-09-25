@@ -30,6 +30,7 @@ import BuscarOperarios from "./Operarios/BuscarOperarios";
 import ModalEditOpe from "./Operarios/ModalEditOpe";
 import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
 import EditarCliente from './Registrar/EditarCliente';
+import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion"
 
 function App() {
   return (
@@ -37,7 +38,7 @@ function App() {
       <Navegacion />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
-        <Route exact path="/loginnn" element={<JefeTaller />} />
+        <Route exact path="/login" element={<JefeTaller />} />
         <Route exact path="/agregarservicio" element={<AgregarServicio />} />
         <Route exact path="/buscarservicio/" element={<BuscarServicio />} />
         <Route exact path="/" element={<ListadoServicios />} />
@@ -46,7 +47,7 @@ function App() {
         <Route exact path="/agregarorden/" element={<AgregarOrden />} />
         <Route exact path="/buscarorden/" element={<BuscarOrden />} />
         <Route exact path="/jefetaller/" element={<JefeTaller />} />
-        <Route exact path="/listachequeo/" element={<ListaChequeo />} />
+        <Route exact path="/listachequeo/" element={<ListadoChequeo />} />
         <Route exact path="/listadocliente/" element={<ListadoCliente />} />
         <Route exact path="/agregarCliente/" element={<AgregarCliente />} />
         <Route exact path="/buscarCliente/" element={<BuscarCliente />} />

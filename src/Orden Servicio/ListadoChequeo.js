@@ -27,7 +27,7 @@ function ListadoChequeo() {
 
             <div className='container text-center' style={{ margin: "30px" }}>
                 <div className='container'></div>
-                <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/listachequeo">Agregar Servicio</Link>
+                <Link type="button" className="btn btn-center btn-primary" to="http://localhost:3000/chequeo">Agregar Servicio</Link>
             </div>
 
             <table class="table table-striped table-hover align-middel">
