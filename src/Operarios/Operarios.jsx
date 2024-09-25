@@ -78,6 +78,7 @@ function Operarios() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        window.location.reload(true);
         navigate('/agregar-operarios');
         setFormData({
             cedula: '',
