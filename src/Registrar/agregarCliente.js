@@ -168,7 +168,7 @@ export default function AgregarCliente() {
             <div className="col">
                 <div className="mb-3">
                     <label htmlFor="cedula" className="form-label">Cédula: *</label>
-                    <input type="number" className="form-control" id="cedula" name='cedula' required style={{ width: "320px" }} 
+                    <input type="number" className="form-control" step="any" id="cedula" name='cedula' required style={{ width: "320px" }} 
                         value={cedula}  />
                 </div>
                 <div className="mb-3">

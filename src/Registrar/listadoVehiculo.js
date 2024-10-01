@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import ModalEliminar from './modalEliminar';
 
 export default function ListadoVehiculo() {
     const servicios = [
@@ -33,56 +34,55 @@ export default function ListadoVehiculo() {
     const eliminarVehiculo = async (id) => {
         await axios.delete(`${urlBase}/${id}`);
         cargarVehiculos();
-      };
+    };
 
-      const exportToPDF = () => {
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Cálculo de paginación
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = vehiculos.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(vehiculos.length / itemsPerPage);
+
+    const exportToPDF = () => {
         const doc = new jsPDF();
         const tableColumn = ["Placa", "Observación", "Modelo"];
         const tableRows = [];
-    
+
         vehiculos.forEach(vehiculo => {
-          const vehiculoData = [
-            vehiculo.placa,
-            vehiculo.observacion,
-            vehiculo.modelo,
-            
-          ];
-          tableRows.push(vehiculoData);
+            const vehiculoData = [
+                vehiculo.placa,
+                vehiculo.observacion,
+                vehiculo.modelo,
+
+            ];
+            tableRows.push(vehiculoData);
         });
-    
+
         doc.autoTable(tableColumn, tableRows, { startY: 20 });
         doc.text("Listado de vehiculos", 14, 15);
         doc.save("listado_vehiculos.pdf");
-      };
-    
-      const exportToExcel = () => {
+    };
+
+    const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(vehiculos.map(vehiculo => ({
-          "Placa": vehiculo.placa,
-          "Observación": vehiculo.observacion,
-          "Modelo": vehiculo.modelo,
+            "Placa": vehiculo.placa,
+            "Observación": vehiculo.observacion,
+            "Modelo": vehiculo.modelo,
         })));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Vehiculos");
         const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(data, "listado_vehiculos.xlsx");
-      };
-    
-
-    // Calcular el índice del primer y último elemento de la página actual
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
-    // Extraer los elementos de la página actual
-    const currentItems = servicios.slice(indexOfFirstItem, indexOfLastItem);
-
-    // Calcular el número total de páginas
-    const totalPages = Math.ceil(servicios.length / itemsPerPage);
-
-    // Función para cambiar de página
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
     };
+
+
+   
+
+
 
     return (
         <div className='container'>
@@ -125,7 +125,7 @@ export default function ListadoVehiculo() {
 
                     </thead>
                     <tbody>
-                        {vehiculos.map((vehiculo, indice) => (
+                        {currentItems.map((vehiculo, indice) => (
                             <tr className='tr-table-tr text-center' key={indice}>
                                 <td>{vehiculo.placa}</td>
                                 <td>{vehiculo.observacion}</td>
@@ -136,23 +136,15 @@ export default function ListadoVehiculo() {
                                     </Link>
                                 </td>
                                 <td>
-                                    <button data-bs-toggle="modal" data-bs-target="#modaleliminar" onClick={() => eliminarVehiculo(vehiculo.idVehiculo)} className='btn btn-sm'>
+                                    <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarVehiculo(vehiculo.idVehiculo)} className='btn btn-sm'>
                                         <i className="fa-solid fa-trash-can"></i>
                                     </button>
+                                    <ModalEliminar />
                                 </td>
-
                             </tr>
-
                         ))}
-                        <tr  >
-                            <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
-                            <th className='text-letras colorthead' scope="col"></th>
-                            <th className='text-letras colorthead' scope="col"></th>
-                            <th className='text-letras colorthead' scope="col"></th>
-                            <th className='text-letras colorthead' scope="col">  </th>
-
-                        </tr>
                     </tbody>
+
                 </table>
                 {/* Paginación */}
                 <div class="h4 pb-2 mb-4  border-bottom border-black"></div>

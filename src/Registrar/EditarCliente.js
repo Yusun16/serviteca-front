@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import ModalEditar from './modalEditar';
 
 export default function EditarServicio() {
     const urlBase = "http://localhost:8080/serviteca/cliente";
@@ -90,7 +91,7 @@ export default function EditarServicio() {
         }
     };
 
-    
+
 
     return (
         <div className='container'>
@@ -105,70 +106,71 @@ export default function EditarServicio() {
                 <h2>Editar Cliente</h2>
             </div>
             <form onSubmit={onSubmit} className='container' style={{ width: "580px", position: "relative", height: "310px" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-            <div className="col">
-                <div className="mb-3">
-                    <label htmlFor="cedula" className="form-label">Cédula: *</label>
-                    <input type="number" className="form-control" id="cedula" name='cedula' required style={{ width: "320px" }} 
-                        value={cedula} onChange={(e) => onInputChange(e)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="nombre" className="form-label">Nombre: *</label>
-                    <input type="text" className="form-control" required id="nombre" name='nombre' 
-                        value={nombre} onChange={(e) => onInputChange(e)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="apellido" className="form-label">Apellido: *</label>
-                    <input type="text" className="form-control" id="apellido" required name='apellido' 
-                        value={apellido} onChange={(e) => onInputChange(e)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="correo" className="form-label">Correo: *</label>
-                    <input type="text" className="form-control" id="correo" required name='correo' 
-                        value={correo} onChange={(e) => onInputChange(e)} />
-                </div>
-            </div>
-            <div>
-                <div className="mb-3">
-                    <label htmlFor="direccion" className="form-label">Dirección: *</label>
-                    <input type="text" className="form-control" id="direccion" name='direccion' style={{ width: "320px" }}
-                        required value={direccion} onChange={(e) => onInputChange(e)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="telefono" className="form-label">Teléfono: *</label>
-                    <input type="number" className="form-control" id="telefono" required name='telefono' 
-                        value={telefono} onChange={(e) => onInputChange(e)} />
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="departamento" className="form-label">Departamento: *</label>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                    <div className="col">
+                        <div className="mb-3">
+                            <label htmlFor="cedula" className="form-label">Cédula: *</label>
+                            <input type="number" className="form-control" id="cedula" name='cedula' required style={{ width: "320px" }}
+                                value={cedula} onChange={(e) => onInputChange(e)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="nombre" className="form-label">Nombre: *</label>
+                            <input type="text" className="form-control" required id="nombre" name='nombre'
+                                value={nombre} onChange={(e) => onInputChange(e)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="apellido" className="form-label">Apellido: *</label>
+                            <input type="text" className="form-control" id="apellido" required name='apellido'
+                                value={apellido} onChange={(e) => onInputChange(e)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="correo" className="form-label">Correo: *</label>
+                            <input type="text" className="form-control" id="correo" required name='correo'
+                                value={correo} onChange={(e) => onInputChange(e)} />
+                        </div>
+                    </div>
                     <div>
-                        <select className="form-select" id="departamento" required name='departamento' value={departamento} onChange={(e) => onInputChange(e)}>
-                            <option value=""></option>
-                            {departamentos.map((dep, index) => (
-                                <option key={index} value={dep}>{dep}</option>
-                            ))}
-                        </select>
+                        <div className="mb-3">
+                            <label htmlFor="direccion" className="form-label">Dirección: *</label>
+                            <input type="text" className="form-control" id="direccion" name='direccion' style={{ width: "320px" }}
+                                required value={direccion} onChange={(e) => onInputChange(e)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="telefono" className="form-label">Teléfono: *</label>
+                            <input type="number" className="form-control" id="telefono" required name='telefono'
+                                value={telefono} onChange={(e) => onInputChange(e)} />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="departamento" className="form-label">Departamento: *</label>
+                            <div>
+                                <select className="form-select" id="departamento" required name='departamento' value={departamento} onChange={(e) => onInputChange(e)}>
+                                    <option value=""></option>
+                                    {departamentos.map((dep, index) => (
+                                        <option key={index} value={dep}>{dep}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="ciudad" className="form-label">Ciudad: *</label>
+                            <div>
+                                <select className="form-select" id="ciudad" name='ciudad' value={ciudad} onChange={(e) => onInputChange(e)}>
+                                    <option value=""></option>
+                                    {ciudades.map((ciu, index) => (
+                                        <option key={index} value={ciu}>{ciu}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="mb-3">
-                    <label htmlFor="ciudad" className="form-label">Ciudad: *</label>
-                    <div>
-                        <select className="form-select" id="ciudad" name='ciudad' value={ciudad} onChange={(e) => onInputChange(e)}>
-                            <option value=""></option>
-                            {ciudades.map((ciu, index) => (
-                                <option key={index} value={ciu}>{ciu}</option>
-                            ))}
-                        </select>
-                    </div>
-                </div>
-            </div>
-        </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                     {/* Input fields and labels */}
                 </div>
                 <div className='text-center'>
-                    <button type="submit"  className="btn btn-success btn-sm me-3"><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <button type="submit" to="/listadoCliente" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente" ><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
                     <button type="button" onClick={() => navegacion('/listadoCliente')} className='btn btn-danger btn-sm me-3'><i className="fa-regular fa-circle-xmark"></i> Cancelar</button>
+                    <ModalEditar />
                 </div>
             </form>
         </div>

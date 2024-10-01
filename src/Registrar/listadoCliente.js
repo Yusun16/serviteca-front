@@ -6,6 +6,8 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import { Modal } from 'bootstrap';
+import ModalEliminar from './modalEliminar';
 
 export default function ListadoCliente() {
 
@@ -17,6 +19,7 @@ export default function ListadoCliente() {
   useEffect(() => {
     cargarClientes();
   }, []);
+  
 
   const cargarClientes = async () => {
     try {
@@ -136,9 +139,10 @@ export default function ListadoCliente() {
                   </Link>
                 </td>
                 <td>
-                  <button onClick={() => eliminarCliente(cliente.idCliente)} className='btn btn-sm'>
+                  <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente"  onClick={() => eliminarCliente(cliente.idCliente)} className='btn btn-sm'>
                     <i className="fa-solid fa-trash-can"></i>
                   </button>
+                  <ModalEliminar />
                 </td>
               </tr>
             ))}

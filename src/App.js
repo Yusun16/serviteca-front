@@ -31,6 +31,8 @@ import ModalEditOpe from "./Operarios/ModalEditOpe";
 import EditarCliente from "./Registrar/EditarCliente";
 import ModalAgregarEjecucion from "./Orden Servicio/modalAgregarEjecucion";
 import EditarVehiculo from "./Registrar/EditarVehiculo";
+import ListadoChequeo from "./Orden Servicio/ListadoChequeo";
+
 
 
 function App() {
