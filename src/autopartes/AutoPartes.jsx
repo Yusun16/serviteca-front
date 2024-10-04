@@ -88,6 +88,7 @@ function AutoPartes() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        window.location.reload();
         setInputs({
             referencia: '',
             siigo: '',

@@ -45,26 +45,26 @@ function App() {
     <BrowserRouter>
       <NavBarVisibility />
       <Routes>
-        <Route exact path="/inicio" element={<VistaPrincipal />} />
-        <Route exact path="/login" element={<JefeTaller />} />
-        <Route exact path="/agregarservicio" element={<AgregarServicio />} />
-        <Route exact path="/buscarservicio/" element={<BuscarServicio />} />
-        <Route exact path="/" element={<ListadoServicios />} />
-        <Route exact path="/editar/:id" element={<EditarServicio />} />
-        <Route exact path="/ordenservicio/" element={<ListadoOrden />} />
-        <Route exact path="/agregarorden/" element={<AgregarOrden />} />
-        <Route exact path="/buscarorden/" element={<BuscarOrden />} />
-        <Route exact path="/jefetaller/" element={<JefeTaller />} />
-        <Route exact path="/listachequeo/" element={<ListadoChequeo />} />
-        <Route exact path="/listadocliente/" element={<ListadoCliente />} />
-        <Route exact path="/agregarCliente/" element={<AgregarCliente />} />
-        <Route exact path="/buscarCliente/" element={<BuscarCliente />} />
-        <Route exact path="/listadovehiculo" element={<ListadoVehiculo />} />
-        <Route exact path="/agregarvehiculo" element={<AgregarVehiculo />} />
-        <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
-        <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
-        <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
-        <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
+        <Route  path="/inicio" element={<VistaPrincipal />} />
+        <Route  path="/login" element={<JefeTaller />} />
+        <Route  path="/agregarservicio" element={<AgregarServicio />} />
+        <Route  path="/buscarservicio/" element={<BuscarServicio />} />
+        <Route  path="/" element={<ListadoServicios />} />
+        <Route  path="/editar/:id" element={<EditarServicio />} />
+        <Route  path="/ordenservicio/" element={<ListadoOrden />} />
+        <Route  path="/agregarorden/" element={<AgregarOrden />} />
+        <Route  path="/buscarorden/" element={<BuscarOrden />} />
+        <Route  path="/jefetaller/" element={<JefeTaller />} />
+        <Route  path="/listachequeo/" element={<ListadoChequeo />} />
+        <Route  path="/listadocliente/" element={<ListadoCliente />} />
+        <Route  path="/agregarCliente/" element={<AgregarCliente />} />
+        <Route  path="/buscarCliente/" element={<BuscarCliente />} />
+        <Route  path="/listadovehiculo" element={<ListadoVehiculo />} />
+        <Route  path="/agregarvehiculo" element={<AgregarVehiculo />} />
+        <Route  path="/buscarvehiculo" element={<BuscarVehiculo />} />
+        <Route  path="/EditarCliente/:id" element={<EditarCliente />} />
+        <Route  path="/ejecucionServicio/" element={<EjecucionServicio />} />
+        <Route  path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
 
         {/* Rutas de Jefer */}
         <Route path="/auto-partes" element={<IniAutPar />} />

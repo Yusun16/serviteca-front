@@ -1,10 +1,10 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export default function BuscarOrden() {
     const urlBase = "http://localhost:8080/serviteca";
-
     const [ordenes, setOrdenes] = useState([]);
+    const [clientes, setClientes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(7);
 
@@ -20,12 +20,11 @@ export default function BuscarOrden() {
 
         const filtros = {};
         if (codigo) filtros.codigo = codigo;
-        if (cliente) filtros.cliente = cliente;
+        if (cliente) filtros.cliente = cliente; // Esto puede que no se use directamente, dependiendo de cómo está configurado tu backend
         if (fecha) filtros.fecha = fecha;
         if (placaVehiculo) filtros.placaVehiculo = placaVehiculo;
 
         await cargarOrdenes(filtros);
-
         setCurrentPage(1); // Reinicia la paginación
     }
 
@@ -33,12 +32,25 @@ export default function BuscarOrden() {
         try {
             const resultado = await axios.get(`${urlBase}/buscarorden`, { params: filtros });
             console.log(resultado);
-
             setOrdenes(resultado.data);
         } catch (error) {
             console.error("Error al cargar las órdenes:", error);
         }
     }
+
+    // Obtener clientes al cargar el componente
+    const obtenerClientes = async () => {
+        try {
+            const response = await axios.get(`${urlBase}/cliente`);
+            setClientes(response.data);
+        } catch (error) {
+            console.error("Error al obtener los clientes:", error);
+        }
+    };
+
+    useEffect(() => {
+        obtenerClientes();
+    }, []);
 
     // Paginación
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -113,7 +125,7 @@ export default function BuscarOrden() {
             {ordenes.length > 0 && (
                 <div className='container' style={{ margin: "30px 0px" }}>
                     <h5>Seleccione el N° de servicio para abrir la ejecución</h5>
-                    <div className="container" style={{}}>
+                    <div className="container">
                         <table className="container">
                             <thead>
                                 <tr className='tr-table-tr'>
@@ -126,20 +138,25 @@ export default function BuscarOrden() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentItems.map((orden, indice) => (
-                                    <tr className='tr-table-tr text-center' key={indice}>
-                                        <td>{orden.fecha}</td>
-                                        <td>{orden.kilometraje}</td>
-                                        <th>{orden.codigo}</th>
-                                        <td>{orden.cliente}</td>
-                                        <td>{orden.tipoServicio}</td>
-                                        <td>{orden.placaVehiculo}</td>
-                                    </tr>
-                                ))}
+                                {currentItems.map((orden, indice) => {
+                                    // Buscar el cliente correspondiente utilizando el cliente_id
+                                    const clienteEncontrado = clientes.find(c => cliente.id === orden.cliente_id);
+                                    const nombreCompleto = clienteEncontrado ? `${clienteEncontrado.nombre} ${clienteEncontrado.apellido}` : 'Cliente no encontrado';
+                                    return (
+                                        <tr className='tr-table-tr text-center' key={indice}>
+                                            <td>{orden.fecha}</td>
+                                            <td>{orden.kilometraje}</td>
+                                            <th>{orden.codigo}</th>
+                                            <td>{nombreCompleto}</td>
+                                            <td>{orden.tipoServicio}</td>
+                                            <td>{orden.placaVehiculo}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
-                    <div class="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
+                    <div className="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
 
@@ -147,12 +164,10 @@ export default function BuscarOrden() {
             {ordenes.length > 0 && (
                 <div className='container' style={{ margin: "30px" }}>
                     <div className='d-flex justify-content-between align-items-center'>
-                        {/* Texto de página actual */}
                         <div>
                             <span>Mostrando {currentPage} de {totalPages}</span>
                         </div>
-                        {/* Botones Anterior y Siguiente */}
-                        <div className='pag-num' >
+                        <div className='pag-num'>
                             <button
                                 onClick={goToPreviousPage}
                                 className="btn btn-secondary"
@@ -160,8 +175,8 @@ export default function BuscarOrden() {
                             >
                                 Anterior
                             </button>
-                            <div >
-                                <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                            <div>
+                                <button type="button" className="btn btn-light"><span>{currentPage}</span></button>
                             </div>
                             <button
                                 onClick={goToNextPage}

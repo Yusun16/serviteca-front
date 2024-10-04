@@ -1,13 +1,16 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Select from 'react-select';
 
 export default function AgregarServicio() {
     let navegacion = useNavigate();
 
     const [orden, setOrden] = useState({
         codigo: "",
-        cliente: "",
+        clienteId: {
+            id: ""
+        },
         tipoServicio: "",
         placaVehiculo: "",
         kilometraje: "",
@@ -15,7 +18,7 @@ export default function AgregarServicio() {
     });
 
     const [isEditing, setIsEditing] = useState(false); // Controla si se puede editar el formulario
-
+    const [clientes, setClientes] = useState([]);
     const { codigo, cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
 
     // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
@@ -28,36 +31,78 @@ export default function AgregarServicio() {
         }
     };
 
+    const obtenerClientes = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/cliente');  // Ajusta la URL según sea necesario
+            setClientes(response.data);  // Guardamos los clientes en el estado
+        } catch (error) {
+            console.error("Error al obtener los clientes", error);
+        }
+    };
+
+    useEffect(() => {
+        obtenerClientes();
+    }, []);
+
     const onInputChange = (e) => {
-        setOrden({ ...orden, [e.target.name]: e.target.value });
+        if (e && e.target) {
+            // Esto maneja los campos estándar del formulario HTML
+            const { name, value } = e.target;
+            setOrden(prevOrden => ({
+                ...prevOrden,
+                [name]: value   // Actualiza el campo en el estado de acuerdo al nombre del input
+            }));
+        } else {
+            // Esto maneja el valor del 'react-select'
+            setOrden(prevOrden => ({
+                ...prevOrden,
+                clienteId: e ? e.value : ""   // Actualiza el clienteId o lo limpia si no hay opción seleccionada
+            }));
+        }
     };
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
-        await axios.post(urlBase, orden);
+        const jSonBody={
+            codigo:orden.codigo,
+            clienteId:{
+                id:orden.clienteId
+            },
+            tipoServicio:orden.tipoServicio,
+            placaVehiculo:orden.placaVehiculo,
+            kilometraje:orden.kilometraje,
+            fecha:orden.fecha
+        }
+        await axios.post(urlBase, jSonBody);
         setOrden({
-            codigo: "",
-            cliente: "",
-            tipoServicio: "",
-            placaVehiculo: "",
-            kilometraje: "",
-            fecha: ""
+            "codigo": "",
+            "clienteId": {
+                "id": ""
+            },
+            "tipoServicio": "",
+            "placaVehiculo": "",
+            "kilometraje": "",
+            "fecha": ""
         });
         setIsEditing(false);
-        navegacion("/listachequeo");
+        navegacion("/chequeo");
     };
 
     const handleAgregarOrden = () => {
         obtenerCodigo(); // Llama la función para obtener el código cuando el usuario presiona el botón
         setIsEditing(true); // Habilita la edición del formulario
     };
+    const opcionesClientes = clientes.map(cliente => ({
+        value: cliente.id,
+        label: `${cliente.nombre} ${cliente.apellido}`  // Mostrar nombre completo
+    }));
 
     return (
         <div className="container my-5 ">
             <nav aria-label="breadcrumb">
                 <ol className="breadcrumb">
-                    
+
                     <li className="breadcrumb-item"><i className="fa-solid fa-house"></i><a href="/agregarorden"> Inicio</a></li>
                     <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
                 </ol>
@@ -97,20 +142,20 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
-                    <label htmlFor="cliente" className="col-4 col-form-label">Cliente:*</label>
-                    <div className="col-8">
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="cliente"
-                            name="cliente"
-                            required
-                            value={cliente}
-                            onChange={onInputChange}
-                            disabled={!isEditing}
-                        />
-                    </div>
+                <label htmlFor="clienteId" className="col-4 col-form-label">Cliente:*</label>
+                <div className="col-8">
+                    <Select
+                        id="clienteId"
+                        name="clienteId"
+                        value={opcionesClientes.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
+                        onChange={onInputChange} 
+                        options={opcionesClientes}
+                        isDisabled={!isEditing}  
+                        isClearable  
+                        placeholder="Seleccione un cliente"
+                    />
                 </div>
+            </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
                     <label htmlFor="placaVehiculo" className="col-4 col-form-label">Placa:*</label>
@@ -212,7 +257,7 @@ export default function AgregarServicio() {
                                 />
                             </div>
                         </div>
-                        <div className="modal-footer">
+                        <div className="modal-footer" style={{ display: "flex", justifyContent: "space-around" }}>
                             <button type="button" className="btn btn-success" data-bs-dismiss="modal">
                                 <i className="fa-solid fa-floppy-disk"></i> Guardar
                             </button>
