@@ -111,12 +111,12 @@ export default function AgregarServicio() {
             <div className="text-center mb-4">
                 <div className="row" style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
                     <div className="col-4">
-                        <button type="button" className="btn btn-primary w-100" onClick={handleAgregarOrden}>
+                        <button type="button" className="btn btncolor w-100" onClick={handleAgregarOrden}>
                             Agregar Nueva Orden de Servicio
                         </button>
                     </div>
                     <div className="col-4">
-                        <Link type="button" className="btn btn-primary w-100" to="/buscarorden">
+                        <Link type="button" className="btn btncolor w-100" to="/buscarorden">
                             Buscar Orden de Servicio
                         </Link>
                     </div>
@@ -143,7 +143,7 @@ export default function AgregarServicio() {
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
                 <label htmlFor="clienteId" className="col-4 col-form-label">Cliente:*</label>
-                <div className="col-8">
+                <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }} >
                     <Select
                         id="clienteId"
                         name="clienteId"
@@ -151,15 +151,17 @@ export default function AgregarServicio() {
                         onChange={onInputChange} 
                         options={opcionesClientes}
                         isDisabled={!isEditing}  
-                        isClearable  
+                        isClearable
+                        className='selecclientes'  
                         placeholder="Seleccione un cliente"
-                    />
+                    /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarcliente"><i class="fa-solid fa-plus" style={{color: "#ffffff;"}}></i></Link></button>
+                    
                 </div>
             </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
                     <label htmlFor="placaVehiculo" className="col-4 col-form-label">Placa:*</label>
-                    <div className="col-8">
+                    <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }}>
                         <input
                             type="text"
                             className="form-control"
@@ -169,7 +171,7 @@ export default function AgregarServicio() {
                             value={placaVehiculo}
                             onChange={onInputChange}
                             disabled={!isEditing}
-                        />
+                        /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarvehiculo" style={{color: "#ffffff;"}}><i class="fa-solid fa-plus" style={{color: "#ffffff;"}}></i></Link></button>
                     </div>
                 </div>
 

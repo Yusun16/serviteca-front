@@ -9,6 +9,11 @@ body {
 }
 
 /* Diseños de Yusun y Manuel */
+.selecclientes{
+  width: 90%;
+  padding-right: 1px;
+}
+
 .btnn-close {
   background-color: red;
   width: 30px;

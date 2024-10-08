@@ -81,7 +81,7 @@ export default function BuscarOrden() {
                         <div className="row">
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="codigo" className="col-sm-3 col-form-label">N° de servicio:*</label>
+                                    <label htmlFor="codigo" className="col-sm-3 col-form-label">N° de servicio:</label>
                                     <div className="col-sm-6">
                                         <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={(e) => setidOrden(e.target.value)} />
                                     </div>
@@ -89,7 +89,7 @@ export default function BuscarOrden() {
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:*</label>
+                                    <label htmlFor="cliente" className="col-sm-3 col-form-label">Cliente:</label>
                                     <div className="col-sm-6">
                                         <input type="text" className="form-control" id="cliente" name='cliente' value={cliente} onChange={(e) => setCliente(e.target.value)} />
                                     </div>
@@ -97,7 +97,7 @@ export default function BuscarOrden() {
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="fecha" className="col-sm-3 col-form-label">Fecha de Ingreso:*</label>
+                                    <label htmlFor="fecha" className="col-sm-3 col-form-label">Fecha de Ingreso:</label>
                                     <div className="col-sm-6">
                                         <input type="date" className="form-control" id="fecha" name='fecha' value={fecha} onChange={(e) => setFecha(e.target.value)} />
                                     </div>
@@ -105,7 +105,7 @@ export default function BuscarOrden() {
                             </div>
                             <div className="col-12 mb-3">
                                 <div className="mb-3 row">
-                                    <label htmlFor="placaVehiculo" className="col-sm-3 col-form-label">Placa:*</label>
+                                    <label htmlFor="placaVehiculo" className="col-sm-3 col-form-label">Placa:</label>
                                     <div className="col-sm-6">
                                         <input type="text" className="form-control" id="placaVehiculo" name='placaVehiculo' value={placaVehiculo} onChange={(e) => setPlacaVehiculo(e.target.value)} />
                                     </div>
@@ -140,8 +140,8 @@ export default function BuscarOrden() {
                             <tbody>
                                 {currentItems.map((orden, indice) => {
                                     // Buscar el cliente correspondiente utilizando el cliente_id
-                                    const clienteEncontrado = clientes.find(c => cliente.id === orden.cliente_id);
-                                    const nombreCompleto = clienteEncontrado ? `${clienteEncontrado.nombre} ${clienteEncontrado.apellido}` : 'Cliente no encontrado';
+                                    const clienteEncontrado = clientes.find(c => c.id === orden.clienteId?.id);
+                                    const nombreCompleto = clienteEncontrado ? `${clienteEncontrado.nombre} ${clienteEncontrado.apellido}` : 'Orden sin cliente';
                                     return (
                                         <tr className='tr-table-tr text-center' key={indice}>
                                             <td>{orden.fecha}</td>
