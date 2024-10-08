@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import { Modal } from 'bootstrap';
 import ModalEliminar from './modalEliminar';
+import ModalEliminarCliente from './modalEliminarCliente';
 
 export default function ListadoCliente() {
 
@@ -26,10 +27,11 @@ export default function ListadoCliente() {
       const resultado = await axios.get(urlBase);
       setClientes(resultado.data);
     } catch (error) {
-      console.error("Error cargando los clientes:", error);
+      console.error("Error cargando los clientes:", error.response || error.message);
       alert("Error cargando los clientes. Verifica la conexión con el servidor.");
     }
   };
+  
 
   const eliminarCliente = async (id) => {
     try {
@@ -55,6 +57,8 @@ export default function ListadoCliente() {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  
 
   const exportToPDF = () => {
     const doc = new jsPDF();
@@ -120,32 +124,40 @@ export default function ListadoCliente() {
         <table className="container">
           <thead>
             <tr>
-              <th className='text-letras colorthead' scope="col">Cedula</th>
-              <th className='text-letras colorthead' scope="col">Nombre</th>
-              <th className='text-letras colorthead' scope="col">Ciudad</th>
-              <th className='text-letras colorthead'>Editar</th>
-              <th className='text-letras colorthead'>Borrar</th>
+              <th className='text-letras colorthead text-center' scope="col">Cedula</th>
+              <th className='text-letras colorthead text-center' scope="col">Nombre</th>
+              <th className='text-letras colorthead text-center' scope="col">Ciudad</th>
+              <th className='text-letras colorthead text-center'>Editar</th>
+              <th className='text-letras colorthead text-center'>Borrar</th>
             </tr>
           </thead>
           <tbody>
             {currentItems.map((cliente, indice) => (
-              <tr className='tr-table-tr' key={indice}>
+              <tr className='tr-table-tr text-center' key={indice}>
                 <td>{cliente.cedula}</td>
                 <td>{cliente.nombre}</td>
                 <td>{cliente.ciudad}</td>
                 <td className='text-center'>
-                  <Link to={`/EditarCliente/${cliente.idCliente}`} className='btn btn-sm me-3'>
+                  <Link to={`/EditarCliente/${cliente.id}`} className='btn btn-sm me-3'>
                     <i className="fa-solid fa-pen-to-square"></i>
                   </Link>
                 </td>
                 <td>
-                  <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente"  onClick={() => eliminarCliente(cliente.idCliente)} className='btn btn-sm'>
+                  <button  data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarCliente(cliente.id)} className='btn btn-sm'>
                     <i className="fa-solid fa-trash-can"></i>
                   </button>
-                  <ModalEliminar />
+                  <ModalEliminarCliente />
                 </td>
               </tr>
             ))}
+                    <tr  >
+              <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
+              <th className='text-letras colorthead' scope="col"></th>
+              <th className='text-letras colorthead' scope="col"></th>
+              <th className='text-letras colorthead' scope="col"></th>
+              <th className='text-letras colorthead' scope="col">  </th>
+              <th className='text-letras colorthead'></th>
+            </tr>
           </tbody>
         </table>
 

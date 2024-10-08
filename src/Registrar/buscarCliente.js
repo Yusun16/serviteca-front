@@ -1,9 +1,10 @@
 import React from 'react'
 
 export default function buscarCliente() {
+
+    
+
   return (
-
-
     <div className='container'>
         
                 <nav aria-label="breadcrumb">

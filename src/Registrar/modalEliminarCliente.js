@@ -5,7 +5,7 @@ export default function () {
     return (
 
         <div>
-            <div className="modal fade " id="modaleliminarvehiculo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+            <div className="modal fade " id="modaleliminarcliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content colorr-modal">
                         <div className="modal-header ">

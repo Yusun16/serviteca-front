@@ -2,11 +2,13 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModalEditar from './modalEditar';
+import ModalEditarCliente from './modalEditarCliente';
 
 export default function EditarServicio() {
     const urlBase = "http://localhost:8080/serviteca/cliente";
     let navegacion = useNavigate();
     const { id } = useParams();
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Inicialización del estado del cliente
     const [cliente, setCliente] = useState({
@@ -82,13 +84,31 @@ export default function EditarServicio() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        try {
+
+        const requiredForm = ["cedula",
+            "nombre",
+            "apellido",
+            "correo",
+            "direccion",
+            "telefono",
+            "departamento",
+            "ciudad"];
+
+        const allRequiredForm = requiredForm.every(field => cliente[field].trim() !== '');
+
+        if(allRequiredForm) {
+            try {
             await axios.put(`${urlBase}/${id}`, cliente);
-            navegacion("/listadoCliente");
+            setIsModalOpen(true);
+            // navegacion("/listadoCliente");
         } catch (error) {
             console.error("Hubo un error al actualizar el cliente:", error.response ? error.response.data : error.message);
             alert("Hubo un problema al actualizar los datos. Por favor, verifica los campos e intenta de nuevo.");
         }
+        } else {
+            alert("Por favor, completar todos los campos, Manuel!!!")
+        }
+        
     };
 
 
@@ -168,9 +188,9 @@ export default function EditarServicio() {
                     {/* Input fields and labels */}
                 </div>
                 <div className='text-center'>
-                    <button type="submit" to="/listadoCliente" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente" ><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <button type="submit"  className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente" ><i className="fa-regular fa-floppy-disk"></i> Guardar</button>
                     <button type="button" onClick={() => navegacion('/listadoCliente')} className='btn btn-danger btn-sm me-3'><i className="fa-regular fa-circle-xmark"></i> Cancelar</button>
-                    <ModalEditar />
+                    <ModalEditarCliente />
                 </div>
             </form>
         </div>

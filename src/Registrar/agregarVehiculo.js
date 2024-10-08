@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -6,10 +6,27 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import fotoimage from '../img/fotoup.jpeg';
 import axios from 'axios';
+import ModalEliminar from './modalEliminar';
+import ModalGuardar from './modalGuardar';
 
 export default function AgregarVehiculo() {
 
     let navegacion = useNavigate();
+
+    const urlBase = "http://localhost:8080/serviteca/vehiculos";
+    const [vehiculos, setVehiculos] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    // Cálculo de paginación
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = vehiculos.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(vehiculos.length / itemsPerPage);
 
     const servicios = [
         { cedula: '123456789', nombre: 'Juan Perez', ciudad: 'Bogotá' },
@@ -45,9 +62,6 @@ export default function AgregarVehiculo() {
         "Subaru": ["Impreza", "Legacy", "Outback", "Forester", "Crosstrek", "",],
         "Mazda": ["Mazda2", "Mazda3", "CX-3", "CX-5", "MX-5 Miata",],
 
-
-
-        // Agrega más departamentos y ciudades según sea necesario
     };
 
     const lineas = Object.keys(lineasYmarcas);
@@ -61,24 +75,40 @@ export default function AgregarVehiculo() {
         }));
     }
 
+    useEffect(() => {
+        cargarVehiculos();
+    }, []);
 
-
-    const onSubmit = async (e) => {
-        e.preventDefault();
-        const urlBase = "http://localhost:8080/serviteca/vehiculos";
-        await axios.post(urlBase, vehiculo);
-        // Arreglar el redireccionamiento !!!
-        // navegacion("/agregarvehiculo")
-        navegacion("/listadoVehiculo")
-
+    const cargarVehiculos = async () => {
+        const resultado = await axios.get(urlBase);
+        console.log("Resultado de cargar Vehiculos");
+        console.log(resultado.data);
+        setVehiculos(resultado.data);
     }
+
+    const eliminarVehiculo = async (id) => {
+        await axios.delete(`${urlBase}/${id}`);
+        cargarVehiculos();
+    };
+
+
+
+    // const onSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const urlBase = "http://localhost:8080/serviteca/vehiculos";
+    //     await axios.post(urlBase, vehiculo);
+    //     // Arreglar el redireccionamiento !!!
+    //     // navegacion("/agregarvehiculo")
+    //     navegacion("/listadoVehiculo")
+
+    // }
 
     // Función para exportar a Excel
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(servicios.map(servicio => ({
-            "Cedula": servicio.cedula,
-            "Nombre": servicio.nombre,
-            "Ciudad": servicio.ciudad,
+        const ws = XLSX.utils.json_to_sheet(vehiculos.map(vehiculo => ({
+            "Placa": vehiculo.placa,
+            "Observación": vehiculo.observacion,
+            "Modelo": vehiculo.modelo,
         })));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, "Agregar Vehiculo");
@@ -90,16 +120,22 @@ export default function AgregarVehiculo() {
     // Función para exportar a PDF
     const exportToPDF = () => {
         const doc = new jsPDF();
-        doc.text('Vehiculos Agregados', 20, 10);
-        doc.autoTable({
-            head: [['Cedula', 'Nombre', 'Ciudad']],
-            body: servicios.map(servicio => [
-                servicio.cedula,
-                servicio.nombre,
-                servicio.ciudad,
-            ]),
+        const tableColumn = ["Placa", "Observación", "Modelo"];
+        const tableRows = [];
+
+        vehiculos.forEach(vehiculo => {
+            const vehiculoData = [
+                vehiculo.placa,
+                vehiculo.observacion,
+                vehiculo.modelo,
+
+            ];
+            tableRows.push(vehiculoData);
         });
-        doc.save('Vehiculos Agregados.pdf');
+
+        doc.autoTable(tableColumn, tableRows, { startY: 20 });
+        doc.text("Listado de vehiculos", 14, 15);
+        doc.save("listado_vehiculos.pdf");
     };
 
     const [image, setImage] = useState(null);
@@ -135,17 +171,12 @@ export default function AgregarVehiculo() {
                     },
                 });
             }
+            navegacion("/listadoVehiculo")
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
         }
     };
-
-
-
-
-
-
 
     return (
         <div className='container'>
@@ -160,7 +191,7 @@ export default function AgregarVehiculo() {
                 <h3> Agregar Vehiculo</h3>
             </div>
 
-            <div style={{ height: "350px" }}>
+            <div style={{ height: "450px" }}>
                 <form onSubmit={(e) => handleSubmit(e)} className='container' style={{ width: "580px", position: "relative", height: "310px" }} >
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                         <div className="col">
@@ -211,15 +242,16 @@ export default function AgregarVehiculo() {
                                 </div>
                             </div>
                             <div className="col">
-                                <label htmlFor="clente" className="form-label">Foto: *</label>
+                                <label htmlFor="fotoimg" className="form-label">Foto: *</label>
                                 <div className="col-md-6 d-flex align-items-center">
                                     <div className="w-50">
                                         <div className="card" style={{ width: '329px', height: '130px', overflow: "hidden" }}>
-                                            {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "100px", top: "10px", left: "18px", position: "relative" }} />}
+                                            {image && <img src={URL.createObjectURL(image)} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "100px", top: "10px", left: "18px", position: "relative" }} />}
                                             <input
                                                 type="file"
                                                 className="form-control-file d-none"
                                                 id="fotoimg"
+                                                name='fotoimg'
                                                 accept="image/*"
                                                 onChange={handleImageChange}
                                             // value={foto}
@@ -245,14 +277,20 @@ export default function AgregarVehiculo() {
                         </div>
 
                         <div className='text-center'>
-                            <button type="submit" className="btn btn-success btn-sm me-3"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+                            <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregarvehiculo">
+                                <i className="fa-regular fa-floppy-disk"></i> Guardar
+                            </button>
+                            <ModalGuardar />
                         </div>
                     </div>
                 </form>
             </div>
 
+
+            {/* Contenedor del formulario y la tabla */}
             <div className='d-flex'>
                 <div className='container'>
+                    {/* Tabla de servicios */}
                     <div className="nav justify-content-end">
                         <button
                             className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
@@ -265,7 +303,70 @@ export default function AgregarVehiculo() {
                             style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
                         ></button>
                     </div>
+                    <table className="container" style={{ marginTop: "15px" }}>
+                        <thead >
+                            <tr className='tr-table-tr text-center'>
+                                <th className='text-letras colorthead text-center' scope="col">Placa</th>
+                                <th className='text-letras colorthead text-center' scope="col">Observación</th>
+                                <th className='text-letras colorthead text-center' scope="col">Modelo</th>
+                                <th className='text-letras colorthead text-center' scope="col">Editar</th>
+                                <th className='text-letras colorthead text-center' scope="col">Borrar</th>
+                            </tr>
 
+                        </thead>
+                        <tbody>
+                            {currentItems.map((vehiculo, indice) => (
+                                <tr className='tr-table-tr text-center' key={indice}>
+                                    <td>{vehiculo.placa}</td>
+                                    <td>{vehiculo.observacion}</td>
+                                    <td>{vehiculo.modelo}</td>
+                                    <td className='text-center'>
+                                        <Link to={`/EditarVehiculo/${vehiculo.id}`} className='btn btn-sm me-3'>
+                                            <i className="fa-solid fa-pen-to-square"></i>
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarVehiculo(vehiculo.id)} className='btn btn-sm'>
+                                            <i className="fa-solid fa-trash-can"></i>
+                                        </button>
+                                        <ModalEliminar />
+                                    </td>
+                                </tr>
+                            ))}
+                             <tr className='container'>
+                                <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col">  </th>
+                            
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    {/* Paginación */}
+                    <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                    <div className='d-flex justify-content-between align-items-center'>
+                        <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
+                        <div className="d-flex justify-content-start  justify-content-end">
+
+                            <button
+                                className="btn btn-secondary me-2"
+                                onClick={() => paginate(currentPage - 1)}
+                                disabled={currentPage === 1}
+                            >
+                                Anterior
+                            </button>
+                            <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                            <button
+                                className="btn btn-secondary ms-2"
+                                onClick={() => paginate(currentPage + 1)}
+                                disabled={currentPage === totalPages}
+                            >
+                                Siguiente
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

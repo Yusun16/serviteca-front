@@ -3,7 +3,7 @@ import React from 'react'
 export default function () {
     return (
         <div>
-            <div className="modal fade" id="modaleditarvehiculo" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+            <div className="modal fade" id="modaleditarcliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
                 <div className="modal-dialog modal-dialog-centered">
                     <div className="modal-content colorr-modal">
                         <div className="modal-header">
@@ -14,7 +14,7 @@ export default function () {
                            <h6> Registro editado con exito</h6>
                         </div>
                         <div className="botonposicion modal-footer" >
-                            <a type="submit" href='/listadoVehiculo' className="btn btn-success">Ok</a >
+                            <a type="submit" href='/listadoCliente' className="btn btn-success">Ok</a >
                         </div>
                     </div>
                 </div>

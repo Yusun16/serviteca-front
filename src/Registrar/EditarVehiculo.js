@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import fotoimage from '../img/fotoup.jpeg';
+import ModalEditar from './modalEditar';
 
 export default function EditarVehiculo() {
-    const urlBase = "http://localhost:8080/serviteca/servicios";
+    const urlBase = "http://localhost:8080/serviteca/vehiculos";
     let navegacion = useNavigate();
     const { id } = useParams();
 
@@ -16,13 +16,34 @@ export default function EditarVehiculo() {
         modelo: "",
         cliente: "",
         foto: "",
-        obsevaciones: "",
+        observacion: "",
     });
 
     // Estado para almacenar la imagen seleccionada
     const [image, setImage] = useState(null);
 
-    const { placa, marca, linea, modelo, cliente, foto, obsevaciones } = vehiculo;
+    // const { placa, marca, linea, modelo, cliente, foto, observacion } = vehiculo;
+
+    const lineasYmarcas = {
+        "Toyota": ["Corolla", "Camry ", "Hilux", "RAV4", "Land Cruiser"],
+        "Ford": ["Fiesta", "Focus", "Mustang", "Explorer", "F-150"],
+        "Chevrolet": ["Spark", "Onix", "Tracker", "Equinox", "Camaro", ""],
+        "Honda": ["Civic", "Accord", "CR-V", "HR-V", "Fit"],
+        "Nissan": ["Versa", "Sentra", "Altima", "Rogue", "Frontier"],
+        "Hyundai": ["Accent", "Elantra", "Tucson", "Santa Fe", "Palisade"],
+        "Kia": ["Rio", "Forte", "Sportage", "Sorento", "Telluride",],
+        "Volkswagen": ["Polo", "Golf", "Jetta", "Tiguan", "Passat",],
+        "BMW": ["Serie 1", "Serie 3", "Serie 5", "X3", "X5"],
+        "Mercedes-Benz": ["Clase A", "Clase C", "Clase E", "GLA", "GLC"],
+        "Subaru": ["Impreza", "Legacy", "Outback", "Forester", "Crosstrek", "",],
+        "Mazda": ["Mazda2", "Mazda3", "CX-3", "CX-5", "MX-5 Miata",],
+
+
+
+
+    };
+    const lineas = Object.keys(lineasYmarcas);
+    const marcas = vehiculo.linea ? lineasYmarcas[vehiculo.linea] : [];
 
     useEffect(() => {
         cargarVehiculo();
@@ -76,49 +97,40 @@ export default function EditarVehiculo() {
                                     className="form-control"
                                     id="placa"
                                     name='placa'
-                                    value={placa}
+                                    value={vehiculo.placa}
                                     onChange={onInputChange}
                                     style={{ width: "320px" }}
                                 />
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="marca" className="form-label">Marca: *</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="marca"
-                                    name='marca'
-                                    value={marca}
-                                    onChange={onInputChange}
-                                />
+                            <div className="col">
+                                <div className="mb-3">
+                                    <label htmlFor="linea" className="form-label">Marca: *</label>
+                                    <select className="form-select" id='linea' name='linea' required value={vehiculo.linea} onChange={(e) => onInputChange(e)}>
+                                        <option value="">Selecciona la Línea</option>
+                                        {lineas.map((linea, index) => (
+                                            <option key={index} value={linea}>{linea}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="linea" className="form-label">Linea: *</label>
-                                <select
-                                    className="form-select"
-                                    name="linea"
-                                    value={linea}
-                                    onChange={onInputChange}
-                                >
-                                    <option value="">Selecciona la Linea</option>
-                                    <option value="1">Linea 1</option>
-                                    <option value="2">Linea 2</option>
-                                    <option value="3">Linea 3</option>
-                                </select>
+                            <div className="col">
+                                <div className="mb-3">
+                                    <label htmlFor="marca" className="form-label">Linea: *</label>
+                                    <select className="form-select" id='marca' name='marca' required value={vehiculo.marca} onChange={(e) => onInputChange(e)} >
+                                        <option value="">Selecciona el Modelo</option>
+                                        {marcas.map((marca, index) => (
+                                            <option key={index} value={marca}>{marca}</option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="modelo" className="form-label">Modelo: *</label>
-                                <select
-                                    className="form-select"
-                                    name="modelo"
-                                    value={modelo}
-                                    onChange={onInputChange}
-                                >
-                                    <option value="">Selecciona el Modelo</option>
-                                    <option value="1">Modelo 1</option>
-                                    <option value="2">Modelo 2</option>
-                                    <option value="3">Modelo 3</option>
-                                </select>
+
+                            <div className="col">
+                                <div className="mb-3">
+                                    <label htmlFor="modelo" className="form-label">modelo: *</label>
+                                    <input type="text" className="form-control" id="modelo" name='modelo'
+                                        required value={vehiculo.modelo} onChange={(e) => onInputChange(e)} />
+                                </div>
                             </div>
                         </div>
                         <div className="">
@@ -129,7 +141,7 @@ export default function EditarVehiculo() {
                                     className="form-control"
                                     id="cliente"
                                     name='cliente'
-                                    value={cliente}
+                                    value={vehiculo.cliente}
                                     onChange={onInputChange}
                                     style={{ width: "320px" }}
                                     required={true}
@@ -150,20 +162,20 @@ export default function EditarVehiculo() {
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px" }} />
+                                            <img src={vehiculo.foto} alt="foto ejemplo" style={{ width: "120px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px" }} />
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div className="mb-3">
-                                <label htmlFor="descripcion" className="form-label">Descripción: *</label>
+                                <label htmlFor="observacion" className="form-label">Observaciones: *</label>
                                 <textarea
                                     style={{ resize: "none" }}
                                     className="form-control"
                                     rows={5}
-                                    id="descripcion"
-                                    name='descripcion'
-                                    value={obsevaciones}
+                                    id="observacion"
+                                    name='observacion'
+                                    value={vehiculo.observacion}
                                     onChange={onInputChange}
                                     required
                                 />
@@ -171,9 +183,10 @@ export default function EditarVehiculo() {
                         </div>
                     </div>
                     <div className='text-center'>
-                        <button type="submit" className="btn btn-success btn-sm me-3">
-                            <i className="fa-regular fa-floppy-disk"></i> Guardar
-                        </button>
+                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente">
+                        <i className="fa-regular fa-floppy-disk"></i> Guardar
+                    </button>
+                    <ModalEditar />
                     </div>
                 </form>
             </div>

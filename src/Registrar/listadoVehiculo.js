@@ -131,18 +131,26 @@ export default function ListadoVehiculo() {
                                 <td>{vehiculo.observacion}</td>
                                 <td>{vehiculo.modelo}</td>
                                 <td className='text-center'>
-                                    <Link to={`/editar/${vehiculo.idVehiculo}`} className='btn btn-sm me-3'>
+                                    <Link to={`/EditarVehiculo/${vehiculo.id}`} className='btn btn-sm me-3'>
                                         <i className="fa-solid fa-pen-to-square"></i>
                                     </Link>
                                 </td>
                                 <td>
-                                    <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarVehiculo(vehiculo.idVehiculo)} className='btn btn-sm'>
+                                    <button data-bs-toggle="modal" data-bs-target="#modaleliminarvehiculo" onClick={() => eliminarVehiculo(vehiculo.id)} className='btn btn-sm'>
                                         <i className="fa-solid fa-trash-can"></i>
                                     </button>
                                     <ModalEliminar />
                                 </td>
                             </tr>
                         ))}
+                         <tr className='container'>
+                                <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col"></th>
+                                <th className='text-letras colorthead' scope="col">  </th>
+                                <th className='text-letras colorthead'></th>
+                            </tr>
                     </tbody>
 
                 </table>
