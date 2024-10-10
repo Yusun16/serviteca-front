@@ -64,15 +64,15 @@ export default function AgregarServicio() {
     const onSubmit = async (e) => {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
-        const jSonBody={
-            codigo:orden.codigo,
-            clienteId:{
-                id:orden.clienteId
+        const jSonBody = {
+            codigo: orden.codigo,
+            clienteId: {
+                id: orden.clienteId
             },
-            tipoServicio:orden.tipoServicio,
-            placaVehiculo:orden.placaVehiculo,
-            kilometraje:orden.kilometraje,
-            fecha:orden.fecha
+            tipoServicio: orden.tipoServicio,
+            placaVehiculo: orden.placaVehiculo,
+            kilometraje: orden.kilometraje,
+            fecha: orden.fecha
         }
         await axios.post(urlBase, jSonBody);
         setOrden({
@@ -142,22 +142,22 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
-                <label htmlFor="clienteId" className="col-4 col-form-label">Cliente:*</label>
-                <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }} >
-                    <Select
-                        id="clienteId"
-                        name="clienteId"
-                        value={opcionesClientes.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
-                        onChange={onInputChange} 
-                        options={opcionesClientes}
-                        isDisabled={!isEditing}  
-                        isClearable
-                        className='selecclientes'  
-                        placeholder="Seleccione un cliente"
-                    /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarcliente"><i class="fa-solid fa-plus" style={{color: "#ffffff;"}}></i></Link></button>
-                    
+                    <label htmlFor="clienteId" className="col-4 col-form-label">Cliente:*</label>
+                    <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }} >
+                        <Select
+                            id="clienteId"
+                            name="clienteId"
+                            value={opcionesClientes.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
+                            onChange={onInputChange}
+                            options={opcionesClientes}
+                            isDisabled={!isEditing}
+                            isClearable
+                            className='selecclientes'
+                            placeholder="Seleccione un cliente"
+                        /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarcliente"><i class="fa-solid fa-plus" style={{ color: "#ffffff;" }}></i></Link></button>
+
+                    </div>
                 </div>
-            </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
                     <label htmlFor="placaVehiculo" className="col-4 col-form-label">Placa:*</label>
@@ -171,7 +171,7 @@ export default function AgregarServicio() {
                             value={placaVehiculo}
                             onChange={onInputChange}
                             disabled={!isEditing}
-                        /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarvehiculo" style={{color: "#ffffff;"}}><i class="fa-solid fa-plus" style={{color: "#ffffff;"}}></i></Link></button>
+                        /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarvehiculo" style={{ color: "#ffffff;" }}><i class="fa-solid fa-plus" style={{ color: "#ffffff;" }}></i></Link></button>
                     </div>
                 </div>
 
