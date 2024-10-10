@@ -132,10 +132,11 @@ export default function EjecucionServicio() {
                                 </select>
                             </div>
                             <div className=' col-4'>
-                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalagregarejecucion">
+                                <button type="button" className="btn btn-primary" data-bs-toggle="modal" data-bs-target="#firstModal">
                                     Agregar
                                 </button>
-                                <ModalAgregarEjecucion />
+                                <ModalAgregarEjecucion/>
+                               
                             </div>
 
 

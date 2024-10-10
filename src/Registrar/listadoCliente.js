@@ -156,7 +156,6 @@ export default function ListadoCliente() {
               <th className='text-letras colorthead' scope="col"></th>
               <th className='text-letras colorthead' scope="col"></th>
               <th className='text-letras colorthead' scope="col">  </th>
-              <th className='text-letras colorthead'></th>
             </tr>
           </tbody>
         </table>
