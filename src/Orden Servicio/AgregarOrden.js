@@ -8,18 +8,18 @@ export default function AgregarServicio() {
 
     const [orden, setOrden] = useState({
         codigo: "",
-        clienteId: {
+        tipoServicio: "",
+        vehiculo: {
             id: ""
         },
-        tipoServicio: "",
-        placaVehiculo: "",
         kilometraje: "",
         fecha: ""
     });
 
     const [isEditing, setIsEditing] = useState(false); // Controla si se puede editar el formulario
     const [clientes, setClientes] = useState([]);
-    const { codigo, cliente, tipoServicio, placaVehiculo, kilometraje, fecha } = orden;
+    const [opcionesVehiculos, setOpcionesVehiculos] = useState([]);
+    const { codigo, cliente, tipoServicio, vehiculo, kilometraje, fecha } = orden;
 
     // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
     const obtenerCodigo = async () => {
@@ -40,6 +40,26 @@ export default function AgregarServicio() {
         }
     };
 
+    const obtenerVehiculos = async (id) => {
+        try {
+            const respuesta = await axios.get('http://localhost:8080/serviteca/vehiculosCliente/' + id); // Asegúrate de que la URL sea correcta
+            const vehiculos = respuesta.data.map(vehiculo => ({
+                value: vehiculo.vehiculoId, // Ajusta según tu estructura de datos
+                label: vehiculo.placa,      // La placa o cualquier otro identificador
+            }));
+            setOpcionesVehiculos(vehiculos); // Actualizamos el estado con las opciones
+        } catch (error) {
+            console.error("Error obteniendo los vehículos: ", error);
+        }
+    };
+
+    const manejarCambioCliente = (opcionSeleccionada) => {
+        if (opcionSeleccionada) {
+            const clienteId = opcionSeleccionada.value;  // Captura el ID del cliente seleccionado
+            obtenerVehiculos(clienteId);
+        }
+    };
+
     useEffect(() => {
         obtenerClientes();
     }, []);
@@ -50,38 +70,39 @@ export default function AgregarServicio() {
             const { name, value } = e.target;
             setOrden(prevOrden => ({
                 ...prevOrden,
-                [name]: value   // Actualiza el campo en el estado de acuerdo al nombre del input
+                [name]: value,  // Actualiza el campo en el estado de acuerdo al nombre del input
             }));
         } else {
-            // Esto maneja el valor del 'react-select'
+            // Esto maneja el valor del 'react-select' para el campo de vehículo
             setOrden(prevOrden => ({
                 ...prevOrden,
-                clienteId: e ? e.value : ""   // Actualiza el clienteId o lo limpia si no hay opción seleccionada
+                vehiculo: {
+                    ...prevOrden.vehiculo, // Mantiene las otras propiedades de "vehiculo" intactas
+                    id: e ? e.value : "",  // Actualiza solo el ID del vehículo
+                }
             }));
         }
-    };
+    };  
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
         const jSonBody = {
             codigo: orden.codigo,
-            clienteId: {
-                id: orden.clienteId
-            },
             tipoServicio: orden.tipoServicio,
-            placaVehiculo: orden.placaVehiculo,
+            vehiculo: {
+                id: orden.vehiculo.id
+            },
             kilometraje: orden.kilometraje,
             fecha: orden.fecha
         }
         await axios.post(urlBase, jSonBody);
         setOrden({
             "codigo": "",
-            "clienteId": {
+            "tipoServicio": "",
+            "vehiculo": {
                 "id": ""
             },
-            "tipoServicio": "",
-            "placaVehiculo": "",
             "kilometraje": "",
             "fecha": ""
         });
@@ -148,7 +169,7 @@ export default function AgregarServicio() {
                             id="clienteId"
                             name="clienteId"
                             value={opcionesClientes.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
-                            onChange={onInputChange}
+                            onChange={(opcionSeleccionada) => manejarCambioCliente(opcionSeleccionada)}
                             options={opcionesClientes}
                             isDisabled={!isEditing}
                             isClearable
@@ -159,19 +180,25 @@ export default function AgregarServicio() {
                     </div>
                 </div>
 
-                <div className="row mb-3 text-start" style={{ display: "flex" }}>
-                    <label htmlFor="placaVehiculo" className="col-4 col-form-label">Placa:*</label>
-                    <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }}>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="placaVehiculo"
-                            name="placaVehiculo"
-                            required
-                            value={placaVehiculo}
-                            onChange={onInputChange}
-                            disabled={!isEditing}
-                        /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarvehiculo" style={{ color: "#ffffff;" }}><i class="fa-solid fa-plus" style={{ color: "#ffffff;" }}></i></Link></button>
+                <div className="row mb-3 text-start " style={{ display: "flex" }}>
+                    <label htmlFor="vehiculo" className="col-4 col-form-label">Placa:*</label>
+                    <div className="col-8 " style={{ display: "flex", gap: "2px", alignItems: "center" }}>
+                        <Select
+                            id="vehiculo"
+                            name="vehiculo"
+                            value={opcionesVehiculos.find(option => option.value === orden.vehiculo)}  // Muestra la placa seleccionada
+                            onChange={onInputChange}  // Función para manejar el cambio
+                            options={opcionesVehiculos}  // Opciones de vehículos obtenidas desde tu backend
+                            isDisabled={!isEditing}
+                            isClearable
+                            className='selecclientes'
+                            placeholder="Seleccione un vehículo"
+                        />
+                        <button className="btn btn-link" disabled={!isEditing}>
+                            <Link type="button" class="btn btncolor" to="/agregarvehiculo">
+                                <i class="fa-solid fa-plus" style={{ color: "#ffffff;" }}></i>
+                            </Link>
+                        </button>
                     </div>
                 </div>
 
@@ -207,6 +234,7 @@ export default function AgregarServicio() {
                             value={kilometraje}
                             onChange={onInputChange}
                             disabled={!isEditing}
+                            min={0}
                         />
                     </div>
                     <div className="col-4" style={{ textAlignLast: "left" }}>
