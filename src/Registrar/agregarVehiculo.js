@@ -8,6 +8,7 @@ import fotoimage from '../img/fotoup.jpeg';
 import axios from 'axios';
 import ModalEliminar from './modalEliminar';
 import ModalGuardar from './modalGuardar';
+import Select from 'react-select';
 
 export default function AgregarVehiculo() {
 
@@ -17,6 +18,9 @@ export default function AgregarVehiculo() {
     const [vehiculos, setVehiculos] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
+    const [clientes, setClientes] = useState([]);
+    const [opcionesClientes, setOpcionesClientes] = useState([]);
+
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -39,10 +43,25 @@ export default function AgregarVehiculo() {
         marca: "",
         linea: "",
         modelo: "",
-        cliente: "",
+        cliente: {
+            id: ""
+        },
         observacion: "",
     })
 
+    const obtenerClientes = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/cliente');
+            setClientes(response.data);
+            const opciones = response.data.map((cliente) => ({
+                value: cliente.id,
+                label: `${cliente.nombre} ${cliente.apellido}`,
+            }));
+            setOpcionesClientes(opciones);
+        } catch (error) {
+            console.error("Error al obtener los clientes", error);
+        }
+    };
 
     // const { placa, marca, linea, modelo, cliente, foto, Observacion } = vehiculo
 
@@ -67,16 +86,40 @@ export default function AgregarVehiculo() {
     const lineas = Object.keys(lineasYmarcas);
     const marcas = vehiculo.linea ? lineasYmarcas[vehiculo.linea] : [];
 
-    const onInputChange = (e) => {
-        const { name, value } = e.target;
-        setVehiculo(prevData => ({
-            ...prevData,
-            [name]: value,
-        }));
-    }
+    const handleChange = (e, selectedOption) => {
+        console.log(selectedOption, "select"); 
+        if (selectedOption) {
+            // Lógica para manejar el cambio de cliente
+            setVehiculo(prevData => ({
+                ...prevData,
+                cliente: {
+                    id: selectedOption.value,
+                },
+            }));
+        }else {
+            // Lógica para manejar cambios en los inputs
+            const { name, value } = e.target;
+            setVehiculo(prevData => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
+    };
+
+    const handleSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setVehiculo(prevData => ({
+                ...prevData,
+                cliente: {
+                    id: selectedOption.value,
+                },
+            }));
+        }
+    };
 
     useEffect(() => {
         cargarVehiculos();
+        obtenerClientes();
     }, []);
 
     const cargarVehiculos = async () => {
@@ -148,35 +191,60 @@ export default function AgregarVehiculo() {
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Guardando datos del Formulario
+        console.log(vehiculo.cliente);
         try {
-            const response = await axios.post('http://localhost:8080/serviteca/vehiculos', vehiculo, {
+            // Preparar datos del vehículo
+            const jSonBody = {
+                placa: vehiculo.placa,
+                marca: vehiculo.marca,
+                linea: vehiculo.linea,
+                modelo: vehiculo.modelo,
+                cliente: {
+                    id: vehiculo.cliente.id
+                },
+                observacion: vehiculo.observacion
+            };
+    
+            // Enviar vehículo
+            const response = await axios.post('http://localhost:8080/serviteca/vehiculos', jSonBody, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-            // Response para conectar el id
+    
             const vehiculoId = response.data.id;
-            // Formulario guardado. Guardar imagen.
-            // Condicional para subir la imagen
+    
+            // Subir imagen si existe
             if (image) {
                 const imageFormData = new FormData();
                 imageFormData.append('id', vehiculoId);
                 imageFormData.append('file', image);
-
+    
                 await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
             }
-            navegacion("/listadoVehiculo")
+    
+            // Limpiar el estado del vehículo
+            setVehiculo({
+                placa: "",
+                marca: "",
+                linea: "",
+                modelo: "",
+                cliente: { id: "" },
+                observacion: "",
+            });
+    
+            navegacion("/listadoVehiculo");
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
         }
     };
+    
+    
 
     return (
         <div className='container'>
@@ -199,13 +267,13 @@ export default function AgregarVehiculo() {
                                 <div className="mb-3">
                                     <label htmlFor="placa" className="form-label">Placa: *</label>
                                     <input type="text" className="form-control" id="placa" name='placa' style={{ width: "320px" }}
-                                        value={vehiculo.placa} required onChange={(e) => onInputChange(e)} />
+                                        value={vehiculo.placa} required onChange={(e) => handleChange(e)} />
                                 </div>
                             </div>
                             <div className="col">
                                 <div className="mb-3">
                                     <label htmlFor="linea" className="form-label">Marca: *</label>
-                                    <select className="form-select" id='linea' name='linea' required value={vehiculo.linea} onChange={(e) => onInputChange(e)}>
+                                    <select className="form-select" id='linea' name='linea' required value={vehiculo.linea} onChange={(e) => handleChange(e)}>
                                         <option value="">Selecciona la Línea</option>
                                         {lineas.map((linea, index) => (
                                             <option key={index} value={linea}>{linea}</option>
@@ -216,7 +284,7 @@ export default function AgregarVehiculo() {
                             <div className="col">
                                 <div className="mb-3">
                                     <label htmlFor="marca" className="form-label">Linea: *</label>
-                                    <select className="form-select" id='marca' name='marca' required value={vehiculo.marca} onChange={(e) => onInputChange(e)} >
+                                    <select className="form-select" id='marca' name='marca' required value={vehiculo.marca} onChange={(e) => handleChange(e)} >
                                         <option value="">Selecciona el Modelo</option>
                                         {marcas.map((marca, index) => (
                                             <option key={index} value={marca}>{marca}</option>
@@ -229,16 +297,24 @@ export default function AgregarVehiculo() {
                                 <div className="mb-3">
                                     <label htmlFor="modelo" className="form-label">modelo: *</label>
                                     <input type="text" className="form-control" id="modelo" name='modelo'
-                                        required value={vehiculo.modelo} onChange={(e) => onInputChange(e)} />
+                                        required value={vehiculo.modelo} onChange={(e) => handleChange(e)} />
                                 </div>
                             </div>
                         </div>
                         <div className="">
                             <div className="col">
-                                <div className="mb-3">
-                                    <label htmlFor="cliente" className="form-label">Cliente: *</label>
-                                    <input type="text" className="form-control" id="cliente" name='cliente' style={{ width: "320px" }}
-                                        required={true} value={vehiculo.cliente} onChange={(e) => onInputChange(e)} />
+                                <label htmlFor="cliente" className="col-4 col-form-label">Cliente:*</label>
+                                <div className="col-12">
+                                    <Select
+                                        id="cliente"
+                                        name="cliente"
+                                        value={opcionesClientes.find(option => option.value === vehiculo.cliente.id)}
+                                        onChange={handleSelectChange}
+                                        options={opcionesClientes}
+                                        isClearable
+                                        className='selecclientes'
+                                        placeholder="Seleccione un cliente"
+                                    />
                                 </div>
                             </div>
                             <div className="col">
@@ -270,7 +346,7 @@ export default function AgregarVehiculo() {
                                     <div className="mb-3">
                                         <label htmlFor="observacion" className="form-label" style={{ resize: "none" }} >Observaciones: *</label>
                                         <textarea style={{ resize: "none" }} className="form-control" rows={5} id="observacion" name='observacion'
-                                            required value={vehiculo.observacion} onChange={(e) => onInputChange(e)} />
+                                            required value={vehiculo.observacion} onChange={(e) => handleChange(e)} />
                                     </div>
                                 </div>
                             </div>
@@ -333,13 +409,13 @@ export default function AgregarVehiculo() {
                                     </td>
                                 </tr>
                             ))}
-                             <tr className='container'>
+                            <tr className='container'>
                                 <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col">  </th>
-                            
+
                             </tr>
                         </tbody>
 
