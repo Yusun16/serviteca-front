@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { NumericFormat } from 'react-number-format';
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
@@ -169,7 +168,7 @@ export default function BuscarVehiculo() {
                                         </Link>
                                     </td>
                                     <td>
-                                        <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarVehiculo(vehiculo.id)} className='btn btn-sm'>
+                                        <button data-bs-toggle="modal" data-bs-target="#modaleliminarvehiculo" onClick={() => eliminarVehiculo(vehiculo.id)} className='btn btn-sm'>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
                                         <ModalEliminar />

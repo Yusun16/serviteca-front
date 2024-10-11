@@ -1,13 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { NumericFormat } from 'react-number-format';
+
 import { Link } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import { Modal } from 'bootstrap';
-import ModalEliminar from './modalEliminar';
+
 import ModalEliminarCliente from './modalEliminarCliente';
 
 export default function ListadoCliente() {

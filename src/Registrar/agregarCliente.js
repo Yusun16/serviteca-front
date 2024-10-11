@@ -152,7 +152,7 @@ export default function AgregarCliente() {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/cliente";
         await axios.post(urlBase, cliente);
-        navegacion("/listadoCliente");
+        // navegacion("/listadoCliente");
     }
 
     return (

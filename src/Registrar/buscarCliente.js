@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import ModalEliminar from './modalEliminar';
+import ModalEliminarCliente from './modalEliminarCliente';
 
 export default function BuscarCliente() {
     const urlBase = "http://localhost:8080/serviteca/cliente";
@@ -183,7 +183,7 @@ export default function BuscarCliente() {
                                         <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarCliente(cliente.id)} className='btn btn-sm'>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
-                                        <ModalEliminar />
+                                        <ModalEliminarCliente />
                                     </td>
                                 </tr>
 

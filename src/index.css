@@ -98,6 +98,10 @@ body {
   color: white;
 }
 
+.btntrasparente {
+  
+}
+
 .offcanvas-backdrop.show {
   opacity: 0;
 }

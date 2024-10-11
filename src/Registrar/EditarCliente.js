@@ -8,7 +8,6 @@ export default function EditarServicio() {
     const urlBase = "http://localhost:8080/serviteca/cliente";
     let navegacion = useNavigate();
     const { id } = useParams();
-    const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Inicialización del estado del cliente
     const [cliente, setCliente] = useState({
@@ -84,29 +83,13 @@ export default function EditarServicio() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-
-        const requiredForm = ["cedula",
-            "nombre",
-            "apellido",
-            "correo",
-            "direccion",
-            "telefono",
-            "departamento",
-            "ciudad"];
-
-        const allRequiredForm = requiredForm.every(field => cliente[field].trim() !== '');
-
-        if(allRequiredForm) {
             try {
             await axios.put(`${urlBase}/${id}`, cliente);
-            setIsModalOpen(true);
+          
             // navegacion("/listadoCliente");
         } catch (error) {
             console.error("Hubo un error al actualizar el cliente:", error.response ? error.response.data : error.message);
             alert("Hubo un problema al actualizar los datos. Por favor, verifica los campos e intenta de nuevo.");
-        }
-        } else {
-            alert("Por favor, completar todos los campos, Manuel!!!")
         }
         
     };

@@ -237,7 +237,8 @@ export default function AgregarVehiculo() {
                 observacion: "",
             });
     
-            navegacion("/listadoVehiculo");
+            
+            // navegacion("/agregarvehiculo");
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
