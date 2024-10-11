@@ -9,6 +9,12 @@ body {
 }
 
 /* Diseños de Yusun y Manuel */
+
+.text-color-items{
+  color: #002060 !important;
+}
+
+
 .selecclientes{
   width: 90%;
   padding-right: 1px;

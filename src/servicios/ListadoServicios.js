@@ -182,9 +182,9 @@ export default function ListadoServicios() {
 
         {/* Paginación */}
         <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
-        <div className='d-flex justify-content-between align-items-center'>
-          <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-          <div className="d-flex justify-content-start  justify-content-end">
+          <div className='d-flex justify-content-between align-items-center'>
+            <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
+            <div className="d-flex justify-content-start  justify-content-end">
 
             <button
               className="btn btn-secondary me-2"

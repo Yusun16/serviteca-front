@@ -41,9 +41,14 @@ export default function BuscarCliente() {
     }
 
     const eliminarCliente = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarClientes();
-    };
+        try {
+          await axios.delete(`${urlBase}/${id}`);
+          cargarClientes();
+        } catch (error) {
+          console.error("Error eliminando el cliente:", error);
+          alert("Error al eliminar al cliente, por favor intenta de nuevo.");
+        }
+      };
 
     // Paginación
     const indexOfLastItem = currentPage * itemsPerPage;
