@@ -5,7 +5,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import ModalEliminar from './modalEliminar';
+import ModalEliminarCliente from './modalEliminarCliente';
 
 export default function BuscarCliente() {
     const urlBase = "http://localhost:8080/serviteca/cliente";
@@ -41,9 +41,14 @@ export default function BuscarCliente() {
     }
 
     const eliminarCliente = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarClientes();
-    };
+        try {
+          await axios.delete(`${urlBase}/${id}`);
+          cargarClientes();
+        } catch (error) {
+          console.error("Error eliminando el cliente:", error);
+          alert("Error al eliminar al cliente, por favor intenta de nuevo.");
+        }
+      };
 
     // Paginación
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -183,7 +188,7 @@ export default function BuscarCliente() {
                                         <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarCliente(cliente.id)} className='btn btn-sm'>
                                             <i className="fa-solid fa-trash-can"></i>
                                         </button>
-                                        <ModalEliminar />
+                                        <ModalEliminarCliente />
                                     </td>
                                 </tr>
 

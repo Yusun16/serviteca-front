@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import imglist from "../img/imglist.png";
 import LogoGasolina from "../img/LogoGasolina.svg";
@@ -13,8 +13,23 @@ const CheckListComponent = () => {
         observationsBack: '',
         observationsIndicador: '',
     });
+    
+    const urlBase = "http://localhost:8080/serviteca/servicios";
     const [combustible, setCombustible] = useState('');
     const navigate = useNavigate();
+    const [listachequeo, setListachequeo] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+
+    useEffect(() => {
+        cargarServicios();
+      }, []);
+
+    const cargarServicios = async () => {
+        const resultado = await axios.get(urlBase);
+        setListachequeo(resultado.data);
+      };
+      
 
     const handleImageChange = (e, index) => {
         const file = e.target.files[0];
@@ -78,6 +93,21 @@ const CheckListComponent = () => {
         }
     };
 
+    // Calcular el índice del primer y último elemento de la página actual
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+
+    // Extraer los elementos de la página actual
+    const currentItems = listachequeo.slice(indexOfFirstItem, indexOfLastItem);
+
+    // Calcular el número total de páginas
+    const totalPages = Math.ceil(listachequeo.length / itemsPerPage);
+
+    // Función para cambiar de página
+    const paginate = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     return (
         <div className="container">
             <div className='d-flex justify-content-between'>
@@ -91,10 +121,10 @@ const CheckListComponent = () => {
                     </nav>
                 </div>
                 <div className='d-flex flex-row-reverse  gap-0 column-gap-3'>
-                    <button type="button" className="btn text-primary" data-bs-toggle="modal" data-bs-target="#inventario">
+                    <button type="button" className="btn text-color-items" data-bs-toggle="modal" data-bs-target="#inventario">
                         <i className="fa-solid fa-list"></i> Inventario
                     </button>
-                    <button type="button" className="btn text-primary" data-bs-toggle="modal" data-bs-target="#historia">
+                    <button type="button" className="btn text-color-items" data-bs-toggle="modal" data-bs-target="#historia">
                         <i className="fa-solid fa-clock-rotate-left"></i> Historial
                     </button>
                 </div>
@@ -171,22 +201,31 @@ const CheckListComponent = () => {
                                             <td>edmundo</td>
                                             <td>No se observa nada</td>
                                         </tr>
-                                        <tr className='tr001'>
-                                            <th scope="row">2</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>No se observa nada</td>
-                                        </tr>
-                                        <tr className='tr001'>
-                                            <th scope="row">3</th>
-                                            <td>Mark</td>
-                                            <td>Otto</td>
-                                            <td>@mdo</td>
-                                            <td>No se observa nada</td>
-                                        </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            {/* Paginación */}
+                            <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                            <div className='d-flex justify-content-between align-items-center'>
+                                <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
+                                <div className="d-flex justify-content-start  justify-content-end">
+
+                                    <button
+                                        className="btn btn-secondary me-2"
+                                        onClick={() => paginate(currentPage - 1)}
+                                        disabled={currentPage === 1}
+                                    >
+                                        Anterior
+                                    </button>
+                                    <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                                    <button
+                                        className="btn btn-secondary ms-2"
+                                        onClick={() => paginate(currentPage + 1)}
+                                        disabled={currentPage === totalPages}
+                                    >
+                                        Siguiente
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -361,7 +400,7 @@ const CheckListComponent = () => {
                     <div className="listcehk" style={{ display: "flex", alignItems: "center", width: "104%" }}>
                         <label className="" style={{ marginRight: "86px" }} htmlFor="indicadorCombustible">Indicador de Combustible</label>
                         <div className="">
-                            <div className="card" style={{ width: '367px', height: '180px', left:"2%" }}>
+                            <div className="card" style={{ width: '367px', height: '180px', left: "2%" }}>
                                 {images[4] ? (
                                     <img src={URL.createObjectURL(images[4])} alt="Indicador de Combustible" className="card-img-top" style={{ height: '180px', width: 'auto', maxWidth: '100%', objectFit: 'fill' }} />
                                 ) : (

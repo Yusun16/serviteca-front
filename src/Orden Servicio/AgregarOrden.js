@@ -284,6 +284,7 @@ export default function AgregarServicio() {
                                     className="form-control"
                                     id="kilometros"
                                     name="kilometros"
+                                    min={0}
                                 />
                             </div>
                         </div>
