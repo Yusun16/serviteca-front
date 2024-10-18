@@ -16,6 +16,7 @@ export default function AgregarServicio() {
         codigo: "",
         descripcion: "",
         valorServicio: "",
+        nombre:"",
         ano: "",
         porcentajeOperario: ""
     });
@@ -77,7 +78,7 @@ export default function AgregarServicio() {
 
     const eliminarServicio = async (id) => {
         try {
-            await axios.delete(`http://localhost:8080/serviteca/servicios/${id}`);
+            await axios.delete(http://localhost:8080/serviteca/servicios/${id});
             cargarServicios();
         } catch (error) {
             console.error("Error al eliminar servicio", error);
@@ -92,9 +93,10 @@ export default function AgregarServicio() {
             body: servicios.map(servicio => [
                 servicio.codigo,
                 servicio.descripcion,
-                `$${servicio.valorServicio.toLocaleString()}`,
+                $${servicio.valorServicio.toLocaleString()},
+                servicio.nombre,
                 servicio.ano,
-                `${servicio.porcentajeOperario}%`
+                ${servicio.porcentajeOperario}%
             ])
         });
         doc.save("Listado_Servicios.pdf");
@@ -150,11 +152,24 @@ export default function AgregarServicio() {
                             <input type="text" className="form-control" id="codigo" required name='codigo' value={servicio.codigo} readOnly />
                         </div>
                         <div className="mb-3">
+                            <label htmlFor="nombre" className="form-label">Nombre del servicio: *</label>
+                            <input
+                                type="text"
+                                step="any"
+                                className="form-control"
+                                id="nombre"
+                                name='nombre'
+                                required
+                                value={servicio.nombre}
+                                onChange={onInputChange}
+                            />
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción: *</label>
                             <textarea
                                 style={{ resize: "none" }}
                                 className="form-control"
-                                rows={5}
+                                rows={2}
                                 id="descripcion"
                                 name='descripcion'
                                 required={true}
@@ -252,7 +267,7 @@ export default function AgregarServicio() {
                                             displayType={'text'}
                                             thousandSeparator=","
                                             decimalScale={2}
-                                            renderText={(value) => `${value}%`}
+                                            renderText={(value) => ${value}%}
                                         />
                                     </td>
                                     <td>
@@ -267,7 +282,7 @@ export default function AgregarServicio() {
 
 
                                     <td className='text-center'>
-                                        <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
+                                        <Link to={/editar/${servicio.idServicio}} className='btn btn-sm me-3'>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                         </Link>
                                     </td>
