@@ -7,11 +7,17 @@ import { useNavigate } from 'react-router-dom';
 function AutoPartes() {
     let navegacion = useNavigate();
     const [autopartes, setAutopartes] = useState([]);
+    const [servicios, setServicios] = useState([]);
+    const [opcionesServicios, setOpcionesServicios] = useState([]);
 
     const [inputs, setInputs] = useState({
         referencia: '',
         siigo: '',
+        namautoparte: '',
         descripcion: '',
+        servicio: {
+            idServicio: ''
+        },
         linea: '',
         tipo: '',
         marca: '',
@@ -21,15 +27,30 @@ function AutoPartes() {
     const [isInputEnabled, setIsInputEnabled] = useState({
         referencia: true,
         siigo: false,
+        namautoparte: false,
         descripcion: false,
-        linea: false,
+        servicio: false,
+        linea: true,
         tipo: false,
-        proveedor: false,
         marca: false,
         modelo: false,
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const obtenerServicios = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/servicios');
+            setServicios(response.data);
+            const opciones = response.data.map((servicio) => ({
+                value: servicio.idServicio,
+                label: `${servicio.nombre}`,
+            }));
+            setOpcionesServicios(opciones);
+        } catch (error) {
+            console.error("Error al obtener los clientes", error);
+        }
+    };
 
     // Maneja el cambio en los inputs
     const handleInputChange = (e) => {
@@ -45,9 +66,15 @@ function AutoPartes() {
                     updatedState.siigo = true;
                 }
                 if (name === 'siigo' && value.trim() !== '') {
+                    updatedState.namautoparte = true;
+                }
+                if (name === 'namautoparte' && value.trim() !== '') {
                     updatedState.descripcion = true;
                 }
                 if (name === 'descripcion' && value.trim() !== '') {
+                    updatedState.servicio = true;
+                }
+                if (name === 'servicio' && value.trim() !== '') {
                     updatedState.linea = true;
                 }
                 if (name === 'linea' && newInputs.linea.trim() !== '') {
@@ -67,9 +94,20 @@ function AutoPartes() {
         });
     };
 
+    const handleSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setInputs(prevData => ({
+                ...prevData,
+                servicio: {
+                    idServicio: selectedOption.value,
+                },
+            }));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const requiredFields = ['referencia', 'siigo', 'descripcion', 'linea', 'tipo'];
+        const requiredFields = ['referencia', 'siigo', 'namautoparte', 'descripcion', 'linea', 'tipo'];
         const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
         if (allRequiredFieldsValid) {
@@ -92,7 +130,11 @@ function AutoPartes() {
         setInputs({
             referencia: '',
             siigo: '',
+            namautoparte: '',
             descripcion: '',
+            servicio: {
+                idServicio: ''
+            },
             linea: '',
             tipo: '',
             marca: '',
@@ -112,6 +154,7 @@ function AutoPartes() {
 
     useEffect(() => {
         fetchAutopartes();
+        obtenerServicios();
     }, []);
 
     return (
@@ -159,6 +202,19 @@ function AutoPartes() {
                         />
                     </div>
                     <div className='div-col002'>
+                        <label className='label006' htmlFor="namautoparte">Nombre: *</label>
+                        <input
+                            className='input005 input007'
+                            type="text"
+                            id="namautoparte"
+                            name="namautoparte"
+                            required
+                            value={inputs.namautoparte}
+                            onChange={handleInputChange}
+                            disabled={!isInputEnabled.namautoparte}
+                        />
+                    </div>
+                    <div className='div-col002'>
                         <label className='label006' htmlFor="descripcion">Descripción: *</label>
                         <textarea
                             className='input005 inputarea002'
@@ -171,8 +227,29 @@ function AutoPartes() {
                             disabled={!isInputEnabled.descripcion}
                         />
                     </div>
+
+                </div>
+                <div className='column001'>
                     <div className='div-col002'>
-                        <label className='label006' htmlFor="linea">Línea: *</label>
+                        <label className='label006' htmlFor="servicio">Servicio: *</label>
+                        <select
+                            className="dropdown-toggle002"
+                            name="servicio"
+                            value={inputs.servicio.idServicio} // Debes usar el valor del `id`
+                            onChange={(e) => handleSelectChange({ value: e.target.value })} 
+                            required
+                           
+                        >
+                            <option value="" disabled>Selecciona una opción</option>
+                            {opcionesServicios.map((opcion) => (
+                                <option key={opcion.value} value={opcion.value}>{opcion.label}</option>
+                            ))}
+                            
+                        </select>
+
+                    </div>
+                    <div className='div-col002'>
+                        <label className='label006' htmlFor="linea">Linea: *</label>
                         <select
                             className="dropdown-toggle002"
                             name="linea"
@@ -186,8 +263,6 @@ function AutoPartes() {
                             <option>Grabado</option>
                         </select>
                     </div>
-                </div>
-                <div className='column001'>
                     <div className='div-col002'>
                         <label className='label006' htmlFor="tipo">Tipo: *</label>
                         <select

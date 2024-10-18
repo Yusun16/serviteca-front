@@ -8,18 +8,22 @@ export default function AgregarServicio() {
 
     const [orden, setOrden] = useState({
         codigo: "",
-        tipoServicio: "",
+        servicio: {
+            idServicio: ''
+        },
         vehiculo: {
             id: ""
         },
         kilometraje: "",
-        fecha: ""
+        fecha: "",
+        hora:""
     });
 
     const [isEditing, setIsEditing] = useState(false); // Controla si se puede editar el formulario
     const [clientes, setClientes] = useState([]);
     const [opcionesVehiculos, setOpcionesVehiculos] = useState([]);
-    const { codigo, cliente, tipoServicio, vehiculo, kilometraje, fecha } = orden;
+    const { codigo, cliente, tipoServicio, vehiculo, kilometraje, fecha, hora } = orden;
+    const [opcionesServicios, setOpcionesServicios] = useState([]);
 
     // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
     const obtenerCodigo = async () => {
@@ -53,6 +57,20 @@ export default function AgregarServicio() {
         }
     };
 
+    const obtenerServicios = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/servicios');
+            setServicios(response.data);
+            const opciones = response.data.map((servicio) => ({
+                value: servicio.idServicio,
+                label: `${servicio.nombre}`,
+            }));
+            setOpcionesServicios(opciones);
+        } catch (error) {
+            console.error("Error al obtener los Servicios", error);
+        }
+    };
+
     const manejarCambioCliente = (opcionSeleccionada) => {
         if (opcionSeleccionada) {
             const clienteId = opcionSeleccionada.value;  // Captura el ID del cliente seleccionado
@@ -62,6 +80,7 @@ export default function AgregarServicio() {
 
     useEffect(() => {
         obtenerClientes();
+        obtenerServicios();
     }, []);
 
     const onInputChange = (e) => {
@@ -82,24 +101,40 @@ export default function AgregarServicio() {
                 }
             }));
         }
-    };  
+    };
+
+    const handleSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setInputs(prevData => ({
+                ...prevData,
+                servicio: {
+                    idServicio: selectedOption.value,
+                },
+            }));
+        }
+    };
 
     const onSubmit = async (e) => {
         e.preventDefault();
         const urlBase = "http://localhost:8080/serviteca/ordenservicios";
         const jSonBody = {
             codigo: orden.codigo,
-            tipoServicio: orden.tipoServicio,
+            servicio: {
+                idServicio: ''
+            },
             vehiculo: {
                 id: orden.vehiculo.id
             },
             kilometraje: orden.kilometraje,
-            fecha: orden.fecha
+            fecha: orden.fecha,
+            hora: orden.hora
         }
         await axios.post(urlBase, jSonBody);
         setOrden({
             "codigo": "",
-            "tipoServicio": "",
+            "servicio": {
+                "idServicio": ''
+            },
             "vehiculo": {
                 "id": ""
             },
@@ -118,6 +153,7 @@ export default function AgregarServicio() {
         value: cliente.id,
         label: `${cliente.nombre} ${cliente.apellido}`  // Mostrar nombre completo
     }));
+
 
     return (
         <div className="container my-5 ">
@@ -203,6 +239,24 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="servicio" className="col-4 col-form-label">Cliente:*</label>
+                    <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }} >
+                        <Select
+                            id="servicio"
+                            name="servicio"
+                            value={opcionesServicios.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
+                            onChange={(opcionSeleccionada) => obtenerServicios(opcionSeleccionada)}
+                            options={opcionesServicios}
+                            isDisabled={!isEditing}
+                            isClearable
+                            className='selecclientes'
+                            placeholder="Seleccione un cliente"
+                        />
+
+                    </div>
+                </div>
+
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
                     <label htmlFor="tipoServicio" className="col-4 col-form-label">Servicio:*</label>
                     <div className="col-8">
                         <select
@@ -254,6 +308,22 @@ export default function AgregarServicio() {
                             name="fecha"
                             required
                             value={fecha}
+                            onChange={onInputChange}
+                            disabled={!isEditing}
+                        />
+                    </div>
+                </div>
+
+                <div className="row mb-3 text-start" style={{ display: "flex" }}>
+                    <label htmlFor="hora" className="col-4 col-form-label">Hora Ingreso:*</label>
+                    <div className="col-8">
+                        <input
+                            type="time"
+                            className="form-control"
+                            id="hora"
+                            name="hora"
+                            required
+                            value={hora}
                             onChange={onInputChange}
                             disabled={!isEditing}
                         />
