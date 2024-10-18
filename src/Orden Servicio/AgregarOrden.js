@@ -9,7 +9,7 @@ export default function AgregarServicio() {
     const [orden, setOrden] = useState({
         codigo: "",
         servicio: {
-            idServicio: ''
+            idServicio: ""
         },
         vehiculo: {
             id: ""
@@ -23,6 +23,7 @@ export default function AgregarServicio() {
     const [clientes, setClientes] = useState([]);
     const [opcionesVehiculos, setOpcionesVehiculos] = useState([]);
     const { codigo, cliente, tipoServicio, vehiculo, kilometraje, fecha, hora } = orden;
+    const [servicios, setServicios] = useState([]);
     const [opcionesServicios, setOpcionesServicios] = useState([]);
 
     // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
@@ -61,11 +62,11 @@ export default function AgregarServicio() {
         try {
             const response = await axios.get('http://localhost:8080/serviteca/servicios');
             setServicios(response.data);
-            const opciones = response.data.map((servicio) => ({
+            const orden = response.data.map((servicio) => ({
                 value: servicio.idServicio,
                 label: `${servicio.nombre}`,
             }));
-            setOpcionesServicios(opciones);
+            setOpcionesServicios(orden);
         } catch (error) {
             console.error("Error al obtener los Servicios", error);
         }
@@ -105,7 +106,7 @@ export default function AgregarServicio() {
 
     const handleSelectChange = (selectedOption) => {
         if (selectedOption) {
-            setInputs(prevData => ({
+            setOrden(prevData => ({
                 ...prevData,
                 servicio: {
                     idServicio: selectedOption.value,
@@ -120,7 +121,7 @@ export default function AgregarServicio() {
         const jSonBody = {
             codigo: orden.codigo,
             servicio: {
-                idServicio: ''
+                idServicio: orden.servicio.idServicio
             },
             vehiculo: {
                 id: orden.vehiculo.id
@@ -239,7 +240,7 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className="row mb-3 text-start" style={{ display: "flex" }}>
-                    <label htmlFor="servicio" className="col-4 col-form-label">Cliente:*</label>
+                    <label htmlFor="servicio" className="col-4 col-form-label">Servicio:*</label>
                     <div className="col-8" style={{ display: "flex", gap: "2px", alignItems: "center" }} >
                         <Select
                             id="servicio"
@@ -253,26 +254,6 @@ export default function AgregarServicio() {
                             placeholder="Seleccione un cliente"
                         />
 
-                    </div>
-                </div>
-
-                <div className="row mb-3 text-start" style={{ display: "flex" }}>
-                    <label htmlFor="tipoServicio" className="col-4 col-form-label">Servicio:*</label>
-                    <div className="col-8">
-                        <select
-                            className="form-select"
-                            id="tipoServicio"
-                            name="tipoServicio"
-                            required
-                            value={tipoServicio}
-                            onChange={onInputChange}
-                            disabled={!isEditing}
-                        >
-                            <option value="">Seleccione un servicio</option>
-                            <option value="Mecanico">Mecánico</option>
-                            <option value="Lavado">Lavado</option>
-                            <option value="Lubricacion">Lubricación</option>
-                        </select>
                     </div>
                 </div>
 
