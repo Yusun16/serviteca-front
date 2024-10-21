@@ -305,7 +305,7 @@ export default function AgregarServicio() {
                         </tbody>
                     </table>
 
-
+ 
                     {/* Paginación */}
                     <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
                     <div className='d-flex justify-content-between align-items-center'>
@@ -334,3 +334,7 @@ export default function AgregarServicio() {
         </div>
     );
 }
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> a3c071f106ff14daf58a53cdbd6b9db9859f5ff6
