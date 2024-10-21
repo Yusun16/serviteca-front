@@ -334,7 +334,3 @@ export default function AgregarServicio() {
         </div>
     );
 }
-<<<<<<< HEAD
-=======
- 
->>>>>>> a3c071f106ff14daf58a53cdbd6b9db9859f5ff6
