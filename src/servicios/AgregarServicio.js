@@ -78,7 +78,7 @@ export default function AgregarServicio() {
 
     const eliminarServicio = async (id) => {
         try {
-            await axios.delete(http://localhost:8080/serviteca/servicios/${id});
+            await axios.delete(`http://localhost:8080/serviteca/servicios/${id}`);
             cargarServicios();
         } catch (error) {
             console.error("Error al eliminar servicio", error);
@@ -93,10 +93,10 @@ export default function AgregarServicio() {
             body: servicios.map(servicio => [
                 servicio.codigo,
                 servicio.descripcion,
-                $${servicio.valorServicio.toLocaleString()},
+                `$${servicio.valorServicio.toLocaleString()}`,
                 servicio.nombre,
                 servicio.ano,
-                ${servicio.porcentajeOperario}%
+                `${servicio.porcentajeOperario}%`
             ])
         });
         doc.save("Listado_Servicios.pdf");
@@ -267,7 +267,7 @@ export default function AgregarServicio() {
                                             displayType={'text'}
                                             thousandSeparator=","
                                             decimalScale={2}
-                                            renderText={(value) => ${value}%}
+                                            renderText={(value) => `${value}%`}
                                         />
                                     </td>
                                     <td>
@@ -282,7 +282,7 @@ export default function AgregarServicio() {
 
 
                                     <td className='text-center'>
-                                        <Link to={/editar/${servicio.idServicio}} className='btn btn-sm me-3'>
+                                        <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
                                             <i className="fa-solid fa-pen-to-square"></i>
                                         </Link>
                                     </td>
