@@ -2,11 +2,14 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModalEditar from './modalEditar';
+import Select from 'react-select';
 
 export default function EditarVehiculo() {
     const urlBase = "http://localhost:8080/serviteca/vehiculos";
     let navegacion = useNavigate();
     const { id } = useParams();
+    const [clientes, setClientes] = useState([]);
+    const [opcionesClientes, setOpcionesClientes] = useState([]);
 
     // Estado para almacenar la información del vehículo
     const [vehiculo, setVehiculos] = useState({
@@ -14,10 +17,25 @@ export default function EditarVehiculo() {
         marca: "",
         linea: "",
         modelo: "",
-        cliente: "",
-        foto: "",
+        cliente: {
+            id: ""
+        },
         observacion: "",
-    });
+    })
+
+    const obtenerClientes = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/cliente');
+            setClientes(response.data);
+            const opciones = response.data.map((cliente) => ({
+                value: cliente.id,
+                label: `${cliente.nombre} ${cliente.apellido}`,
+            }));
+            setOpcionesClientes(opciones);
+        } catch (error) {
+            console.error("Error al obtener los clientes", error);
+        }
+    };
 
     // Estado para almacenar la imagen seleccionada
     const [image, setImage] = useState(null);
@@ -47,6 +65,7 @@ export default function EditarVehiculo() {
 
     useEffect(() => {
         cargarVehiculo();
+        obtenerClientes();
     }, []);
 
     // Cargar los datos del vehículo desde el backend
@@ -61,11 +80,73 @@ export default function EditarVehiculo() {
     };
 
     // Envío del formulario
-    const onSubmit = async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(urlBase, vehiculo);
-        navegacion("/");
+        console.log(vehiculo.cliente);
+        try {
+            // Preparar datos del vehículo
+            const jSonBody = {
+                placa: vehiculo.placa,
+                marca: vehiculo.marca,
+                linea: vehiculo.linea,
+                modelo: vehiculo.modelo,
+                cliente: {
+                    id: vehiculo.cliente.id
+                },
+                observacion: vehiculo.observacion
+            };
+    
+            // Enviar vehículo
+            const response = await axios.post('http://localhost:8080/serviteca/vehiculos', jSonBody, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+    
+            const vehiculoId = response.data.id;
+    
+            // Subir imagen si existe
+            if (image) {
+                const imageFormData = new FormData();
+                imageFormData.append('id', vehiculoId);
+                imageFormData.append('file', image);
+    
+                await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+            }
+    
+            // Limpiar el estado del vehículo
+            setVehiculos({
+                placa: "",
+                marca: "",
+                linea: "",
+                modelo: "",
+                cliente: { id: "" },
+                observacion: "",
+            });
+    
+            
+            // navegacion("/agregarvehiculo");
+        } catch (error) {
+            console.error('Error al enviar los datos', error);
+            alert('Hubo un problema al enviar los datos');
+        }
     };
+
+    const handleSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setVehiculos(prevData => ({
+                ...prevData,
+                cliente: {
+                    id: selectedOption.value,
+                },
+            }));
+        }
+    };
+
 
     // Manejar el cambio de la imagen
     const handleImageChange = (e) => {
@@ -87,7 +168,7 @@ export default function EditarVehiculo() {
             </div>
 
             <div style={{ height: "350px" }}>
-                <form className='container' style={{ width: "580px", position: "relative", height: "310px" }} onSubmit={onSubmit}>
+                <form onSubmit={(e) => handleSubmit(e)} className='container' style={{ width: "580px", position: "relative", height: "310px" }} >
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
                         <div className="col">
                             <div className="mb-3">
@@ -134,18 +215,20 @@ export default function EditarVehiculo() {
                             </div>
                         </div>
                         <div className="">
-                            <div className="mb-3">
-                                <label htmlFor="cliente" className="form-label">Cliente: *</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="cliente"
-                                    name='cliente'
-                                    value={vehiculo.cliente}
-                                    onChange={onInputChange}
-                                    style={{ width: "320px" }}
-                                    required={true}
-                                />
+                        <div className="col">
+                                <label htmlFor="cliente" className="col-4 col-form-label">Cliente:*</label>
+                                <div className="col-12">
+                                    <Select
+                                        id="cliente"
+                                        name="cliente"
+                                        value={opcionesClientes.find(option => option.value === vehiculo.cliente.id)}
+                                        onChange={handleSelectChange}
+                                        options={opcionesClientes}
+                                        isClearable
+                                        className='selecclientes'
+                                        placeholder="Seleccione un cliente"
+                                    />
+                                </div>
                             </div>
                             <div className="col-md-6 d-flex align-items-center">
                                 <div className="w-50">
@@ -183,7 +266,7 @@ export default function EditarVehiculo() {
                         </div>
                     </div>
                     <div className='text-center'>
-                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente">
+                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarvehiculo">
                         <i className="fa-regular fa-floppy-disk"></i> Guardar
                     </button>
                     <ModalEditar />

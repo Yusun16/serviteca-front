@@ -133,7 +133,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className=' col-4'>
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
-                                <i class="fas fa-align-left fas fa-plus"></i> <i class="fas fa-plus"></i>  Agregar
+                                <i class="fas fa-align-left fas fa-plus"></i>  Agregar
                                 </button>
                                 <ModalAgregarEjecucion/>
                             </div>
