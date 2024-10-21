@@ -62,11 +62,11 @@ export default function AgregarServicio() {
         try {
             const response = await axios.get('http://localhost:8080/serviteca/servicios');
             setServicios(response.data);
-            const orden = response.data.map((servicio) => ({
+            const servicios = response.data.map((servicio) => ({
                 value: servicio.idServicio,
-                label: `${servicio.nombre}`,
+                label: servicio.nombre,
             }));
-            setOpcionesServicios(orden);
+            setOpcionesServicios(servicios);
         } catch (error) {
             console.error("Error al obtener los Servicios", error);
         }
@@ -134,7 +134,7 @@ export default function AgregarServicio() {
         setOrden({
             "codigo": "",
             "servicio": {
-                "idServicio": ''
+                "id": ""
             },
             "vehiculo": {
                 "id": ""
@@ -245,8 +245,8 @@ export default function AgregarServicio() {
                         <Select
                             id="servicio"
                             name="servicio"
-                            value={opcionesServicios.find(option => option.value === orden.clienteId)}  // Muestra el valor seleccionado
-                            onChange={(opcionSeleccionada) => obtenerServicios(opcionSeleccionada)}
+                            value={opcionesServicios.find(option => option.value === orden.servicio.idServicio)}  // Muestra el valor seleccionado
+                            onChange={handleSelectChange}
                             options={opcionesServicios}
                             isDisabled={!isEditing}
                             isClearable
