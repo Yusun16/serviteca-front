@@ -5,8 +5,13 @@ import LogoGasolina from "../img/LogoGasolina.svg";
 import axios from 'axios';
 
 const CheckListComponent = () => {
+    const idOrden = localStorage.getItem('idOrden');
+
     const [images, setImages] = useState([null, null, null, null, null]);
     const [formData, setFormData] = useState({
+        orden:{
+            idOrden: idOrden
+        },
         observationsRight: '',
         observationsLeft: '',
         observationsFrontal: '',
@@ -64,7 +69,6 @@ const CheckListComponent = () => {
             });
 
             const revisionId = response.data.id;
-
             // Preparar FormData para la solicitud PUT para cargar las imagenes x5
             const formDataWithFiles = new FormData();
             formDataWithFiles.append('id', revisionId);
