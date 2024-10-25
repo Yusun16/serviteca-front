@@ -13,7 +13,7 @@ function AutoPartes() {
     const [inputs, setInputs] = useState({
         referencia: '',
         siigo: '',
-        namautoparte: '',
+        nombre: '',
         descripcion: '',
         servicio: {
             idServicio: ''
@@ -27,7 +27,7 @@ function AutoPartes() {
     const [isInputEnabled, setIsInputEnabled] = useState({
         referencia: true,
         siigo: false,
-        namautoparte: false,
+        nombre: false,
         descripcion: false,
         servicio: false,
         linea: true,
@@ -66,9 +66,9 @@ function AutoPartes() {
                     updatedState.siigo = true;
                 }
                 if (name === 'siigo' && value.trim() !== '') {
-                    updatedState.namautoparte = true;
+                    updatedState.nombre = true;
                 }
-                if (name === 'namautoparte' && value.trim() !== '') {
+                if (name === 'nombre' && value.trim() !== '') {
                     updatedState.descripcion = true;
                 }
                 if (name === 'descripcion' && value.trim() !== '') {
@@ -107,7 +107,7 @@ function AutoPartes() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const requiredFields = ['referencia', 'siigo', 'namautoparte', 'descripcion', 'linea', 'tipo'];
+        const requiredFields = ['referencia', 'siigo', 'nombre', 'descripcion', 'linea', 'tipo'];
         const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
         if (allRequiredFieldsValid) {
@@ -130,7 +130,7 @@ function AutoPartes() {
         setInputs({
             referencia: '',
             siigo: '',
-            namautoparte: '',
+            nombre: '',
             descripcion: '',
             servicio: {
                 idServicio: ''
@@ -202,16 +202,16 @@ function AutoPartes() {
                         />
                     </div>
                     <div className='div-col002'>
-                        <label className='label006' htmlFor="namautoparte">Nombre: *</label>
+                        <label className='label006' htmlFor="nombre">Nombre: *</label>
                         <input
                             className='input005 input007'
                             type="text"
-                            id="namautoparte"
-                            name="namautoparte"
+                            id="nombre"
+                            name="nombre"
                             required
-                            value={inputs.namautoparte}
+                            value={inputs.nombre}
                             onChange={handleInputChange}
-                            disabled={!isInputEnabled.namautoparte}
+                            disabled={!isInputEnabled.nombre}
                         />
                     </div>
                     <div className='div-col002'>

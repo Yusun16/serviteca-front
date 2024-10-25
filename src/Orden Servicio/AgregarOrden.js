@@ -129,22 +129,33 @@ export default function AgregarServicio() {
             kilometraje: orden.kilometraje,
             fecha: orden.fecha,
             hora: orden.hora
+        };
+    
+        try {
+            const response = await axios.post(urlBase, jSonBody);
+            const { idOrden } = response.data;  
+            
+            localStorage.setItem('idOrden', idOrden);
+    
+            setOrden({
+                "codigo": "",
+                "servicio": {
+                    "id": ""
+                },
+                "vehiculo": {
+                    "id": ""
+                },
+                "kilometraje": "",
+                "fecha": "",
+                "hora": ""
+            });
+    
+            setIsEditing(false);
+            navegacion("/chequeo");
+        } catch (error) {
+            console.error("Error al enviar los datos: ", error);
         }
-        await axios.post(urlBase, jSonBody);
-        setOrden({
-            "codigo": "",
-            "servicio": {
-                "id": ""
-            },
-            "vehiculo": {
-                "id": ""
-            },
-            "kilometraje": "",
-            "fecha": ""
-        });
-        setIsEditing(false);
-        navegacion("/chequeo");
-    };
+    };    
 
     const handleAgregarOrden = () => {
         obtenerCodigo(); // Llama la función para obtener el código cuando el usuario presiona el botón
