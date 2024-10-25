@@ -149,7 +149,6 @@ export default function ListadoVehiculo() {
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col">  </th>
-                                <th className='text-letras colorthead'></th>
                             </tr>
                     </tbody>
 

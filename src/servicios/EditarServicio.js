@@ -14,11 +14,12 @@ export default function EditarServicio() {
         codigo: "",
         descripcion: "",
         valorServicio: "",
+        nombre: "",
         ano: "",
         porcentajeOperario: ""
     })
 
-    const { codigo, descripcion, valorServicio, ano, porcentajeOperario } = servicio
+    const { codigo, descripcion, valorServicio, nombre, ano, porcentajeOperario } = servicio
 
     useEffect(() => {
         cargarServicio();
@@ -61,6 +62,19 @@ export default function EditarServicio() {
                                 <label htmlFor="codigo" className="form-label">Código: *</label>
                                 <input type="number" className="form-control" id="codigo" name='codigo' value={codigo} readOnly onChange={(e) => onInputCahnge(e)} />
                             </div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="nombre" className="form-label">Nombre del servicio: *</label>
+                            <input
+                                type="text"
+                                step="any"
+                                className="form-control"
+                                id="nombre"
+                                name='nombre'
+                                required
+                                value={servicio.nombre}
+                                onChange={onInputCahnge}
+                            />
                         </div>
                         <div className="col">
                             <div className="mb-3">
