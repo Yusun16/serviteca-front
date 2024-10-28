@@ -29,10 +29,10 @@ export default function EjecucionServicio() {
         const placa = datosOrden.length > 0 ? datosOrden[0].placaVehiculo : '';
         const codigo = datosOrden.length > 0 ? datosOrden[0].codigoOrden : '';
 
-        const operarioSeleccionado = document.querySelector('select[aria-label="operario"]');
+        const operarioSeleccionado = document.getElementById('operario-select');
         const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
 
-        const operarioValue = operarioSeleccionado ? operarioSeleccionado.value : 'No seleccionado';
+        const operarioValue = operarioSeleccionado?.value || 'No seleccionado';
         const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
 
         // Agregando datos de la primera tabla
@@ -64,19 +64,20 @@ export default function EjecucionServicio() {
 
         // Estableciendo un título
         doc.text("Ejecución del Servicio", 14, 20);
-// Obtener la fecha y hora final
-const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
-const horaFinal = document.getElementById('end-time').value || 'No definido';
+        // Obtener la fecha y hora final
+        const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
+        const horaFinal = document.getElementById('end-time').value || 'No definido';
 
-// Añadiendo la información adicional
-doc.text(`Placa: ${placa}`, 14, 30);
-doc.text(`Código: ${codigo}`, 14, 35);
-doc.text(`Operario: ${operarioValue}`, 14, 40);
-doc.text(`Producto Seleccionado: ${productoValue}`, 14, 45);
-doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 50);
-doc.text(`Fecha Final: ${fechaFinal}`, 14, 55);  
-doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
-doc.text(`Hora Final: ${horaFinal}`, 14, 65);  
+        // Añadiendo la información adicional
+        doc.text(`Placa: ${placa}`, 14, 30);
+        doc.text(`Código: ${codigo}`, 14, 35);
+        doc.text(`Operario: ${operarioValue}`, 14, 40);
+        doc.text(`Producto Seleccionado: ${productoValue}`, 14, 45);
+        doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 50);
+        doc.text(`Fecha Final: ${fechaFinal}`, 14, 55);
+        doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
+        doc.text(`Hora Final: ${horaFinal}`, 14, 65);
+
         // Agregando la primera tabla
         doc.autoTable(tableColumn, tableRows, { startY: 70 });
 
@@ -98,7 +99,6 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
         // Guardar el PDF
         doc.save("ejecucion_servicio.pdf");
     };
-
 
 
     useEffect(() => {
@@ -208,26 +208,13 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                 <div className="row align-items-start">
                     <div className="col">
 
-<<<<<<< HEAD
-                        <div className="col" style={{ display: "flex", flexDirection: "row" }}>
-
-                            <div className='col-2'>operario: *</div>
-                            <div className='col-6'>
-                                <select className="form-select" aria-label="operario">
-                                    <option selected>Open this select menu</option>
-                                    <option value="hf">manuel</option>
-                                    <option value="fr">yusum</option>
-                                    <option value="jefer">jefer</option>
-                                </select>
-=======
                         <div className="row" style={{ display: "flex", alignItems: "center" }}>
                             <div className="col-2">
                                 <label>Operario: *</label>
->>>>>>> 5458db5d3462f9029b130aa7a4c76fbeffe2a124
                             </div>
                             <div className="col-6">
                                 <Select
-                                    className="operarios"
+                                   id="operario-select"
                                     options={operarios}
                                     value={selectedOperario}
                                     onChange={setSelectedOperario}
@@ -253,9 +240,7 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                                     <th className='text-letras colorthead text-center' scope="col">Inicio</th>
                                     <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
-
                             </thead>
-
                             <tbody>
                                 {/* Iterar sobre los datos de la orden para mostrar los servicios dinámicamente */}
                                 {datosOrden.map((orden, index) => (
@@ -276,21 +261,12 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                         <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                             <div className='col-4'>Productos según servicio:</div>
                             <div className='col-5'>
-<<<<<<< HEAD
-                                <select className="form-select" aria-label="productos según servicio">
-                                    <option selected>Open this select menu</option>
-                                    <option value="manuel">manuel</option>
-                                    <option value="2">yusum</option>
-                                    <option value="3">jefer</option>
-                                </select>
-=======
                                 <input
                                     type="text"
                                     className="form-control"
                                     value={datosOrden.map((orden) => orden.nombreServicio).join(', ')}
                                     readOnly
                                 />
->>>>>>> 5458db5d3462f9029b130aa7a4c76fbeffe2a124
                             </div>
                             <div className=' col-4'>
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
@@ -353,7 +329,7 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                             </div>
                             <div className='col-3'>Fecha Final:</div>
                             <div className='col-3'>
-                                <input type="date" className="form-control" id="dateFinal" /> {/* Cambiado a "dateFinal" */}
+                                <input type="date" className="form-control" id="dateFinal" />
                             </div>
                         </div>
 
@@ -366,19 +342,18 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                                             type="time"
                                             className="form-control"
                                             id="start-time"
-                                            value={horaInicio}
+                                            value={horaInicio}  // Utilizamos la hora almacenada en el estado
                                             onChange={handleHoraChange}
                                             disabled
                                         />
                                     </div>
                                     <div className='col-3'>Hora Final:</div>
                                     <div className='col-3'>
-                                        <input type="time" className="form-control" id="end-time" /> {/* Este ID está correcto */}
+                                        <input type="time" className="form-control" id="end-time" />
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                         <div className='container' style={{ marginTop: "25px" }}>
                             <div className="container text-center">
                                 <div className="row align-items-start">
@@ -458,16 +433,6 @@ doc.text(`Hora Final: ${horaFinal}`, 14, 65);
                                                     left: "0px",
                                                     position: "relative"
                                                 }} />}
-<<<<<<< HEAD
-                                        {/* <input
-                                            type="file"
-                                            className="form-control-file d-none"
-                                            id="fotoimg"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                        /> */}
-=======
->>>>>>> 5458db5d3462f9029b130aa7a4c76fbeffe2a124
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
