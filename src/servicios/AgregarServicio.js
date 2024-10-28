@@ -39,8 +39,6 @@ export default function AgregarServicio() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-
-
             try {
                 const urlBase = "http://localhost:8080/serviteca/servicios";
                 await axios.post(urlBase, servicio);
@@ -49,10 +47,6 @@ export default function AgregarServicio() {
             } catch (error) {
                 console.error("Error al agregar servicio", error);
             }
-
-
-
-
 
     };
 

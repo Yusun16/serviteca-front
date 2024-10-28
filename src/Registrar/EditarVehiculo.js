@@ -86,6 +86,9 @@ export default function EditarVehiculo() {
         try {
             // Preparar datos del vehículo
             const jSonBody = {
+                // Incluir el ID del vehículo para indicar que es una edición
+                // COnfigurar aqui el id porque sin el, no edita!!!
+                id: vehiculo.id,
                 placa: vehiculo.placa,
                 marca: vehiculo.marca,
                 linea: vehiculo.linea,
@@ -232,6 +235,7 @@ export default function EditarVehiculo() {
                             </div>
                             <div className="col-md-6 d-flex align-items-center">
                                 <div className="w-50">
+                                <label htmlFor="cliente" className="col-4 col-form-label">Foto:*</label>
                                     <div className="card" style={{ width: '329px', height: '130px', overflow: "hidden" }}>
                                         {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "100px", top: "10px", left: "18px", position: "relative" }} />}
                                         <input
