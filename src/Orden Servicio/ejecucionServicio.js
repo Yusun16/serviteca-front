@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import fotoimage from '../img/fotoup.jpeg';
 import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 import axios from 'axios';
+import Select from 'react-select';
 
 export default function EjecucionServicio() {
     const [image, setImage] = useState(null);
@@ -14,6 +15,8 @@ export default function EjecucionServicio() {
     const [error, setError] = useState(null);
     const [fechaInicio, setFechaInicio] = useState('');  // Estado para la fecha
     const [horaInicio, setHoraInicio] = useState('');    // Estado para la hora
+    const [operarios, setOperarios] = useState([]);
+    const [selectedOperario, setSelectedOperario] = useState(null);
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -32,18 +35,31 @@ export default function EjecucionServicio() {
             try {
                 const response = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
                 setDatosOrden(response.data);
-                // Aquí guardamos la fecha de la orden en el estado `fechaInicio`
+
                 if (response.data.length > 0) {
-                    setFechaInicio(response.data[0].fechaOrden);  // Asumiendo que la fecha está en el primer objeto de la lista
+                    setFechaInicio(response.data[0].fechaOrden);
                     setHoraInicio(response.data[0].horaOrden);
-                    setImage(response.data[0].imgFrontalRevision);    // Hora de la orden
+                    setImage(response.data[0].imgFrontalRevision);
                 }
             } catch (err) {
                 setError(err);
             }
         };
 
+        const fetchOperarios = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/serviteca/operarios');
+                setOperarios(response.data.map(operario => ({
+                    value: operario.id,
+                    label: `${operario.nombre} ${operario.apellido}`
+                })));
+            } catch (err) {
+                console.error("Error al obtener operarios:", err);
+            }
+        };
+
         fetchEjecucionServicio();
+        fetchOperarios();
     }, []);
 
     const handleFechaChange = (e) => {
@@ -119,18 +135,27 @@ export default function EjecucionServicio() {
                 <div className="row align-items-start">
                     <div className="col">
 
-                        <div className="col" style={{ display: "flex", flexDirection: "row" }}>
-
-                            <div className='col-2'>operario: *</div>
-                            <div className='col-6'>
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                        <div className="row" style={{ display: "flex", alignItems: "center" }}>
+                            <div className="col-2">
+                                <label>Operario: *</label>
                             </div>
+                            <div className="col-6">
+                                <Select
+                                    className="operarios"
+                                    options={operarios}
+                                    value={selectedOperario}
+                                    onChange={setSelectedOperario}
+                                    placeholder="Selecciona un operario"
+                                    isClearable
+                                />
+                            </div>
+                            {error && (
+                                <div className="col-4 text-danger">
+                                    Error al obtener datos: {error.message}
+                                </div>
+                            )}
                         </div>
+
 
                         <div className='text-start' style={{ margin: "10px" }}>Servicios asignados:</div>
 
@@ -163,12 +188,12 @@ export default function EjecucionServicio() {
                         <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                             <div className='col-4'>Productos según servicio:</div>
                             <div className='col-5'>
-                                <select className="form-select" aria-label="Default select example">
-                                    <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
-                                </select>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    value={datosOrden.map((orden) => orden.nombreServicio).join(', ')}
+                                    readOnly
+                                />
                             </div>
                             <div className=' col-4'>
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
@@ -321,27 +346,20 @@ export default function EjecucionServicio() {
                                 <div className='col-3'>Foto posterior:</div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image && 
-                                        <img 
-                                        src={image} 
-                                        className='' 
-                                        alt="Foto-subida" 
-                                        style={{ 
-                                            objectFit: "fill", 
-                                            zIndex: "2", 
-                                            width: "191px", 
-                                            height: "120px", 
-                                            top: "10px", 
-                                            left: "0px", 
-                                            position: "relative" 
-                                            }} />}
-                                        {/* <input
-                                            type="file"
-                                            className="form-control-file d-none"
-                                            id="fotoimg"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                        /> */}
+                                        {image &&
+                                            <img
+                                                src={image}
+                                                className=''
+                                                alt="Foto-subida"
+                                                style={{
+                                                    objectFit: "fill",
+                                                    zIndex: "2",
+                                                    width: "191px",
+                                                    height: "120px",
+                                                    top: "10px",
+                                                    left: "0px",
+                                                    position: "relative"
+                                                }} />}
 
                                         <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
