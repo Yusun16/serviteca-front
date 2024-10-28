@@ -55,10 +55,6 @@ export default function EditarVehiculo() {
         "Mercedes-Benz": ["Clase A", "Clase C", "Clase E", "GLA", "GLC"],
         "Subaru": ["Impreza", "Legacy", "Outback", "Forester", "Crosstrek", "",],
         "Mazda": ["Mazda2", "Mazda3", "CX-3", "CX-5", "MX-5 Miata",],
-
-
-
-
     };
     const lineas = Object.keys(lineasYmarcas);
     const marcas = vehiculo.linea ? lineasYmarcas[vehiculo.linea] : [];

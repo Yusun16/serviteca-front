@@ -17,13 +17,86 @@ export default function EjecucionServicio() {
 
     const exportToPDF = () => {
         const doc = new jsPDF();
-        const tableColumn = ["Código", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
+        const tableColumn = ["Servicio", "Inicio", "Terminado"];
         const tableRows = [];
 
-        doc.autoTable(tableColumn, tableRows, { startY: 20 });
-        doc.text("Listado de Servicios", 14, 15);
-        doc.save("listado_servicios.pdf");
+        const segundaTablaColumn = ["Referencia", "Cantidad", "Terminado"];
+        const segundaTablaRows = [];
+
+        const placa = datosOrden.length > 0 ? datosOrden[0].placaVehiculo : '';
+        const codigo = datosOrden.length > 0 ? datosOrden[0].codigoOrden : '';
+
+        const operarioSeleccionado = document.querySelector('select[aria-label="operario"]');
+        const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
+
+        const operarioValue = operarioSeleccionado ? operarioSeleccionado.value : 'No seleccionado';
+        const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
+
+        // Agregando datos de la primera tabla
+        datosOrden.forEach(orden => {
+            const serviceData = [
+                orden.nombreServicio,
+                orden.horaInicio || "No definido",
+                orden.horaTerminado || "No definido"
+            ];
+            tableRows.push(serviceData);
+        });
+
+        // Agregando datos de la segunda tabla
+        // Reemplaza este bloque con tus datos reales
+        const datosSegundaTabla = [
+            { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
+            { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
+            // Agrega más datos según sea necesario
+        ];
+
+        datosSegundaTabla.forEach(item => {
+            const segundaTablaData = [
+                item.referencia,
+                item.cantidad,
+                item.terminado
+            ];
+            segundaTablaRows.push(segundaTablaData);
+        });
+
+        // Estableciendo un título
+        doc.text("Ejecución del Servicio", 14, 20);
+// Obtener la fecha y hora final
+const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
+const horaFinal = document.getElementById('end-time').value || 'No definido';
+
+// Añadiendo la información adicional
+doc.text(`Placa: ${placa}`, 14, 30);
+doc.text(`Código: ${codigo}`, 14, 35);
+doc.text(`Operario: ${operarioValue}`, 14, 40);
+doc.text(`Producto Seleccionado: ${productoValue}`, 14, 45);
+doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 50);
+doc.text(`Fecha Final: ${fechaFinal}`, 14, 55);  
+doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
+doc.text(`Hora Final: ${horaFinal}`, 14, 65);  
+        // Agregando la primera tabla
+        doc.autoTable(tableColumn, tableRows, { startY: 70 });
+
+        // Agregando la segunda tabla
+        const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
+        doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
+
+        // Añadiendo imágenes
+        if (image) {
+            doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+        if (imageFrontAfter) {
+            doc.addImage(imageFrontAfter, 'JPEG', 60, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+        if (imageBackAfter) {
+            doc.addImage(imageBackAfter, 'JPEG', 106, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+
+        // Guardar el PDF
+        doc.save("ejecucion_servicio.pdf");
     };
+
+
 
     useEffect(() => {
         const idOrden = localStorage.getItem('idOrden');
@@ -123,11 +196,11 @@ export default function EjecucionServicio() {
 
                             <div className='col-2'>operario: *</div>
                             <div className='col-6'>
-                                <select className="form-select" aria-label="Default select example">
+                                <select className="form-select" aria-label="operario">
                                     <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="hf">manuel</option>
+                                    <option value="fr">yusum</option>
+                                    <option value="jefer">jefer</option>
                                 </select>
                             </div>
                         </div>
@@ -142,7 +215,9 @@ export default function EjecucionServicio() {
                                     <th className='text-letras colorthead text-center' scope="col">Inicio</th>
                                     <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
+
                             </thead>
+
                             <tbody>
                                 {/* Iterar sobre los datos de la orden para mostrar los servicios dinámicamente */}
                                 {datosOrden.map((orden, index) => (
@@ -163,11 +238,11 @@ export default function EjecucionServicio() {
                         <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                             <div className='col-4'>Productos según servicio:</div>
                             <div className='col-5'>
-                                <select className="form-select" aria-label="Default select example">
+                                <select className="form-select" aria-label="productos según servicio">
                                     <option selected>Open this select menu</option>
-                                    <option value="1">One</option>
-                                    <option value="2">Two</option>
-                                    <option value="3">Three</option>
+                                    <option value="manuel">manuel</option>
+                                    <option value="2">yusum</option>
+                                    <option value="3">jefer</option>
                                 </select>
                             </div>
                             <div className=' col-4'>
@@ -231,7 +306,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className='col-3'>Fecha Final:</div>
                             <div className='col-3'>
-                                <input type="date" className="form-control" id="date" />
+                                <input type="date" className="form-control" id="dateFinal" /> {/* Cambiado a "dateFinal" */}
                             </div>
                         </div>
 
@@ -244,18 +319,19 @@ export default function EjecucionServicio() {
                                             type="time"
                                             className="form-control"
                                             id="start-time"
-                                            value={horaInicio}  // Utilizamos la hora almacenada en el estado
+                                            value={horaInicio}
                                             onChange={handleHoraChange}
                                             disabled
                                         />
                                     </div>
                                     <div className='col-3'>Hora Final:</div>
                                     <div className='col-3'>
-                                        <input type="time" className="form-control" id="end-time" />
+                                        <input type="time" className="form-control" id="end-time" /> {/* Este ID está correcto */}
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                         <div className='container' style={{ marginTop: "25px" }}>
                             <div className="container text-center">
                                 <div className="row align-items-start">
@@ -321,20 +397,20 @@ export default function EjecucionServicio() {
                                 <div className='col-3'>Foto posterior:</div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image && 
-                                        <img 
-                                        src={image} 
-                                        className='' 
-                                        alt="Foto-subida" 
-                                        style={{ 
-                                            objectFit: "fill", 
-                                            zIndex: "2", 
-                                            width: "191px", 
-                                            height: "120px", 
-                                            top: "10px", 
-                                            left: "0px", 
-                                            position: "relative" 
-                                            }} />}
+                                        {image &&
+                                            <img
+                                                src={image}
+                                                className=''
+                                                alt="Foto-subida"
+                                                style={{
+                                                    objectFit: "fill",
+                                                    zIndex: "2",
+                                                    width: "191px",
+                                                    height: "120px",
+                                                    top: "10px",
+                                                    left: "0px",
+                                                    position: "relative"
+                                                }} />}
                                         {/* <input
                                             type="file"
                                             className="form-control-file d-none"
