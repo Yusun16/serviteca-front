@@ -20,7 +20,7 @@ export default function EjecucionServicio() {
 
     const exportToPDF = () => {
         const doc = new jsPDF();
-        const tableColumn = ["Servicio", "Inicio", "Terminado"];
+        const tableColumn = ["Código", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
         const tableRows = [];
 
         const segundaTablaColumn = ["Referencia", "Cantidad", "Terminado"];
