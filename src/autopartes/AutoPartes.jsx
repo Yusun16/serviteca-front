@@ -15,6 +15,7 @@ function AutoPartes() {
         siigo: '',
         nombre: '',
         descripcion: '',
+        cantidad: '',
         servicio: {
             idServicio: ''
         },
@@ -29,6 +30,7 @@ function AutoPartes() {
         siigo: false,
         nombre: false,
         descripcion: false,
+        cantidad: false,
         servicio: false,
         linea: true,
         tipo: false,
@@ -72,6 +74,9 @@ function AutoPartes() {
                     updatedState.descripcion = true;
                 }
                 if (name === 'descripcion' && value.trim() !== '') {
+                    updatedState.cantidad = true;
+                }
+                if (name === 'cantidad' && value.trim() !== '') {
                     updatedState.servicio = true;
                 }
                 if (name === 'servicio' && value.trim() !== '') {
@@ -107,7 +112,7 @@ function AutoPartes() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const requiredFields = ['referencia', 'siigo', 'nombre', 'descripcion', 'linea', 'tipo'];
+        const requiredFields = ['referencia', 'siigo', 'nombre', 'descripcion', 'cantidad', 'linea', 'tipo'];
         const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
         if (allRequiredFieldsValid) {
@@ -132,6 +137,7 @@ function AutoPartes() {
             siigo: '',
             nombre: '',
             descripcion: '',
+            cantidad: '',
             servicio: {
                 idServicio: ''
             },
@@ -227,8 +233,21 @@ function AutoPartes() {
                             disabled={!isInputEnabled.descripcion}
                         />
                     </div>
-
+                    <div className='div-col002'>
+                        <label className='label006' htmlFor="cantidad">Cantidad: *</label>
+                        <input
+                            className='input005 input007'
+                            type="text"
+                            id="cantidad"
+                            name="cantidad"
+                            required
+                            value={inputs.cantidad}
+                            onChange={handleInputChange}
+                            disabled={!isInputEnabled.cantidad}
+                        />
+                    </div>
                 </div>
+
                 <div className='column001'>
                     <div className='div-col002'>
                         <label className='label006' htmlFor="servicio">Servicio: *</label>
@@ -236,15 +255,15 @@ function AutoPartes() {
                             className="dropdown-toggle002"
                             name="servicio"
                             value={inputs.servicio.idServicio} // Debes usar el valor del `id`
-                            onChange={(e) => handleSelectChange({ value: e.target.value })} 
+                            onChange={(e) => handleSelectChange({ value: e.target.value })}
                             required
-                           
+
                         >
                             <option value="" disabled>Selecciona una opción</option>
                             {opcionesServicios.map((opcion) => (
                                 <option key={opcion.value} value={opcion.value}>{opcion.label}</option>
                             ))}
-                            
+
                         </select>
 
                     </div>
