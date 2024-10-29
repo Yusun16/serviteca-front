@@ -17,6 +17,8 @@ export default function EjecucionServicio() {
     const [horaInicio, setHoraInicio] = useState('');    // Estado para la hora
     const [operarios, setOperarios] = useState([]);
     const [selectedOperario, setSelectedOperario] = useState(null);
+    const [autopartes, setAutopartes] = useState([]);
+    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -58,8 +60,19 @@ export default function EjecucionServicio() {
             }
         };
 
+        // Nueva función para obtener los datos de autopartes
+        const fetchAutopartes = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/serviteca/autopartes');
+                setAutopartes(response.data);
+            } catch (error) {
+                console.error("Error fetching autopartes:", error);
+            }
+        };
+
         fetchEjecucionServicio();
         fetchOperarios();
+        fetchAutopartes(); // Llamada para obtener autopartes
     }, []);
 
     const handleFechaChange = (e) => {
@@ -199,44 +212,25 @@ export default function EjecucionServicio() {
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
                                     <i class="fas fa-align-left fas fa-plus"></i>  Agregar
                                 </button>
-                                <ModalAgregarEjecucion />
+                                <ModalAgregarEjecucion onAutopartesSeleccionadas={setAutopartesSeleccionadas}/>
                             </div>
                         </div>
+
+                        {/* Tabla para autopartes */}
                         <table className="container" style={{ marginTop: "15px" }}>
-                            <thead >
+                            <thead>
                                 <tr className='tr-table-tr text-center'>
                                     <th className='text-letras colorthead text-center' scope="col">Referencia</th>
                                     <th className='text-letras colorthead text-center' scope="col">Cantidad</th>
-                                    <th className='text-letras colorthead text-center' scope="col">Terminado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr className='tr-table-tr text-center'>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr className='tr-table-tr text-center'>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr className='tr-table-tr text-center'>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr className='tr-table-tr text-center'>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr  >
-                                    <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
-                                    <th className='text-letras colorthead' scope="col"></th>
-                                    <th className='text-letras colorthead' scope="col"></th>
-
-                                </tr>
+                                {autopartesSeleccionadas.map((autoparte, index) => (
+                                    <tr key={index} className='tr-table-tr text-center'>
+                                        <td>{autoparte.referencia}</td>
+                                        <td>{autoparte.cantidad}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>

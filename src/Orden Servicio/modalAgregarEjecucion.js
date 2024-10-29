@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
-const ModalStack = () => {
+const ModalStack = ({ onAutopartesSeleccionadas }) => {
+    const [autopartes, setAutopartes] = useState([]);
+    const [autopartesFiltradas, setAutopartesFiltradas] = useState([]);
+    const [filtroReferencia, setFiltroReferencia] = useState('');
+    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
+    const [popoverVisible, setPopoverVisible] = useState(false); // Estado para controlar la visibilidad del Popover
+
     useEffect(() => {
-        // Importamos los scripts de Bootstrap
         const script1 = document.createElement('script');
         const script2 = document.createElement('script');
 
@@ -11,56 +17,96 @@ const ModalStack = () => {
 
         document.body.appendChild(script1);
         document.body.appendChild(script2);
+
+        const fetchAutopartes = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/serviteca/autopartes');
+                setAutopartes(response.data);
+                setAutopartesFiltradas(response.data);
+            } catch (error) {
+                console.error("Error al cargar autopartes:", error);
+            }
+        };
+
+        fetchAutopartes();
     }, []);
 
-    // Función para abrir el primer modal
-    const openFirstModal = () => {
-        const firstModal = new window.bootstrap.Modal(document.getElementById('firstModal'));
-        firstModal.show();
+    const handleCheckboxChange = (parte) => {
+        setAutopartesSeleccionadas((prevSeleccionadas) => {
+            if (prevSeleccionadas.some((item) => item.referencia === parte.referencia)) {
+                const nuevasSeleccionadas = prevSeleccionadas.filter((item) => item.referencia !== parte.referencia);
+                onAutopartesSeleccionadas(nuevasSeleccionadas);
+                return nuevasSeleccionadas;
+            } else {
+                const nuevasSeleccionadas = [...prevSeleccionadas, parte];
+                onAutopartesSeleccionadas(nuevasSeleccionadas);
+                return nuevasSeleccionadas;
+            }
+        });
     };
 
-    // Función para abrir el segundo modal y cerrar el primero
-    const openSecondModal = () => {
-        const secondModal = new window.bootstrap.Modal(document.getElementById('secondModal'));
-        const firstModal = window.bootstrap.Modal.getInstance(document.getElementById('firstModal'));
-        firstModal.hide();
-        secondModal.show();
+    const buscarPorReferencia = () => {
+        const resultado = autopartes.filter(parte =>
+            parte.referencia.toLowerCase().includes(filtroReferencia.toLowerCase())
+        );
+        setAutopartesFiltradas(resultado);
+    };
+
+    const togglePopover = () => {
+        setPopoverVisible(!popoverVisible); // Alterna la visibilidad del Popover
     };
 
     return (
-        <div className="container mt-5 ">
-
-
-            {/* Primer Modal */}
+        <div className="container mt-5">
             <div className="modal fade" id="firstModal" tabIndex="-1" aria-labelledby="firstModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-lg modal-dialog-centered">
                     <div className="modal-content">
                         <div className="modal-body">
-
                             <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            <br></br>
-                            <br></br>
-                            <div className="modal-body text-center" >
+                            <br />
+                            <div className="modal-body text-center">
                                 <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                                     <div className='col-4'>Agregar Productos:</div>
                                     <div className='col-5'>
-                                        <select className="form-select" aria-label="Default select example">
-                                            <option selected>Open this select menu</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
-                                        </select>
-                                    </div>
-                                    <div className=' col-4'>
-                                        <button type="button" className="btn btn-center btncolor" onClick={openSecondModal}>
+                                        {/* Botón para activar el Popover */}
+                                        <button 
+                                            type="button" 
+                                            className="btn btn-center btncolor" 
+                                            onClick={togglePopover} 
+                                            aria-expanded={popoverVisible}
+                                        >
                                             Buscar
                                         </button>
+                                        
+                                        {/* Popover que contiene el campo de búsqueda */}
+                                        {popoverVisible && (
+                                            <div className="popover bs-popover-bottom show" role="tooltip" style={{ position: 'absolute', zIndex: 1 }}>
+                                                <div className="popover-arrow"></div>
+                                                <div className="popover-body">
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Ingrese referencia"
+                                                        value={filtroReferencia}
+                                                        onChange={(e) => setFiltroReferencia(e.target.value)}
+                                                    />
+                                                    <button 
+                                                        type="button" 
+                                                        className="btn btn-sm btn-primary mt-2" 
+                                                        onClick={() => {
+                                                            buscarPorReferencia();
+                                                            togglePopover();
+                                                        }}
+                                                    >
+                                                        Buscar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-
-
                                 </div>
                                 <table className="container" style={{ marginTop: "15px" }}>
-                                    <thead >
+                                    <thead>
                                         <tr className='tr-table-tr text-center'>
                                             <th className='text-letras colorthead text-center' scope="col">Referencia</th>
                                             <th className='text-letras colorthead text-center' scope="col">Agregar</th>
@@ -68,140 +114,26 @@ const ModalStack = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className='tr-table-tr text-center'>
-                                            <td>Mark</td>
-                                            <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                            <td>@mdo</td>
-                                        </tr>
-                                        <tr className='tr-table-tr text-center'>
-                                            <td>Jacob</td>
-                                            <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr className='tr-table-tr text-center'>
-                                            <td>Jacob</td>
-                                            <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr className='tr-table-tr text-center'>
-                                            <td>Jacob</td>
-                                            <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                            <td>@fat</td>
-                                        </tr>
-                                        <tr  >
-                                            <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
-                                            <th className='text-letras colorthead' scope="col"></th>
-                                            <th className='text-letras colorthead' scope="col"></th>
-
-                                        </tr>
+                                        {autopartesFiltradas.map((parte) => (
+                                            <tr key={parte.referencia} className='tr-table-tr text-center'>
+                                                <td>{parte.referencia}</td>
+                                                <td>
+                                                    <input 
+                                                        className="form-check-input" 
+                                                        type="checkbox" 
+                                                        onChange={() => handleCheckboxChange(parte)}
+                                                    />
+                                                </td>
+                                                <td>{parte.cantidad}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
-
-
                             </div>
-
-
-
-
-                            <br />
-                        </div>
-                        <div>
-                            <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
-                                Agregar <i class="fa-solid fa-check"></i>
+                            <button type="button" className="btnncolor btn-sm me-3" data-bs-dismiss="modal">
+                                Agregar <i className="fa-solid fa-check"></i>
                             </button>
                         </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Segundo Modal */}
-            <div className="modal fade" id="secondModal" tabIndex="-1" aria-labelledby="secondModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-lg modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="" style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-                            <div className="" id="secondModalLabel">Agregar Productos:</div>
-                            <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div className="modal-body">
-                            <h6 className="text-start">Buscar por:</h6>
-                            <form>
-                                <div >
-                                    <div className="col" style={{ display: "flex", flexDirection: "row", margin: "10px 0px" }}>
-                                        <div className='col-5'>Referencia: </div>
-                                        <div className='col-5'>
-                                            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
-                                        </div>
-                                    </div>
-                                    <div className="col" style={{ display: "flex", flexDirection: "row", margin: "10px 0px" }}>
-                                        <div className='col-5'>Codigo SIIGO: </div>
-                                        <div className='col-5'>
-                                            <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" />
-                                        </div>
-                                    </div>
-                                    <div className="col" style={{ display: "flex", flexDirection: "row", margin: "10px 0px" }}>
-                                        <div className='col-5'>Descripción: </div>
-                                        <div className='col-5'>
-                                            <input type="email" class="form-control" id="exampleInputEmail3" aria-describedby="emailHelp" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='text-center'>
-                                    <button type="submit" className="btn btncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarcliente" >  <i className="fa-solid fa-magnifying-glass"></i> Buscar</button>
-                                    <button type="button" className='btn btn-danger btn-sm '><i className="fa-regular fa-circle-xmark"></i> Cancelar</button>
-
-                                </div>
-
-                                <div className="modal-body text-center" >
-                                    <div className="col" style={{ display: "flex", flexDirection: "row" }}>
-                                    </div>
-                                    <table className="container" style={{ marginTop: "15px" }}>
-                                        <thead >
-                                            <tr className='tr-table-tr text-center'>
-                                                <th className='text-letras colorthead text-center' scope="col">Referencia</th>
-                                                <th className='text-letras colorthead text-center' scope="col">Agrega</th>
-                                                <th className='text-letras colorthead text-center' scope="col">Cantidad</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr className='tr-table-tr text-center'>
-                                                <td>Mark</td>
-                                                <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                                <td>@mdo</td>
-                                            </tr>
-                                            <tr className='tr-table-tr text-center'>
-                                                <td>Jacob</td>
-                                                <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr className='tr-table-tr text-center'>
-                                                <td>Jacob</td>
-                                                <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr className='tr-table-tr text-center'>
-                                                <td>Jacob</td>
-                                                <td> <input className="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="..." /></td>
-                                                <td>@fat</td>
-                                            </tr>
-                                            <tr  >
-                                                <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
-                                                <th className='text-letras colorthead' scope="col"></th>
-                                                <th className='text-letras colorthead' scope="col"></th>
-
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-
-                                </div>
-                                <div>
-                                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
-                                        Agregar <i class="fa-solid fa-check"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-
                     </div>
                 </div>
             </div>
