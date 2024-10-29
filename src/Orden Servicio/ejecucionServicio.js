@@ -25,10 +25,83 @@ export default function EjecucionServicio() {
         const tableColumn = ["Código", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
         const tableRows = [];
 
-        doc.autoTable(tableColumn, tableRows, { startY: 20 });
-        doc.text("Listado de Servicios", 14, 15);
-        doc.save("listado_servicios.pdf");
+        const segundaTablaColumn = ["Referencia", "Cantidad", "Terminado"];
+        const segundaTablaRows = [];
+
+        const placa = datosOrden.length > 0 ? datosOrden[0].placaVehiculo : '';
+        const codigo = datosOrden.length > 0 ? datosOrden[0].codigoOrden : '';
+
+        const operarioSeleccionado = document.getElementById('operario-select');
+        const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
+
+        const operarioValue = operarioSeleccionado?.value || 'No seleccionado';
+        const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
+
+        // Agregando datos de la primera tabla
+        datosOrden.forEach(orden => {
+            const serviceData = [
+                orden.nombreServicio,
+                orden.horaInicio || "No definido",
+                orden.horaTerminado || "No definido"
+            ];
+            tableRows.push(serviceData);
+        });
+
+        // Agregando datos de la segunda tabla
+        // Reemplaza este bloque con tus datos reales
+        const datosSegundaTabla = [
+            { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
+            { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
+            // Agrega más datos según sea necesario
+        ];
+
+        datosSegundaTabla.forEach(item => {
+            const segundaTablaData = [
+                item.referencia,
+                item.cantidad,
+                item.terminado
+            ];
+            segundaTablaRows.push(segundaTablaData);
+        });
+
+        // Estableciendo un título
+        doc.text("Ejecución del Servicio", 14, 20);
+        // Obtener la fecha y hora final
+        const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
+        const horaFinal = document.getElementById('end-time').value || 'No definido';
+
+        // Añadiendo la información adicional
+        doc.text(`Placa: ${placa}`, 14, 30);
+        doc.text(`Código: ${codigo}`, 14, 35);
+        doc.text(`Operario: ${operarioValue}`, 14, 40);
+        doc.text(`Producto Seleccionado: ${productoValue}`, 14, 45);
+        doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 50);
+        doc.text(`Fecha Final: ${fechaFinal}`, 14, 55);
+        doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
+        doc.text(`Hora Final: ${horaFinal}`, 14, 65);
+
+        // Agregando la primera tabla
+        doc.autoTable(tableColumn, tableRows, { startY: 70 });
+
+        // Agregando la segunda tabla
+        const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
+        doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
+
+        // Añadiendo imágenes
+        if (image) {
+            doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+        if (imageFrontAfter) {
+            doc.addImage(imageFrontAfter, 'JPEG', 60, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+        if (imageBackAfter) {
+            doc.addImage(imageBackAfter, 'JPEG', 106, doc.lastAutoTable.finalY + 10, 40, 30);
+        }
+
+        // Guardar el PDF
+        doc.save("ejecucion_servicio.pdf");
     };
+
 
     useEffect(() => {
         const idOrden = localStorage.getItem('idOrden');
@@ -154,7 +227,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className="col-6">
                                 <Select
-                                    className="operarios"
+                                   id="operario-select"
                                     options={operarios}
                                     value={selectedOperario}
                                     onChange={setSelectedOperario}
@@ -250,7 +323,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className='col-3'>Fecha Final:</div>
                             <div className='col-3'>
-                                <input type="date" className="form-control" id="date" />
+                                <input type="date" className="form-control" id="dateFinal" />
                             </div>
                         </div>
 
