@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Link } from 'react-router-dom';
 import fotoimage from '../img/fotoup.jpeg';
 import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 import axios from 'axios';
@@ -17,10 +16,10 @@ export default function EjecucionServicio() {
     const [horaInicio, setHoraInicio] = useState('');    // Estado para la hora
     const [operarios, setOperarios] = useState([]);
     const [selectedOperario, setSelectedOperario] = useState(null);
-
+    
     const exportToPDF = () => {
         const doc = new jsPDF();
-        const tableColumn = ["Código", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
+        const tableColumn = ["Servicio", "Inicio", "Terminado"];
         const tableRows = [];
 
         const segundaTablaColumn = ["Referencia", "Cantidad", "Terminado"];
@@ -28,79 +27,76 @@ export default function EjecucionServicio() {
 
         const placa = datosOrden.length > 0 ? datosOrden[0].placaVehiculo : '';
         const codigo = datosOrden.length > 0 ? datosOrden[0].codigoOrden : '';
+        
+       // Obtener el operario seleccionado directamente del estado
+    const operarioValue = selectedOperario ? selectedOperario.label : 'No seleccionado';
+    const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
+    const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
 
-        const operarioSeleccionado = document.getElementById('operario-select');
-        const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
+ // Obtener el valor del input que contiene los productos según servicio
+ const productosSegunServicio = datosOrden.map((orden) => orden.nombreServicio).join(', ');
 
-        const operarioValue = operarioSeleccionado?.value || 'No seleccionado';
-        const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
-
-        // Agregando datos de la primera tabla
-        datosOrden.forEach(orden => {
-            const serviceData = [
-                orden.nombreServicio,
-                orden.horaInicio || "No definido",
-                orden.horaTerminado || "No definido"
-            ];
-            tableRows.push(serviceData);
-        });
-
-        // Agregando datos de la segunda tabla
-        // Reemplaza este bloque con tus datos reales
-        const datosSegundaTabla = [
-            { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
-            { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
-            // Agrega más datos según sea necesario
+       // Agregando datos de la primera tabla
+    datosOrden.forEach(orden => {
+        const serviceData = [
+            orden.nombreServicio,
+            orden.horaInicio || "No definido",
+            orden.horaTerminado || "No definido"
         ];
+        tableRows.push(serviceData);
+    });
 
-        datosSegundaTabla.forEach(item => {
-            const segundaTablaData = [
-                item.referencia,
-                item.cantidad,
-                item.terminado
-            ];
-            segundaTablaRows.push(segundaTablaData);
-        });
+    // Agregando datos de la segunda tabla
+    const datosSegundaTabla = [
+        { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
+        { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
+    ];
 
-        // Estableciendo un título
-        doc.text("Ejecución del Servicio", 14, 20);
-        // Obtener la fecha y hora final
-        const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
-        const horaFinal = document.getElementById('end-time').value || 'No definido';
+    datosSegundaTabla.forEach(item => {
+        const segundaTablaData = [
+            item.referencia,
+            item.cantidad,
+            item.terminado
+        ];
+        segundaTablaRows.push(segundaTablaData);
+    });
 
-        // Añadiendo la información adicional
-        doc.text(`Placa: ${placa}`, 14, 30);
-        doc.text(`Código: ${codigo}`, 14, 35);
-        doc.text(`Operario: ${operarioValue}`, 14, 40);
-        doc.text(`Producto Seleccionado: ${productoValue}`, 14, 45);
-        doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 50);
-        doc.text(`Fecha Final: ${fechaFinal}`, 14, 55);
-        doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
-        doc.text(`Hora Final: ${horaFinal}`, 14, 65);
+    // Estableciendo un título
+    doc.text("Ejecución del Servicio", 14, 20);
+    const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
+    const horaFinal = document.getElementById('end-time').value || 'No definido';
 
-        // Agregando la primera tabla
-        doc.autoTable(tableColumn, tableRows, { startY: 70 });
+    // Añadiendo la información adicional
+    doc.text(`Placa: ${placa}`, 14, 30);
+    doc.text(`Código: ${codigo}`, 14, 40);
+    doc.text(`Operario: ${operarioValue}`, 14, 50); // Aquí se incluye el nombre del operario
+    doc.text(`Productos según Servicio: ${productosSegunServicio}`, 14, 60); // Aquí se agrega productos según servicio
+    doc.text(`Fecha Inicio: ${fechaInicio}`, 14, 70);
+    doc.text(`Fecha Final: ${fechaFinal}`, 14, 80);
+    doc.text(`Hora Inicio: ${horaInicio}`, 14, 90);
+    doc.text(`Hora Final: ${horaFinal}`, 14, 100); 
 
-        // Agregando la segunda tabla
-        const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
-        doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
+    // Agregando la primera tabla
+    doc.autoTable(tableColumn, tableRows, { startY: 120 });
 
-        // Añadiendo imágenes
-        if (image) {
-            doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
-        }
-        if (imageFrontAfter) {
-            doc.addImage(imageFrontAfter, 'JPEG', 60, doc.lastAutoTable.finalY + 10, 40, 30);
-        }
-        if (imageBackAfter) {
-            doc.addImage(imageBackAfter, 'JPEG', 106, doc.lastAutoTable.finalY + 10, 40, 30);
-        }
+    // Agregando la segunda tabla
+    const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
+    doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
 
-        // Guardar el PDF
-        doc.save("ejecucion_servicio.pdf");
-    };
+    // Añadiendo imágenes
+    if (image) {
+        doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
+    }
+    if (imageFrontAfter) {
+        doc.addImage(imageFrontAfter, 'JPEG', 60, doc.lastAutoTable.finalY + 10, 40, 30);
+    }
+    if (imageBackAfter) {
+        doc.addImage(imageBackAfter, 'JPEG', 106, doc.lastAutoTable.finalY + 10, 40, 30);
+    }
 
-
+    // Guardar el PDF
+    doc.save("ejecucion_servicio.pdf");
+};
     useEffect(() => {
         const idOrden = localStorage.getItem('idOrden');
 
@@ -214,7 +210,6 @@ export default function EjecucionServicio() {
                             </div>
                             <div className="col-6">
                                 <Select
-                                   id="operario-select"
                                     options={operarios}
                                     value={selectedOperario}
                                     onChange={setSelectedOperario}
@@ -425,7 +420,7 @@ export default function EjecucionServicio() {
                                                 className=''
                                                 alt="Foto-subida"
                                                 style={{
-                                                    objectFit: "fill",
+                                                     objectFit: "fill",
                                                     zIndex: "2",
                                                     width: "191px",
                                                     height: "120px",
