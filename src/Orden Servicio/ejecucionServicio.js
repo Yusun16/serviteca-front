@@ -18,7 +18,7 @@ export default function EjecucionServicio() {
     const [operarios, setOperarios] = useState([]);
     const [selectedOperario, setSelectedOperario] = useState(null);
     const [autopartes, setAutopartes] = useState([]);
-    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
+    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]); // Estado para las autopartes en la tabla principal
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -48,11 +48,9 @@ export default function EjecucionServicio() {
         });
 
         // Agregando datos de la segunda tabla
-        // Reemplaza este bloque con tus datos reales
         const datosSegundaTabla = [
             { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
             { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
-            // Agrega más datos según sea necesario
         ];
 
         datosSegundaTabla.forEach(item => {
@@ -64,13 +62,10 @@ export default function EjecucionServicio() {
             segundaTablaRows.push(segundaTablaData);
         });
 
-        // Estableciendo un título
         doc.text("Ejecución del Servicio", 14, 20);
-        // Obtener la fecha y hora final
         const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
         const horaFinal = document.getElementById('end-time').value || 'No definido';
 
-        // Añadiendo la información adicional
         doc.text(`Placa: ${placa}`, 14, 30);
         doc.text(`Código: ${codigo}`, 14, 35);
         doc.text(`Operario: ${operarioValue}`, 14, 40);
@@ -80,14 +75,10 @@ export default function EjecucionServicio() {
         doc.text(`Hora Inicio: ${horaInicio}`, 14, 60);
         doc.text(`Hora Final: ${horaFinal}`, 14, 65);
 
-        // Agregando la primera tabla
         doc.autoTable(tableColumn, tableRows, { startY: 70 });
-
-        // Agregando la segunda tabla
         const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
         doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
 
-        // Añadiendo imágenes
         if (image) {
             doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
         }
@@ -98,10 +89,8 @@ export default function EjecucionServicio() {
             doc.addImage(imageBackAfter, 'JPEG', 106, doc.lastAutoTable.finalY + 10, 40, 30);
         }
 
-        // Guardar el PDF
         doc.save("ejecucion_servicio.pdf");
     };
-
 
     useEffect(() => {
         const idOrden = localStorage.getItem('idOrden');
@@ -133,7 +122,6 @@ export default function EjecucionServicio() {
             }
         };
 
-        // Nueva función para obtener los datos de autopartes
         const fetchAutopartes = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/serviteca/autopartes');
@@ -145,7 +133,7 @@ export default function EjecucionServicio() {
 
         fetchEjecucionServicio();
         fetchOperarios();
-        fetchAutopartes(); // Llamada para obtener autopartes
+        fetchAutopartes();
     }, []);
 
     const handleFechaChange = (e) => {
@@ -157,12 +145,11 @@ export default function EjecucionServicio() {
     };
 
     const enviarDatos = async () => {
-        const idOrden = localStorage.getItem('idOrden'); // Aseguramos que tenemos el idOrden aquí también
+        const idOrden = localStorage.getItem('idOrden');
         try {
             const response = await axios.get(`/ejecucion?idOrden=${idOrden}`, {
-                params: { fechaInicio }  // Enviamos la fecha de inicio como parámetro
+                params: { fechaInicio }
             });
-            // manejar la respuesta
         } catch (error) {
             console.error("Error al obtener los datos:", error);
         }
@@ -178,6 +165,19 @@ export default function EjecucionServicio() {
             reader.readAsDataURL(file);
         }
     };
+
+    const handleAutopartesSeleccionadas = (seleccionadas) => {
+        setAutopartesSeleccionadas(seleccionadas);
+    };
+
+    const handleEliminarAutoparte = (e, referencia) => {
+        e.preventDefault(); // Previene la recarga de la página
+        const nuevasAutopartes = autopartesSeleccionadas.filter(
+            (autoparte) => autoparte.referencia !== referencia
+        );
+        setAutopartesSeleccionadas(nuevasAutopartes);
+    };
+
 
     return (
         <div className='container'>
@@ -227,7 +227,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className="col-6">
                                 <Select
-                                   id="operario-select"
+                                    id="operario-select"
                                     options={operarios}
                                     value={selectedOperario}
                                     onChange={setSelectedOperario}
@@ -285,7 +285,7 @@ export default function EjecucionServicio() {
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
                                     <i class="fas fa-align-left fas fa-plus"></i>  Agregar
                                 </button>
-                                <ModalAgregarEjecucion onAutopartesSeleccionadas={setAutopartesSeleccionadas}/>
+                                <ModalAgregarEjecucion onAutopartesSeleccionadas={setAutopartesSeleccionadas} />
                             </div>
                         </div>
 
@@ -295,6 +295,7 @@ export default function EjecucionServicio() {
                                 <tr className='tr-table-tr text-center'>
                                     <th className='text-letras colorthead text-center' scope="col">Referencia</th>
                                     <th className='text-letras colorthead text-center' scope="col">Cantidad</th>
+                                    <th className='text-letras colorthead text-center' scope="col">Eliminar</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -302,10 +303,21 @@ export default function EjecucionServicio() {
                                     <tr key={index} className='tr-table-tr text-center'>
                                         <td>{autoparte.referencia}</td>
                                         <td>{autoparte.cantidad}</td>
+                                        <td>
+                                            <button
+                                                onClick={(e) => handleEliminarAutoparte(e, autoparte.referencia)}
+                                                className="btn btn-danger btn-sm"
+                                            >
+                                                <i className="fa fa-trash"></i>
+                                            </button>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+
+                        {/* Componente del modal */}
+                        <ModalAgregarEjecucion onAutopartesSeleccionadas={handleAutopartesSeleccionadas} autopartesSeleccionadas={autopartesSeleccionadas} />
                     </div>
 
                     <div className="col">

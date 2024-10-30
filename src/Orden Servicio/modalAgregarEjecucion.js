@@ -9,15 +9,6 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
     const [popoverVisible, setPopoverVisible] = useState(false); // Estado para controlar la visibilidad del Popover
 
     useEffect(() => {
-        const script1 = document.createElement('script');
-        const script2 = document.createElement('script');
-
-        script1.src = "https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js";
-        script2.src = "https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js";
-
-        document.body.appendChild(script1);
-        document.body.appendChild(script2);
-
         const fetchAutopartes = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/serviteca/autopartes');
@@ -34,13 +25,9 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
     const handleCheckboxChange = (parte) => {
         setAutopartesSeleccionadas((prevSeleccionadas) => {
             if (prevSeleccionadas.some((item) => item.referencia === parte.referencia)) {
-                const nuevasSeleccionadas = prevSeleccionadas.filter((item) => item.referencia !== parte.referencia);
-                onAutopartesSeleccionadas(nuevasSeleccionadas);
-                return nuevasSeleccionadas;
+                return prevSeleccionadas.filter((item) => item.referencia !== parte.referencia);
             } else {
-                const nuevasSeleccionadas = [...prevSeleccionadas, parte];
-                onAutopartesSeleccionadas(nuevasSeleccionadas);
-                return nuevasSeleccionadas;
+                return [...prevSeleccionadas, parte];
             }
         });
     };
@@ -53,7 +40,12 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
     };
 
     const togglePopover = () => {
-        setPopoverVisible(!popoverVisible); // Alterna la visibilidad del Popover
+        setPopoverVisible(!popoverVisible);
+    };
+
+    // Al hacer clic en "Agregar", envía las autopartes seleccionadas al componente principal
+    const handleAgregar = () => {
+        onAutopartesSeleccionadas(autopartesSeleccionadas); // Pasa las autopartes seleccionadas al padre
     };
 
     return (
@@ -68,7 +60,6 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                 <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                                     <div className='col-4'>Agregar Productos:</div>
                                     <div className='col-5'>
-                                        {/* Botón para activar el Popover */}
                                         <button 
                                             type="button" 
                                             className="btn btn-center btncolor" 
@@ -77,8 +68,6 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                         >
                                             Buscar
                                         </button>
-                                        
-                                        {/* Popover que contiene el campo de búsqueda */}
                                         {popoverVisible && (
                                             <div className="popover bs-popover-bottom show" role="tooltip" style={{ position: 'absolute', zIndex: 1 }}>
                                                 <div className="popover-arrow"></div>
@@ -130,7 +119,7 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                     </tbody>
                                 </table>
                             </div>
-                            <button type="button" className="btnncolor btn-sm me-3" data-bs-dismiss="modal">
+                            <button type="button" className="btnncolor btn-sm me-3" data-bs-dismiss="modal" onClick={handleAgregar}>
                                 Agregar <i className="fa-solid fa-check"></i>
                             </button>
                         </div>
