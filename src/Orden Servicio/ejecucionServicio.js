@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Link } from 'react-router-dom';
 import fotoimage from '../img/fotoup.jpeg';
 import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 import axios from 'axios';
@@ -21,7 +22,7 @@ export default function EjecucionServicio() {
 
     const exportToPDF = () => {
         const doc = new jsPDF();
-        const tableColumn = ["Servicio", "Inicio", "Terminado"];
+        const tableColumn = ["Código", "Descripción", "Valor del Servicio", "Año", "Porcentaje del Operario"];
         const tableRows = [];
 
         const segundaTablaColumn = ["Referencia", "Cantidad", "Terminado"];
@@ -29,14 +30,9 @@ export default function EjecucionServicio() {
 
         const placa = datosOrden.length > 0 ? datosOrden[0].placaVehiculo : '';
         const codigo = datosOrden.length > 0 ? datosOrden[0].codigoOrden : '';
-        
-       // Obtener el operario seleccionado directamente del estado
-    const operarioValue = selectedOperario ? selectedOperario.label : 'No seleccionado';
-    const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
-    const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
 
- // Obtener el valor del input que contiene los productos según servicio
- const productosSegunServicio = datosOrden.map((orden) => orden.nombreServicio).join(', ');
+        const operarioSeleccionado = document.getElementById('operario-select');
+        const productoSeleccionado = document.querySelector('select[aria-label="productos según servicio"]');
 
         const operarioValue = operarioSeleccionado?.value || 'No seleccionado';
         const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
@@ -56,14 +52,15 @@ export default function EjecucionServicio() {
             { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
             { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
         ];
-        tableRows.push(serviceData);
-    });
 
-    // Agregando datos de la segunda tabla
-    const datosSegundaTabla = [
-        { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
-        { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
-    ];
+        datosSegundaTabla.forEach(item => {
+            const segundaTablaData = [
+                item.referencia,
+                item.cantidad,
+                item.terminado
+            ];
+            segundaTablaRows.push(segundaTablaData);
+        });
 
         doc.text("Ejecución del Servicio", 14, 20);
         const fechaFinal = document.getElementById('dateFinal').value || 'No definido';
@@ -434,7 +431,7 @@ export default function EjecucionServicio() {
                                                 className=''
                                                 alt="Foto-subida"
                                                 style={{
-                                                     objectFit: "fill",
+                                                    objectFit: "fill",
                                                     zIndex: "2",
                                                     width: "191px",
                                                     height: "120px",
