@@ -1,51 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const ModalStack = ({ onAutopartesSeleccionadas }) => {
+const ModalStack = ({ onAutopartesSeleccionadas }) => { 
+    const [datosOrden, setDatosOrden] = useState([]); 
     const [autopartes, setAutopartes] = useState([]);
     const [autopartesFiltradas, setAutopartesFiltradas] = useState([]);
     const [filtroReferencia, setFiltroReferencia] = useState('');
+    const [popoverVisible, setPopoverVisible] = useState(false);
     const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
-    const [popoverVisible, setPopoverVisible] = useState(false); // Estado para controlar la visibilidad del Popover
 
     useEffect(() => {
-        const fetchAutopartes = async () => {
+        const idOrden = localStorage.getItem('idOrden'); // Identificador del servicio en `localStorage`
+
+        const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/serviteca/autopartes');
-                setAutopartes(response.data);
-                setAutopartesFiltradas(response.data);
+                // Solicitar los nombres de servicio asociados a la orden
+                const responseEjecucion = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
+                const nombresServicio = responseEjecucion.data.map(servicio => servicio.nombreServicio);
+                setDatosOrden(nombresServicio);
+
+                // Solicitar solo las autopartes relacionadas con el servicio asignado
+                const responseAutopartes = await axios.get(`http://localhost:8080/serviteca/autopartes?servicioId=${idOrden}`);
+                setAutopartes(responseAutopartes.data);
+                setAutopartesFiltradas(responseAutopartes.data);
             } catch (error) {
-                console.error("Error al cargar autopartes:", error);
+                console.error("Error al cargar datos:", error);
             }
         };
 
-        fetchAutopartes();
+        fetchData();
     }, []);
 
-    const handleCheckboxChange = (parte) => {
-        setAutopartesSeleccionadas((prevSeleccionadas) => {
-            if (prevSeleccionadas.some((item) => item.referencia === parte.referencia)) {
-                return prevSeleccionadas.filter((item) => item.referencia !== parte.referencia);
-            } else {
-                return [...prevSeleccionadas, parte];
-            }
-        });
-    };
+    const togglePopover = () => setPopoverVisible(!popoverVisible);
 
     const buscarPorReferencia = () => {
-        const resultado = autopartes.filter(parte =>
+        const filtradas = autopartes.filter((parte) =>
             parte.referencia.toLowerCase().includes(filtroReferencia.toLowerCase())
         );
-        setAutopartesFiltradas(resultado);
+        setAutopartesFiltradas(filtradas);
     };
 
-    const togglePopover = () => {
-        setPopoverVisible(!popoverVisible);
+    const isChecked = (parte) => {
+        return autopartesSeleccionadas.some((item) => item.referencia === parte.referencia);
     };
 
-    // Al hacer clic en "Agregar", envía las autopartes seleccionadas al componente principal
+    const handleCheckboxChange = (parte) => {
+        if (isChecked(parte)) {
+            setAutopartesSeleccionadas((prev) =>
+                prev.filter((item) => item.referencia !== parte.referencia)
+            );
+        } else {
+            setAutopartesSeleccionadas((prev) => [...prev, parte]);
+        }
+    };
+
     const handleAgregar = () => {
-        onAutopartesSeleccionadas(autopartesSeleccionadas); // Pasa las autopartes seleccionadas al padre
+        onAutopartesSeleccionadas(autopartesSeleccionadas);
+        setAutopartesSeleccionadas([]);
     };
 
     return (
@@ -59,11 +70,18 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                             <div className="modal-body text-center">
                                 <div className="col" style={{ display: "flex", flexDirection: "row" }}>
                                     <div className='col-4'>Agregar Productos:</div>
-                                    <div className='col-5'>
-                                        <button 
-                                            type="button" 
-                                            className="btn btn-center btncolor" 
-                                            onClick={togglePopover} 
+                                    <div className='col-5 d-flex align-items-center'>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            value={datosOrden ? datosOrden.join(', ') : ''}
+                                            readOnly
+                                            style={{ marginRight: '10px' }}
+                                        />
+                                        <button
+                                            type="button"
+                                            className="btn btn-center btncolor"
+                                            onClick={togglePopover}
                                             aria-expanded={popoverVisible}
                                         >
                                             Buscar
@@ -79,9 +97,9 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                                         value={filtroReferencia}
                                                         onChange={(e) => setFiltroReferencia(e.target.value)}
                                                     />
-                                                    <button 
-                                                        type="button" 
-                                                        className="btn btn-sm btn-primary mt-2" 
+                                                    <button
+                                                        type="button"
+                                                        className="btn btn-sm btn-primary mt-2"
                                                         onClick={() => {
                                                             buscarPorReferencia();
                                                             togglePopover();
@@ -107,9 +125,10 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                             <tr key={parte.referencia} className='tr-table-tr text-center'>
                                                 <td>{parte.referencia}</td>
                                                 <td>
-                                                    <input 
-                                                        className="form-check-input" 
-                                                        type="checkbox" 
+                                                    <input
+                                                        className="form-check-input"
+                                                        type="checkbox"
+                                                        checked={isChecked(parte)}
                                                         onChange={() => handleCheckboxChange(parte)}
                                                     />
                                                 </td>

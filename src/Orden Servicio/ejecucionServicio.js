@@ -176,6 +176,11 @@ export default function EjecucionServicio() {
             (autoparte) => autoparte.referencia !== referencia
         );
         setAutopartesSeleccionadas(nuevasAutopartes);
+
+        // También puedes limpiar el estado de selección en el modal si necesitas hacerlo
+        setAutopartesSeleccionadas((prevSeleccionadas) =>
+            prevSeleccionadas.filter((parte) => parte.referencia !== referencia)
+        );
     };
 
 
@@ -317,7 +322,11 @@ export default function EjecucionServicio() {
                         </table>
 
                         {/* Componente del modal */}
-                        <ModalAgregarEjecucion onAutopartesSeleccionadas={handleAutopartesSeleccionadas} autopartesSeleccionadas={autopartesSeleccionadas} />
+                        <ModalAgregarEjecucion
+                            datosOrden={datosOrden}
+                            autopartesSeleccionadas={autopartesSeleccionadas}
+                            setAutopartesSeleccionadas={setAutopartesSeleccionadas}
+                        />
                     </div>
 
                     <div className="col">
