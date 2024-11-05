@@ -18,6 +18,7 @@ body {
 .selecclientes{
   width: 90%;
   padding-right: 1px;
+  z-index: 99;
 }
 
 .btnn-close {
