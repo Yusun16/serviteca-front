@@ -10,6 +10,7 @@ export default function EditarVehiculo() {
     const { id } = useParams();
     const [clientes, setClientes] = useState([]);
     const [opcionesClientes, setOpcionesClientes] = useState([]);
+    const [image, setImage] = useState(null);
 
     // Estado para almacenar la información del vehículo
     const [vehiculo, setVehiculos] = useState({
@@ -37,8 +38,6 @@ export default function EditarVehiculo() {
         }
     };
 
-    // Estado para almacenar la imagen seleccionada
-    const [image, setImage] = useState(null);
 
     // const { placa, marca, linea, modelo, cliente, foto, observacion } = vehiculo;
 
@@ -76,14 +75,15 @@ export default function EditarVehiculo() {
     };
 
     // Envío del formulario
+    // Envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(vehiculo.cliente);
+
+        console.log("Estado del vehículo antes de enviar:", vehiculo);
+
         try {
             // Preparar datos del vehículo
             const jSonBody = {
-                // Incluir el ID del vehículo para indicar que es una edición
-                // COnfigurar aqui el id porque sin el, no edita!!!
                 id: vehiculo.id,
                 placa: vehiculo.placa,
                 marca: vehiculo.marca,
@@ -94,29 +94,35 @@ export default function EditarVehiculo() {
                 },
                 observacion: vehiculo.observacion
             };
-    
+
+            console.log("Cuerpo JSON para el envío:", jSonBody);
+
             // Enviar vehículo
             const response = await axios.post('http://localhost:8080/serviteca/vehiculos', jSonBody, {
                 headers: {
                     'Content-Type': 'application/json',
                 },
             });
-    
+
+            console.log("Respuesta del backend al enviar el vehículo:", response.data);
+
             const vehiculoId = response.data.id;
-    
+
             // Subir imagen si existe
             if (image) {
                 const imageFormData = new FormData();
                 imageFormData.append('id', vehiculoId);
                 imageFormData.append('file', image);
-    
-                await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
+
+                const imageResponse = await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
+
+                console.log("Respuesta del backend al subir la imagen:", imageResponse.data);
             }
-    
+
             // Limpiar el estado del vehículo
             setVehiculos({
                 placa: "",
@@ -126,9 +132,12 @@ export default function EditarVehiculo() {
                 cliente: { id: "" },
                 observacion: "",
             });
-    
-            
+
+            console.log("Estado del vehículo después de enviar:", vehiculo);
+
+            // Redirigir (si es necesario)
             // navegacion("/agregarvehiculo");
+
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
@@ -150,7 +159,7 @@ export default function EditarVehiculo() {
     // Manejar el cambio de la imagen
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImage(URL.createObjectURL(file)); // Muestra la imagen seleccionada
+        setImage(file); // Almacenar el archivo directamente en lugar de la URL
     };
 
     return (
@@ -214,7 +223,7 @@ export default function EditarVehiculo() {
                             </div>
                         </div>
                         <div className="">
-                        <div className="col">
+                            <div className="col">
                                 <label htmlFor="cliente" className="col-4 col-form-label">Cliente:*</label>
                                 <div className="col-12">
                                     <Select
@@ -231,9 +240,24 @@ export default function EditarVehiculo() {
                             </div>
                             <div className="col-md-6 d-flex align-items-center">
                                 <div className="w-50">
-                                <label htmlFor="cliente" className="col-4 col-form-label">Foto:*</label>
+                                    <label htmlFor="cliente" className="col-4 col-form-label">Foto:*</label>
                                     <div className="card" style={{ width: '329px', height: '130px', overflow: "hidden" }}>
-                                        {image && <img src={image} className='' alt="Foto-subida" style={{ objectFit: "fill", zIndex: "2", width: "191px", height: "100px", top: "10px", left: "18px", position: "relative" }} />}
+                                        {image && (
+                                            <img
+                                                src={image}
+                                                className=''
+                                                alt="Foto-subida"
+                                                style={{
+                                                    objectFit: "fill",
+                                                    zIndex: "2",
+                                                    width: "191px",
+                                                    height: "100px",
+                                                    top: "10px",
+                                                    left: "18px",
+                                                    position: "relative"
+                                                }}
+                                            />
+                                        )}
                                         <input
                                             type="file"
                                             className="form-control-file d-none"
@@ -266,10 +290,10 @@ export default function EditarVehiculo() {
                         </div>
                     </div>
                     <div className='text-center'>
-                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarvehiculo">
-                        <i className="fa-regular fa-floppy-disk"></i> Guardar
-                    </button>
-                    <ModalEditar />
+                        <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarvehiculo">
+                            <i className="fa-regular fa-floppy-disk"></i> Guardar
+                        </button>
+                        <ModalEditar />
                     </div>
                 </form>
             </div>
