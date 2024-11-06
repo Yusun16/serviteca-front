@@ -9,6 +9,7 @@ import Select from 'react-select';
 
 export default function EjecucionServicio() {
     const [image, setImage] = useState(null);
+    const [backImage, setBackImage] = useState(null);
     const [imageBackAfter, setImageBackAfter] = useState(null);
     const [imageFrontAfter, setImageFrontAfter] = useState(null);
     const [datosOrden, setDatosOrden] = useState([]);
@@ -19,6 +20,8 @@ export default function EjecucionServicio() {
     const [selectedOperario, setSelectedOperario] = useState(null);
     const [autopartes, setAutopartes] = useState([]);
     const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]); // Estado para las autopartes en la tabla principal
+    const [checkboxState, setCheckboxState] = useState([]);
+    const [idRevision, setIdRevision] = useState([]);
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -103,8 +106,14 @@ export default function EjecucionServicio() {
                 if (response.data.length > 0) {
                     setFechaInicio(response.data[0].fechaOrden);
                     setHoraInicio(response.data[0].horaOrden);
-                    setImage(response.data[0].imgFrontalRevision);
+                    setImage(response.data[0].imgFrontalRevision); // Imagen frontal
+                    setBackImage(response.data[0].imgBackRevision); // Imagen posterior
+                    setIdRevision(response.data[0].idRevision); // Imagen posterior
+
                 }
+
+                // Inicializar el estado de los checkboxes
+                setCheckboxState(response.data.map(() => ({ inicio: false, terminado: false })));
             } catch (err) {
                 setError(err);
             }
@@ -136,6 +145,20 @@ export default function EjecucionServicio() {
         fetchAutopartes();
     }, []);
 
+    const handleCheckboxChange = (index, type) => {
+        setCheckboxState(prevState =>
+            prevState.map((item, idx) => {
+                if (idx === index) {
+                    return {
+                        inicio: type === 'inicio' ? true : false,
+                        terminado: type === 'terminado' ? true : false
+                    };
+                }
+                return item;
+            })
+        );
+    };
+
     const handleFechaChange = (e) => {
         setFechaInicio(e.target.value);
     };
@@ -155,16 +178,66 @@ export default function EjecucionServicio() {
         }
     };
 
-    const handleImageChange = (e, setImage) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
+    const handleSubmit = async () => {
+        try {
+            const operarioId = selectedOperario?.value;
+            const fechaFinal = document.getElementById('dateFinal').value;
+            const horaFinal = document.getElementById('end-time').value;
+            const observaciones = document.getElementById('observaciones').value;
+            const horaFinalDate = new Date(`${fechaFinal} ${horaFinal}`);
+            const checkboxData = checkboxState.map((state, index) => ({
+                servicio: datosOrden[index].nombreServicio,
+                inicio: state.inicio,
+                terminado: state.terminado
+            }));
+
+            const idOrden = localStorage.getItem('idOrden');
+
+            // Formatear hora en "HH:mm:ss"
+            const formattedHoraFin = horaFinalDate.toLocaleTimeString('it-IT', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+
+            const payload = {
+                idOrden: idOrden,
+                estado: !checkboxData.some(item => item.terminado),
+                fechaFin: fechaFinal,
+                horaFin: formattedHoraFin,
+                observaciones,
+                operario: {
+                    id: operarioId
+                }
             };
-            reader.readAsDataURL(file);
+
+            // Enviar los datos de la orden
+            const response = await axios.put(`http://localhost:8080/serviteca/orden/${idOrden}`, payload);
+            console.log('Datos de la orden enviados con éxito:', response.data);
+
+            // Enviar las imágenes de la revisión
+            const revisionPayload = {
+                id: idRevision,
+                imgFrontalDespues: imageFrontAfter,  // URL de la imagen frontal
+                imgBackDespues: imageBackAfter      // URL de la imagen trasera
+            };
+
+            const responseRevision = await axios.put(`http://localhost:8080/serviteca/revisiones/${idRevision}`, revisionPayload);
+            console.log('Imágenes de revisión enviadas con éxito:', responseRevision.data);
+
+        } catch (error) {
+            console.error('Error al enviar los datos:', error);
         }
     };
+
+
+    const handleImageChange = (e, setter) => {
+        const file = e.target.files[0];
+        if (file) {
+            setter(file);  // Guarda el archivo en el estado
+        }
+    };
+    
 
     const handleAutopartesSeleccionadas = (seleccionadas) => {
         setAutopartesSeleccionadas(seleccionadas);
@@ -260,19 +333,31 @@ export default function EjecucionServicio() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* Iterar sobre los datos de la orden para mostrar los servicios dinámicamente */}
                                 {datosOrden.map((orden, index) => (
                                     <tr key={index} className='tr-table-tr text-center'>
-                                        <td>{orden.nombreServicio}</td> {/* Mostrar el nombre del servicio */}
+                                        <td>{orden.nombreServicio}</td>
                                         <td>
-                                            <input className="form-check-input" type="checkbox" id={`inicio-${index}`} />
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                checked={checkboxState[index]?.inicio || false}
+                                                onChange={() => handleCheckboxChange(index, 'inicio')}
+                                                id={`inicio-${index}`}
+                                            />
                                         </td>
                                         <td>
-                                            <input className="form-check-input" type="checkbox" id={`terminado-${index}`} />
+                                            <input
+                                                className="form-check-input"
+                                                type="checkbox"
+                                                checked={checkboxState[index]?.terminado || false}
+                                                onChange={() => handleCheckboxChange(index, 'terminado')}
+                                                id={`terminado-${index}`}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
                             </tbody>
+
                         </table>
                         <div className="h4 pb-2 mb-4  border-bottom border-black"></div>
 
@@ -431,14 +516,15 @@ export default function EjecucionServicio() {
                                 </div>
                             </div>
                             <div className="col" style={{ display: "flex", flexDirection: "row", alignItems: "center", columnGap: "50px", marginBottom: "15px" }}>
+
+                                {/* Foto Posterior */}
                                 <div className='col-3'>Foto posterior:</div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image &&
+                                        {backImage ? (
                                             <img
-                                                src={image}
-                                                className=''
-                                                alt="Foto-subida"
+                                                src={backImage}
+                                                alt="Foto posterior"
                                                 style={{
                                                     objectFit: "fill",
                                                     zIndex: "2",
@@ -447,14 +533,11 @@ export default function EjecucionServicio() {
                                                     top: "10px",
                                                     left: "0px",
                                                     position: "relative"
-                                                }} />}
-
-                                        <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
-                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
-                                                Examinar
-                                            </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
-                                        </label>
+                                                }}
+                                            />
+                                        ) : (
+                                            <div>Cargando imagen posterior...</div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className='col-3'>
@@ -465,7 +548,7 @@ export default function EjecucionServicio() {
                                             className="form-control-file d-none"
                                             id="fotoBackAfter"
                                             accept="image/*"
-                                            onChange={(e) => handleImageChange(e, setImageBackAfter)}
+                                            onChange={(e) => handleImageChange(e, setImageBackAfter)} // Actualiza la imagen
                                         />
 
                                         <label htmlFor='fotoBackAfter' style={{ width: "50%", height: "100%", }}>
@@ -485,7 +568,7 @@ export default function EjecucionServicio() {
                                 </div>
                             </div>
 
-                            <button type="button" className="btn btn-success">Guardar</button>
+                            <button type="button" className="btn btn-success" onClick={handleSubmit}>Guardar</button>
                         </div>
                     </div>
                 </div>
