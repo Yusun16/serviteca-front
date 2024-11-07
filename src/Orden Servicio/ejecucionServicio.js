@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Link } from 'react-router-dom';
-import fotoimage from '../img/fotoup.jpeg';
-import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 import axios from 'axios';
 import Select from 'react-select';
+import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
+import fotoimage from '../img/fotoup.jpeg';
 
 export default function EjecucionServicio() {
     const [image, setImage] = useState(null);
@@ -14,12 +13,13 @@ export default function EjecucionServicio() {
     const [imageFrontAfter, setImageFrontAfter] = useState(null);
     const [datosOrden, setDatosOrden] = useState([]);
     const [error, setError] = useState(null);
-    const [fechaInicio, setFechaInicio] = useState('');  // Estado para la fecha
-    const [horaInicio, setHoraInicio] = useState('');    // Estado para la hora
+    const [fechaInicio, setFechaInicio] = useState('');
+    const [horaInicio, setHoraInicio] = useState('');
     const [operarios, setOperarios] = useState([]);
     const [selectedOperario, setSelectedOperario] = useState(null);
     const [autopartes, setAutopartes] = useState([]);
-    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]); // Estado para las autopartes en la tabla principal
+    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
+    const [autopartesSeleccionadasIds, setAutopartesSeleccionadasIds] = useState([]);
     const [checkboxState, setCheckboxState] = useState([]);
     const [idRevision, setIdRevision] = useState([]);
 
@@ -40,7 +40,6 @@ export default function EjecucionServicio() {
         const operarioValue = operarioSeleccionado?.value || 'No seleccionado';
         const productoValue = productoSeleccionado ? productoSeleccionado.value : 'No seleccionado';
 
-        // Agregando datos de la primera tabla
         datosOrden.forEach(orden => {
             const serviceData = [
                 orden.nombreServicio,
@@ -50,7 +49,6 @@ export default function EjecucionServicio() {
             tableRows.push(serviceData);
         });
 
-        // Agregando datos de la segunda tabla
         const datosSegundaTabla = [
             { referencia: "Mark", cantidad: "Otto", terminado: "@mdo" },
             { referencia: "Jacob", cantidad: "Thornton", terminado: "@fat" },
@@ -106,13 +104,11 @@ export default function EjecucionServicio() {
                 if (response.data.length > 0) {
                     setFechaInicio(response.data[0].fechaOrden);
                     setHoraInicio(response.data[0].horaOrden);
-                    setImage(response.data[0].imgFrontalRevision); // Imagen frontal
-                    setBackImage(response.data[0].imgBackRevision); // Imagen posterior
-                    setIdRevision(response.data[0].idRevision); // Imagen posterior
-
+                    setImage(response.data[0].imgFrontalRevision);
+                    setBackImage(response.data[0].imgBackRevision);
+                    setIdRevision(response.data[0].idRevision);
                 }
 
-                // Inicializar el estado de los checkboxes
                 setCheckboxState(response.data.map(() => ({ inicio: false, terminado: false })));
             } catch (err) {
                 setError(err);
@@ -178,6 +174,14 @@ export default function EjecucionServicio() {
         }
     };
 
+    const handleImageChange = (e, setter) => {
+        const file = e.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setter(imageUrl);  // Establecer la URL de la imagen
+        }
+    };
+
     const handleSubmit = async () => {
         try {
             const operarioId = selectedOperario?.value;
@@ -193,7 +197,6 @@ export default function EjecucionServicio() {
 
             const idOrden = localStorage.getItem('idOrden');
 
-            // Formatear hora en "HH:mm:ss"
             const formattedHoraFin = horaFinalDate.toLocaleTimeString('it-IT', {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -211,49 +214,59 @@ export default function EjecucionServicio() {
                 }
             };
 
-            // Enviar los datos de la orden
             const response = await axios.put(`http://localhost:8080/serviteca/orden/${idOrden}`, payload);
             console.log('Datos de la orden enviados con éxito:', response.data);
 
-            // Enviar las imágenes de la revisión
             const revisionPayload = {
                 id: idRevision,
-                imgFrontalDespues: imageFrontAfter,  // URL de la imagen frontal
-                imgBackDespues: imageBackAfter      // URL de la imagen trasera
+                imgFrontalDespues: imageFrontAfter,
+                imgBackDespues: imageBackAfter
             };
 
             const responseRevision = await axios.put(`http://localhost:8080/serviteca/revisiones/${idRevision}`, revisionPayload);
             console.log('Imágenes de revisión enviadas con éxito:', responseRevision.data);
 
+            for (const autoparte of autopartesSeleccionadas) {
+                const autopartePayload = {
+                    autoparte: { idAupartes: autoparte.idAupartes },
+                    orden: { idOrden: idOrden }
+                };
+
+                try {
+                    const responseAutoparte = await axios.post(
+                        "http://localhost:8080/api/orden-autoparte",
+                        autopartePayload
+                    );
+                    console.log(`Autoparte con ID ${autoparte.idAupartes} vinculada a la orden con éxito:`, responseAutoparte.data);
+                } catch (error) {
+                    console.error(`Error al vincular autoparte con ID ${autoparte.idAupartes}:`, error);
+                }
+            }
         } catch (error) {
             console.error('Error al enviar los datos:', error);
         }
     };
-
-
-    const handleImageChange = (e, setter) => {
-        const file = e.target.files[0];
-        if (file) {
-            setter(file);  // Guarda el archivo en el estado
-        }
-    };
-    
 
     const handleAutopartesSeleccionadas = (seleccionadas) => {
         setAutopartesSeleccionadas(seleccionadas);
     };
 
     const handleEliminarAutoparte = (e, referencia) => {
-        e.preventDefault(); // Previene la recarga de la página
+        e.preventDefault();
+
         const nuevasAutopartes = autopartesSeleccionadas.filter(
             (autoparte) => autoparte.referencia !== referencia
         );
         setAutopartesSeleccionadas(nuevasAutopartes);
 
-        // También puedes limpiar el estado de selección en el modal si necesitas hacerlo
-        setAutopartesSeleccionadas((prevSeleccionadas) =>
-            prevSeleccionadas.filter((parte) => parte.referencia !== referencia)
+        const autoparteEliminada = autopartesSeleccionadas.find(
+            (autoparte) => autoparte.referencia === referencia
         );
+        if (autoparteEliminada) {
+            setAutopartesSeleccionadasIds((prevIds) =>
+                prevIds.filter((id) => id !== autoparteEliminada.idAupartes)
+            );
+        }
     };
 
 
@@ -375,12 +388,20 @@ export default function EjecucionServicio() {
                                 <button type="button" className="btn" data-bs-toggle="modal" data-bs-target="#firstModal">
                                     <i class="fas fa-align-left fas fa-plus"></i>  Agregar
                                 </button>
-                                <ModalAgregarEjecucion onAutopartesSeleccionadas={setAutopartesSeleccionadas} />
+                                {/* Instancia única de ModalAgregarEjecucion */}
+                                <ModalAgregarEjecucion
+                                    onAutopartesSeleccionadas={handleAutopartesSeleccionadas}
+                                    datosOrden={datosOrden}
+                                    autopartesSeleccionadas={autopartesSeleccionadas}
+                                    setAutopartesSeleccionadas={setAutopartesSeleccionadas}
+                                    autopartesSeleccionadasIds={autopartesSeleccionadasIds}
+                                    setAutopartesSeleccionadasIds={setAutopartesSeleccionadasIds}
+                                />
                             </div>
                         </div>
 
                         {/* Tabla para autopartes */}
-                        <table className="container" style={{ marginTop: "15px" }}>
+                        <table className="container" style={{ marginTop: "15px", marginBottom: "20px" }}>
                             <thead>
                                 <tr className='tr-table-tr text-center'>
                                     <th className='text-letras colorthead text-center' scope="col">Referencia</th>
@@ -405,13 +426,6 @@ export default function EjecucionServicio() {
                                 ))}
                             </tbody>
                         </table>
-
-                        {/* Componente del modal */}
-                        <ModalAgregarEjecucion
-                            datosOrden={datosOrden}
-                            autopartesSeleccionadas={autopartesSeleccionadas}
-                            setAutopartesSeleccionadas={setAutopartesSeleccionadas}
-                        />
                     </div>
 
                     <div className="col">
@@ -497,7 +511,22 @@ export default function EjecucionServicio() {
                                 <div className='container'>
                                     <div className='col-3'>
                                         <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                            {imageFrontAfter && (<img src={imageFrontAfter} className='' alt="Foto Frontal Después" style={{ objectFit: "fill", zIndex: "2", width: "155px", height: "120px", top: "15px", left: "15px", position: "relative" }} />)}
+                                        {imageFrontAfter && (
+                                            <img
+                                                src={imageFrontAfter}
+                                                className=''
+                                                alt="Foto-Foto Posterior Después"
+                                                style={{
+                                                    objectFit: "fill",
+                                                    zIndex: "2",
+                                                    width: "155px",
+                                                    height: "120px",
+                                                    top: "15px",
+                                                    left: "15px",
+                                                    position: "relative"
+                                                }}
+                                            />
+                                        )}
                                             <input
                                                 type="file"
                                                 className="form-control-file d-none"
@@ -542,7 +571,24 @@ export default function EjecucionServicio() {
                                 </div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {imageBackAfter && <img src={imageBackAfter} className='' alt="Foto-Foto Posterior Después" style={{ objectFit: "fill", zIndex: "2", width: "155px", height: "120px", top: "15px", left: "15px", position: "relative" }} />}
+                                        {/* Mostrar la imagen solo si existe una URL */}
+                                        {imageBackAfter && (
+                                            <img
+                                                src={imageBackAfter}
+                                                className=''
+                                                alt="Foto-Foto Posterior Después"
+                                                style={{
+                                                    objectFit: "fill",
+                                                    zIndex: "2",
+                                                    width: "155px",
+                                                    height: "120px",
+                                                    top: "15px",
+                                                    left: "15px",
+                                                    position: "relative"
+                                                }}
+                                            />
+                                        )}
+                                        {/* Input para seleccionar la imagen */}
                                         <input
                                             type="file"
                                             className="form-control-file d-none"
@@ -550,8 +596,7 @@ export default function EjecucionServicio() {
                                             accept="image/*"
                                             onChange={(e) => handleImageChange(e, setImageBackAfter)} // Actualiza la imagen
                                         />
-
-                                        <label htmlFor='fotoBackAfter' style={{ width: "50%", height: "100%", }}>
+                                        <label htmlFor='fotoBackAfter' style={{ width: "50%", height: "100%" }}>
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>

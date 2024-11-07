@@ -1,55 +1,44 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export default function BuscarOrden() {
     const urlBase = "http://localhost:8080/serviteca";
     const [ordenes, setOrdenes] = useState([]);
-    const [clientes, setClientes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(7);
+    const navigate = useNavigate();  // Hook para redirigir a otra vista
 
     // Estados para los campos de búsqueda
-    const [codigo, setidOrden] = useState('');
+    const [codigo, setCodigo] = useState('');
     const [cliente, setCliente] = useState('');
     const [fecha, setFecha] = useState('');
     const [placaVehiculo, setPlacaVehiculo] = useState('');
 
-    // Manejo del envío del formulario de búsqueda
     const handleBuscar = async (e) => {
         e.preventDefault();
 
         const filtros = {};
         if (codigo) filtros.codigo = codigo;
-        if (cliente) filtros.cliente = cliente; // Esto puede que no se use directamente, dependiendo de cómo está configurado tu backend
+        if (cliente) filtros.nombreCliente = cliente;
         if (fecha) filtros.fecha = fecha;
-        if (placaVehiculo) filtros.placaVehiculo = placaVehiculo;
+        if (placaVehiculo) filtros.placa = placaVehiculo;
 
         await cargarOrdenes(filtros);
         setCurrentPage(1); // Reinicia la paginación
-    }
+    };
 
     const cargarOrdenes = async (filtros) => {
         try {
             const resultado = await axios.get(`${urlBase}/buscarorden`, { params: filtros });
-            console.log(resultado);
             setOrdenes(resultado.data);
         } catch (error) {
             console.error("Error al cargar las órdenes:", error);
         }
-    }
-
-    // Obtener clientes al cargar el componente
-    const obtenerClientes = async () => {
-        try {
-            const response = await axios.get(`${urlBase}/cliente`);
-            setClientes(response.data);
-        } catch (error) {
-            console.error("Error al obtener los clientes:", error);
-        }
     };
 
     useEffect(() => {
-        obtenerClientes();
+        cargarOrdenes({});
     }, []);
 
     // Paginación
@@ -60,6 +49,12 @@ export default function BuscarOrden() {
 
     const goToPreviousPage = () => setCurrentPage(prevPage => Math.max(prevPage - 1, 1));
     const goToNextPage = () => setCurrentPage(prevPage => Math.min(prevPage + 1, totalPages));
+
+    // Redirigir a la vista de ejecución y almacenar el idOrden en localStorage
+    const handleRowClick = (idOrden) => {
+        localStorage.setItem('idOrden', idOrden);  // Guarda el idOrden en localStorage
+        navigate('/ejecucionservicio');  // Redirige a la vista de ejecución
+    };
 
     return (
         <div className='container'>
@@ -83,7 +78,7 @@ export default function BuscarOrden() {
                                 <div className="mb-3 row">
                                     <label htmlFor="codigo" className="col-sm-3 col-form-label">N° de servicio:</label>
                                     <div className="col-sm-6">
-                                        <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={(e) => setidOrden(e.target.value)} />
+                                        <input type="text" className="form-control" id="codigo" name='codigo' value={codigo} onChange={(e) => setCodigo(e.target.value)} />
                                     </div>
                                 </div>
                             </div>
@@ -126,37 +121,36 @@ export default function BuscarOrden() {
                 <div className='container' style={{ margin: "30px 0px" }}>
                     <h5>Seleccione el N° de servicio para abrir la ejecución</h5>
                     <div className="container">
-                        <table className="container">
+                        <table className="table table-striped">
                             <thead>
-                                <tr className='tr-table-tr'>
-                                    <th className='th-tabla colorthead text-center' scope="col">Fecha de Servicio</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">N° Kilometros</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">N° de Servicio</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">Cliente</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">Tipo de servicio</th>
-                                    <th className='th-tabla colorthead text-center' scope="col">Placa del vehículo</th>
+                                <tr className='text-center'>
+                                    <th scope="col">Fecha de Servicio</th>
+                                    <th scope="col">N° Kilometros</th>
+                                    <th scope="col">N° de Servicio</th>
+                                    <th scope="col">Nombre Operario</th>
+                                    <th scope="col">N° Factura</th>
+                                    <th scope="col">Observación</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {currentItems.map((orden, indice) => {
-                                    // Buscar el cliente correspondiente utilizando el cliente_id
-                                    const clienteEncontrado = clientes.find(c => c.id === orden.clienteId?.id);
-                                    const nombreCompleto = clienteEncontrado ? `${clienteEncontrado.nombre} ${clienteEncontrado.apellido}` : 'Orden sin cliente';
-                                    return (
-                                        <tr className='tr-table-tr text-center' key={indice}>
-                                            <td>{orden.fecha}</td>
-                                            <td>{orden.kilometraje}</td>
-                                            <th>{orden.codigo}</th>
-                                            <td>{nombreCompleto}</td>
-                                            <td>{orden.tipoServicio}</td>
-                                            <td>{orden.placaVehiculo}</td>
-                                        </tr>
-                                    );
-                                })}
+                                {currentItems.map((orden, index) => (
+                                    <tr
+                                        key={index}
+                                        className='text-center'
+                                        onClick={() => handleRowClick(orden.idOrden)}  // Evento de clic en la fila
+                                        style={{ cursor: 'pointer' }}  // Cambiar el cursor para indicar que es clickeable
+                                    >
+                                        <td>{orden.fecha}</td>
+                                        <td>{orden.kilometraje}</td>
+                                        <td>{orden.codigo}</td>
+                                        <td>{orden.nombreOperario}</td>
+                                        <td>{orden.numeroFactura}</td>
+                                        <td>{orden.observacion}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
-                    <div className="h4 pb-2 mb-4 text-danger border-bottom border-dark"></div>
                 </div>
             )}
 

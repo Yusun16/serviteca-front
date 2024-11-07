@@ -1,25 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const ModalStack = ({ onAutopartesSeleccionadas }) => { 
-    const [datosOrden, setDatosOrden] = useState([]); 
+const ModalAgregarEjecucion = ({
+    onAutopartesSeleccionadas,
+    autopartesSeleccionadas,
+    setAutopartesSeleccionadas,
+    autopartesSeleccionadasIds,
+    setAutopartesSeleccionadasIds,
+}) => {
+    const [datosOrden, setDatosOrden] = useState([]);
     const [autopartes, setAutopartes] = useState([]);
     const [autopartesFiltradas, setAutopartesFiltradas] = useState([]);
     const [filtroReferencia, setFiltroReferencia] = useState('');
     const [popoverVisible, setPopoverVisible] = useState(false);
-    const [autopartesSeleccionadas, setAutopartesSeleccionadas] = useState([]);
 
     useEffect(() => {
-        const idOrden = localStorage.getItem('idOrden'); // Identificador del servicio en `localStorage`
+        const idOrden = localStorage.getItem('idOrden');
 
         const fetchData = async () => {
             try {
-                // Solicitar los nombres de servicio asociados a la orden
                 const responseEjecucion = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
                 const nombresServicio = responseEjecucion.data.map(servicio => servicio.nombreServicio);
                 setDatosOrden(nombresServicio);
 
-                // Solicitar solo las autopartes relacionadas con el servicio asignado
                 const responseAutopartes = await axios.get(`http://localhost:8080/serviteca/autopartes?servicioId=${idOrden}`);
                 setAutopartes(responseAutopartes.data);
                 setAutopartesFiltradas(responseAutopartes.data);
@@ -41,23 +44,32 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
     };
 
     const isChecked = (parte) => {
-        return autopartesSeleccionadas.some((item) => item.referencia === parte.referencia);
+        return autopartesSeleccionadasIds && autopartesSeleccionadasIds.includes(parte.idAupartes);
     };
-
+    
     const handleCheckboxChange = (parte) => {
+        console.log("setAutopartesSeleccionadas:", setAutopartesSeleccionadas);
+        
         if (isChecked(parte)) {
             setAutopartesSeleccionadas((prev) =>
                 prev.filter((item) => item.referencia !== parte.referencia)
             );
+            setAutopartesSeleccionadasIds((prev) =>
+                prev.filter((id) => id !== parte.idAupartes)
+            );
         } else {
             setAutopartesSeleccionadas((prev) => [...prev, parte]);
+            setAutopartesSeleccionadasIds((prev) => [...prev, parte.idAupartes]);
         }
-    };
+    };    
 
     const handleAgregar = () => {
-        onAutopartesSeleccionadas(autopartesSeleccionadas);
-        setAutopartesSeleccionadas([]);
-    };
+        if (onAutopartesSeleccionadas) {
+            onAutopartesSeleccionadas(autopartesSeleccionadas);
+        } else {
+            console.error("onAutopartesSeleccionadas no está definido.");
+        }
+    };    
 
     return (
         <div className="container mt-5">
@@ -138,7 +150,10 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
                                     </tbody>
                                 </table>
                             </div>
-                            <button type="button" className="btnncolor btn-sm me-3" data-bs-dismiss="modal" onClick={handleAgregar}>
+                            <button type="button" className="btnncolor btn-sm me-3" data-bs-dismiss="modal" onClick={() => {
+                                handleAgregar();
+                                console.log("IDs de autopartes seleccionadas al agregar:", autopartesSeleccionadasIds);
+                            }}>
                                 Agregar <i className="fa-solid fa-check"></i>
                             </button>
                         </div>
@@ -149,4 +164,4 @@ const ModalStack = ({ onAutopartesSeleccionadas }) => {
     );
 };
 
-export default ModalStack;
+export default ModalAgregarEjecucion;
