@@ -1681,3 +1681,31 @@ li {
 .offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(7) {
   transition-delay: 0.7s;
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 220px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%; /* Sitúa el tooltip sobre el texto */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
