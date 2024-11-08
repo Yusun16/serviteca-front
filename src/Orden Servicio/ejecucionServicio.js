@@ -5,6 +5,7 @@ import axios from 'axios';
 import Select from 'react-select';
 import ModalAgregarEjecucion from '../Orden Servicio/modalAgregarEjecucion';
 import fotoimage from '../img/fotoup.jpeg';
+import ModalExito from '../autopartes/ModalExito';
 
 export default function EjecucionServicio() {
     const [image, setImage] = useState(null);
@@ -22,6 +23,11 @@ export default function EjecucionServicio() {
     const [autopartesSeleccionadasIds, setAutopartesSeleccionadasIds] = useState([]);
     const [checkboxState, setCheckboxState] = useState([]);
     const [idRevision, setIdRevision] = useState([]);
+    const [observacion, setObservacion] = useState('');
+    const [fechaFinal, setFechaFinal] = useState('');
+    const [horaFinal, setHoraFinal] = useState('');
+    const [operarioId, setOperarioId] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const exportToPDF = () => {
         const doc = new jsPDF();
@@ -99,17 +105,29 @@ export default function EjecucionServicio() {
         const fetchEjecucionServicio = async () => {
             try {
                 const response = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
+                const data = response.data[0];
                 setDatosOrden(response.data);
 
-                if (response.data.length > 0) {
-                    setFechaInicio(response.data[0].fechaOrden);
-                    setHoraInicio(response.data[0].horaOrden);
-                    setImage(response.data[0].imgFrontalRevision);
-                    setBackImage(response.data[0].imgBackRevision);
-                    setIdRevision(response.data[0].idRevision);
-                }
+                if (data) {
+                    // Establecer valores en el estado
+                    setFechaInicio(data.fechaOrden);
+                    setHoraInicio(data.horaOrden);
+                    setImage(data.imgFrontalRevision);
+                    setBackImage(data.imgBackRevision);
+                    setImageFrontAfter(data.imgFrontalDespues);
+                    setImageBackAfter(data.imgPosteriorDespues);
+                    setIdRevision(data.idRevision);
+                    setObservacion(data.observacion);
+                    setFechaFinal(data.fechaFinal);
+                    setHoraFinal(data.horaFinal);
 
-                setCheckboxState(response.data.map(() => ({ inicio: false, terminado: false })));
+                    setOperarioId(data.operarioId);
+                    setCheckboxState(response.data.map(item => ({
+                        inicio: item.estado === true,
+                        terminado: item.estado === false
+                    })));
+
+                }
             } catch (err) {
                 setError(err);
             }
@@ -118,10 +136,11 @@ export default function EjecucionServicio() {
         const fetchOperarios = async () => {
             try {
                 const response = await axios.get('http://localhost:8080/serviteca/operarios');
-                setOperarios(response.data.map(operario => ({
+                const operariosData = response.data.map(operario => ({
                     value: operario.id,
                     label: `${operario.nombre} ${operario.apellido}`
-                })));
+                }));
+                setOperarios(operariosData);
             } catch (err) {
                 console.error("Error al obtener operarios:", err);
             }
@@ -136,10 +155,31 @@ export default function EjecucionServicio() {
             }
         };
 
+        const fetchAutopartesPorOrden = async () => {
+            try {
+                const response = await axios.get("http://localhost:8080/api/orden-autoparte/consultarAutopartePorId", {
+                    params: { ordenId: idOrden }
+                });
+                setAutopartesSeleccionadas(response.data);
+                // Guardar los IDs de las autopartes seleccionadas para marcar los checkboxes
+                setAutopartesSeleccionadasIds(response.data.map(autoparte => autoparte.idAupartes));
+            } catch (error) {
+                console.error("Error fetching autopartes por orden:", error);
+            }
+        };
+
         fetchEjecucionServicio();
         fetchOperarios();
         fetchAutopartes();
+        fetchAutopartesPorOrden();
     }, []);
+
+    useEffect(() => {
+        if (operarios.length > 0 && operarioId) {
+            const operarioSeleccionado = operarios.find(op => op.value === operarioId);
+            setSelectedOperario(operarioSeleccionado || null);
+        }
+    }, [operarios, operarioId]);
 
     const handleCheckboxChange = (index, type) => {
         setCheckboxState(prevState =>
@@ -181,6 +221,12 @@ export default function EjecucionServicio() {
             setter(imageUrl);  // Establecer la URL de la imagen
         }
     };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+        window.location.reload();
+    };
+
 
     const handleSubmit = async () => {
         try {
@@ -242,6 +288,7 @@ export default function EjecucionServicio() {
                     console.error(`Error al vincular autoparte con ID ${autoparte.idAupartes}:`, error);
                 }
             }
+            setIsModalOpen(true);
         } catch (error) {
             console.error('Error al enviar los datos:', error);
         }
@@ -417,9 +464,9 @@ export default function EjecucionServicio() {
                                         <td>
                                             <button
                                                 onClick={(e) => handleEliminarAutoparte(e, autoparte.referencia)}
-                                                className="btn btn-danger btn-sm"
+                                                className="btn"
                                             >
-                                                <i className="fa fa-trash"></i>
+                                                <i class="fa-solid fa-trash-can" style={{color: "#000000;"}}></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -443,7 +490,7 @@ export default function EjecucionServicio() {
                             </div>
                             <div className='col-3'>Fecha Final:</div>
                             <div className='col-3'>
-                                <input type="date" className="form-control" id="dateFinal" />
+                                <input type="date" className="form-control" id="dateFinal" value={fechaFinal} />
                             </div>
                         </div>
 
@@ -463,7 +510,7 @@ export default function EjecucionServicio() {
                                     </div>
                                     <div className='col-3'>Hora Final:</div>
                                     <div className='col-3'>
-                                        <input type="time" className="form-control" id="end-time" />
+                                        <input type="time" className="form-control" id="end-time" value={horaFinal} />
                                     </div>
                                 </div>
                             </div>
@@ -511,22 +558,22 @@ export default function EjecucionServicio() {
                                 <div className='container'>
                                     <div className='col-3'>
                                         <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {imageFrontAfter && (
-                                            <img
-                                                src={imageFrontAfter}
-                                                className=''
-                                                alt="Foto-Foto Posterior Después"
-                                                style={{
-                                                    objectFit: "fill",
-                                                    zIndex: "2",
-                                                    width: "155px",
-                                                    height: "120px",
-                                                    top: "15px",
-                                                    left: "15px",
-                                                    position: "relative"
-                                                }}
-                                            />
-                                        )}
+                                            {imageFrontAfter && (
+                                                <img
+                                                    src={imageFrontAfter}
+                                                    className=''
+                                                    alt="Foto-Foto Posterior Después"
+                                                    style={{
+                                                        objectFit: "fill",
+                                                        zIndex: "2",
+                                                        width: "155px",
+                                                        height: "120px",
+                                                        top: "15px",
+                                                        left: "15px",
+                                                        position: "relative"
+                                                    }}
+                                                />
+                                            )}
                                             <input
                                                 type="file"
                                                 className="form-control-file d-none"
@@ -609,7 +656,7 @@ export default function EjecucionServicio() {
 
                                 <div className='col-3' >Observaciones: </div>
                                 <div className='col-9'>
-                                    <input type="observaciones" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} />
+                                    <input type="observaciones" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} value={observacion} />
                                 </div>
                             </div>
 
@@ -617,6 +664,19 @@ export default function EjecucionServicio() {
                         </div>
                     </div>
                 </div>
+                {isModalOpen && (
+                    // Añadir el z-index
+                    <ModalExito
+                        idmodal="demo-modal3"
+                        titlemodal="Guardado"
+                        lineado="linea002"
+                        parexito="Registro guardado con éxito"
+                        className="modal__message003 "
+                        onClose={handleCloseModal}
+                        btnclassName="btn0010"
+                        buttonContent="OK"
+                    />
+                )}
             </form>
         </div>
 
