@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import TableAutParInfo from './TableAutParInfo'
 import PieCharts from './PieCharts';
 import TableServInfo from './TableServInfo';
 

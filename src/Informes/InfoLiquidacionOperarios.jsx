@@ -65,7 +65,7 @@ function InfoLiquidacionOperarios() {
                             <input
                                 type="text"
                                 id="part"
-                                placeholder="Buscar autoparte"
+                                placeholder="Buscar operario"
                                 value={selectedPart}
                                 onChange={handlePartChange}
                             />

@@ -6,6 +6,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #F0F0F0;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  padding: 0px !important;
 }
 
 /* Diseños de Yusun y Manuel */
@@ -20,9 +23,10 @@ body {
   justify-content: center;
   position: absolute;
   left: 88%;
-  top: 5% ;
+  top: 5%;
   left: 90%;
 }
+
 .equis-close {
   background-color: red;
   width: 30px;
@@ -34,7 +38,7 @@ body {
   justify-content: center;
   position: absolute;
   left: 88%;
-  top: 5% ;
+  top: 5%;
   left: 90%;
 }
 
@@ -65,8 +69,9 @@ body {
   border: none;
   cursor: pointer;
   padding: 5px;
-  
+
 }
+
 .btnncolor:hover {
   opacity: 50%;
 }
@@ -79,6 +84,7 @@ body {
   padding: 5px;
   top: 50px;
 }
+
 .btnn-color-modal:hover {
   background-color: #0CC243;
 }
@@ -91,18 +97,6 @@ body {
 .btncolor:hover {
   background-color: #F2B3B3;
   color: white;
-}
-
-.offcanvas-backdrop.show {
-  opacity: 0;
-}
-
-.btn-offcanvas001 {
-  margin: 0;
-  position: absolute;
-  top: 20px;
-  right: 105%;
-  font-size: 25px;
 }
 
 .th-tabla {
@@ -130,6 +124,54 @@ body {
 }
 
 /* Fin de diseños de Yusun y Manuel */
+.offcanvas-backdrop.show {
+  opacity: 0;
+}
+
+/* Offcanvas */
+.btn-offcanvas001 {
+  background: transparent;
+  border: none;
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.close-icon {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 2px;
+  background: transparent;
+  transition: background 0.3s ease;
+  align-items: center;
+  right: 4rem;
+}
+
+.close-icon::before,
+.close-icon::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #D95447;
+  transition: transform 0.3s ease;
+}
+
+.close-icon::before {
+  transform: rotate(45deg);
+  top: 50%;
+  left: 0;
+}
+
+.close-icon::after {
+  transform: rotate(-45deg);
+  top: 50%;
+  left: 0;
+}
+
+/* Offcanvas */
 /* Del componente AutoPartes */
 /* .barra001 {
   overflow: hidden;
@@ -773,7 +815,7 @@ body {
 }
 
 .colorr-modal {
-background-color: #F0F0F0 ;
+  background-color: #F0F0F0;
 }
 
 /* Del componente BuscarAutPar */
@@ -907,6 +949,56 @@ background-color: #F0F0F0 ;
   opacity: 50%;
 }
 
+/* Del componente de LogOut */
+.btn-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 8px 16px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.sub-btn-logout {
+  display: flex;
+  align-items: center;
+}
+
+.sub-btn-logout .fa-arrow-right-from-bracket {
+  font-size: 26px;
+  margin-right: 8px;
+}
+
+.fa-arrow-right-from-bracket {
+  width: 25px;
+  height: 25px;
+  color: white;
+  transform: rotate(180deg);
+}
+
+/* Fin componente de LogOut */
+.items-vista {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.sub-btn-rol001 {
+  padding: 0px 5px;
+  width: 240px;
+  color: white;
+  text-align: right;
+}
+
+.sub-btn-rol001 i,
+.sub-btn-rol001 span {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+/* Fin componente de Navegación */
 .icons005 {
   display: flex;
   list-style: none;
@@ -1152,6 +1244,10 @@ background-color: #F0F0F0 ;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.btn013:hover {
+  opacity: 50%;
 }
 
 .text010 {
@@ -1478,190 +1574,4 @@ li {
   50% {
     transform: translateX(10px);
   }
-}
-
-.offcanvas-menu>label {
-  /* top: 30px; */
-  top: 137px;
-  left: 30px;
-  position: fixed;
-  width: 40px;
-  height: 40px;
-  cursor: pointer;
-  transition: 0.3s ease;
-  display: flex;
-  align-items: center;
-  z-index: 9999;
-}
-
-.offcanvas-menu label span,
-.offcanvas-menu label span::before,
-.offcanvas-menu label span::after {
-  transition: background 0.3s, transform 0.3s;
-}
-
-.offcanvas-menu label span,
-.offcanvas-menu label span::before,
-.offcanvas-menu label span::after {
-  content: "";
-  position: absolute;
-  height: 4px;
-  width: 40px;
-  background: #b3b3b3;
-}
-
-.offcanvas-menu label span::before {
-  transform: translateY(-12px);
-}
-
-.offcanvas-menu label span::after {
-  transform: translateY(12px);
-}
-
-.offcanvas-menu nav {
-  position: fixed;
-  height: 100%;
-  width: 350px;
-  left: -415px;
-  overflow: hidden;
-  background: #bdddff;
-  transition: 0.3s ease;
-  padding: 40px 30px;
-}
-
-.offcanvas-menu nav>div {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.offcanvas-menu nav>div a {
-  font-size: 2.5rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  font-family: "Monoton", cursive;
-  background: linear-gradient(-90deg, #49a4ed 30%, #3d00a9 110%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.offcanvas-menu nav>div a i {
-  font-size: 4rem;
-  background: linear-gradient(120deg, #49a4ed 30%, #3d00a9 110%);
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.offcanvas-menu nav>div label {
-  width: 30px;
-  height: 30px;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.offcanvas-menu nav>div label span,
-.offcanvas-menu nav>div label span:before,
-.offcanvas-menu nav>div label span:after {
-  background: #4d4d4d;
-  position: absolute;
-  left: 84%;
-}
-
-.offcanvas-menu nav>ul {
-  margin-top: 30px;
-  counter-reset: nav-link-count;
-}
-
-.offcanvas-menu nav>ul li {
-  cursor: pointer;
-  padding: 10px 0;
-  transform: translateX(-30px);
-  opacity: 0;
-  transition: 0.4s ease;
-  counter-increment: nav-link-count;
-}
-
-.offcanvas-menu nav>ul li a {
-  font-size: 2.5rem;
-  line-height: 1.5;
-  font-weight: 400;
-  color: #333;
-  display: block;
-}
-
-.offcanvas-menu nav>ul li a::after {
-  content: " : " counter(nav-link-count);
-}
-
-.offcanvas-menu nav>ul li:hover {
-  animation: hover 0.5s;
-}
-
-.offcanvas-menu input[type="checkbox"] {
-  display: none;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~label {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav {
-  left: 0;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav label span {
-  background: transparent;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav label span:before {
-  transform: rotate(-45deg);
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav label span:after {
-  transform: rotate(45deg);
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav label span:before,
-.offcanvas-menu input[type="checkbox"]:checked~nav label span:after {
-  transition-delay: 0.2s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li {
-  opacity: 1;
-  transform: translateX(0px);
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(1) {
-  transition-delay: 0.1s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(2) {
-  transition-delay: 0.2s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(3) {
-  transition-delay: 0.3s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(4) {
-  transition-delay: 0.4s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(5) {
-  transition-delay: 0.5s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(6) {
-  transition-delay: 0.6s;
-}
-
-.offcanvas-menu input[type="checkbox"]:checked~nav ul li:nth-child(7) {
-  transition-delay: 0.7s;
 }
