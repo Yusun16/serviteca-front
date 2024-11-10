@@ -15,15 +15,34 @@ function TableAutoPartes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
 
-
     const cargarAutoPartes = async () => {
-        const resultado = await axios.get(urlBase);
-        setAutopartes(resultado.data);
+        const token = localStorage.getItem('token');
+
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAutopartes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar las autopartes:", error);
+        }
     };
 
     const eliminarAutoPartes = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarAutoPartes();
+        const token = localStorage.getItem('token');
+
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarAutoPartes();
+        } catch (error) {
+            console.error("Error al eliminar la autoparte:", error);
+        }
     };
 
     useEffect(() => {
@@ -104,12 +123,8 @@ function TableAutoPartes() {
                             <td className='td001'>{autopar.tipo}</td>
                             <td className='td001'>
                                 <Link to={`/editar-auto-partes/${autopar.idAupartes}`} className="btn-modal" id='demo-modal16'>
-                                    {/* <button type='submit' className="btn-modal" id='demo-modal16'> */}
                                     <i className="fa-solid fa-calendar"></i>
                                 </Link>
-                                {/* <Link href="#demo-modal16" className="btn-modal" >
-                                    <i className="fa-solid fa-calendar"></i>
-                                </Link> */}
                             </td>
                             <td className='td001'>
                                 <a href="#demo-modal22" onClick={() => eliminarAutoPartes(autopar.idAupartes)} className="btn-modal">
@@ -140,119 +155,14 @@ function TableAutoPartes() {
                     </div>
                 </div>
             </div>
-            {/*  */}
-            {/* <ModalEdit
-                nameText="Ha sido editado con éxito"
-            /> */}
             <ModalExito
                 idmodal="demo-modal22"
                 parexito="Registro eliminado"
                 className="modal003"
                 buttonContent={<img src={CheckReady} alt='eliminar-registro' className='img-ready' />}
             />
-            {/* <ModalExito
-                idmodal="demo-modal4"
-                titlemodal="Editado"
-                parexito="Registro editado con exito"
-                className="modal003"
-            />
-            <ModalExito
-                idmodal="demo-modal2"
-                titlemodal="Eliminado"
-                parexito="Registro eliminado con exito"
-                className="modal003"
-            /> */}
         </div>
     )
 }
 
 export default TableAutoPartes
-
-//     const columns = (handleEdit, handleDelete) => [
-//         { name: "Codigo", selector: row => row.Codigo },
-//         { name: "Descripcion", selector: row => row.Descripcion },
-//         { name: "Tipo", selector: row => row.Tipo },
-//         { name: "Editar", cell: row => <a href="#demo-modal" className="btn-modal" onClick={() => handleEdit(row)} >Editar</a> },
-//         { name: "Eliminar", cell: row => <button onClick={() => handleDelete(row)}>Eliminar</button> },
-//     ]
-
-//     const data = [
-//         {
-//             Codigo: "456546",
-//             Descripcion: "gas",
-//             Tipo: "Renault",
-//         },
-//         {
-//             Codigo: "456546",
-//             Descripcion: "gas",
-//             Tipo: "Renault",
-//         }
-//     ]
-
-//     const [records, setRecords] = useState(data);
-
-//     function handleFilter(event) {
-//         const newData = data.filter(row => {
-//             return row.name.toLowerCase().includes(event.target.value.toLowerCase())
-//             // https://www.youtube.com/watch?v=3oHUtG0cjfY
-//         })
-//         setRecords(newData)
-//     }
-
-//     const handleEdit = (row) => {
-//         console.log("Editar", row);
-//         // Lógica de edición
-//     }
-
-//     const handleDelete = (row) => {
-//         console.log("Eliminar", row);
-//         // Lógica de eliminación
-//     }
-
-{/* <div className='text-end'>
-//                 <input type="text" onChange={handleFilter} />
-//             </div> */}
-//             <DataTable
-//                 pagination
-//                 columns={columns(handleEdit, handleDelete)}
-//                 data={records}
-//             />
-
-//             <div id="demo-modal" className="modal001">
-//                 <div className="modal__content">
-//                     <h1>Modificando datos</h1>
-//                     <p>
-//                         ¡Cambia o actualiza tus datos!
-//                     </p>
-//                     <form action="" method='' className="form009">
-//                         <div className="form0010">
-//                             <div className="input005">
-//                                 <input type="text" name="" id="" placeholder='Nombre de la empresa' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <div className="input005">
-//                                 <input type="text" name="" id="" placeholder='Nombre del usuario' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <div className="input005">
-//                                 <input type="number" name="" id="" placeholder='Telefono' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <div className="input005">
-//                                 <input type="email" name="" id="" placeholder='Correo' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <div className="input005">
-//                                 <input type="text" name="" id="" placeholder='Lugar' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <div className="input005">
-//                                 <input type="text" name="" id="" placeholder='Dirección' className='input006' />
-//                                 <span className="span007"></span>
-//                             </div>
-//                             <button type="submit" className="view001">Modificar</button>
-//                         </div>
-//                     </form>
-//                     <a href="#" className="modal__close">&times;</a>
-//                 </div>
-//             </div>

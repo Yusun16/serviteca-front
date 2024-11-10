@@ -73,8 +73,14 @@ function AutoPartes() {
         const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
         if (allRequiredFieldsValid) {
+
+            const token = localStorage.getItem('token');
             try {
-                await axios.post('http://localhost:8080/serviteca/autopartes', inputs);
+                await axios.post('http://localhost:8080/serviteca/autopartes', inputs, {
+                    headers: {
+                        Authorization: `Bearer ${token}`, // Incluir el token en los headers
+                    },
+                });
                 setIsModalOpen(true);
                 fetchAutopartes();
                 // navegacion("/auto-partes");Actualiza la lista después de guardar
@@ -88,6 +94,7 @@ function AutoPartes() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+        window.location.reload(true);
         setInputs({
             referencia: '',
             siigo: '',
@@ -101,8 +108,14 @@ function AutoPartes() {
 
     // Fetch autopartes from the backend
     const fetchAutopartes = async () => {
+        const token = localStorage.getItem('token');
+
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/autopartes');
+            const response = await axios.get('http://localhost:8080/serviteca/autopartes', {
+                headers: {
+                    Authorization: `Bearer ${token}`, // Incluir el token en los headers
+                },
+            });
             setAutopartes(response.data);
         } catch (error) {
             console.error('Error al obtener datos:', error);
@@ -253,6 +266,7 @@ function AutoPartes() {
                     buttonContent="OK"
                 />
             )}
+
         </div>
     );
 }
