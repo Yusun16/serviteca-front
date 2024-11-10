@@ -7,11 +7,18 @@ import { useNavigate } from 'react-router-dom';
 function AutoPartes() {
     let navegacion = useNavigate();
     const [autopartes, setAutopartes] = useState([]);
+    const [servicios, setServicios] = useState([]);
+    const [opcionesServicios, setOpcionesServicios] = useState([]);
 
     const [inputs, setInputs] = useState({
         referencia: '',
         siigo: '',
+        nombre: '',
         descripcion: '',
+        cantidad: '',
+        servicio: {
+            idServicio: ''
+        },
         linea: '',
         tipo: '',
         marca: '',
@@ -21,15 +28,31 @@ function AutoPartes() {
     const [isInputEnabled, setIsInputEnabled] = useState({
         referencia: true,
         siigo: false,
+        nombre: false,
         descripcion: false,
-        linea: false,
+        cantidad: false,
+        servicio: false,
+        linea: true,
         tipo: false,
-        proveedor: false,
         marca: false,
         modelo: false,
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const obtenerServicios = async () => {
+        try {
+            const response = await axios.get('http://localhost:8080/serviteca/servicios');
+            setServicios(response.data);
+            const opciones = response.data.map((servicio) => ({
+                value: servicio.idServicio,
+                label: `${servicio.nombre}`,
+            }));
+            setOpcionesServicios(opciones);
+        } catch (error) {
+            console.error("Error al obtener los clientes", error);
+        }
+    };
 
     // Maneja el cambio en los inputs
     const handleInputChange = (e) => {
@@ -45,9 +68,18 @@ function AutoPartes() {
                     updatedState.siigo = true;
                 }
                 if (name === 'siigo' && value.trim() !== '') {
+                    updatedState.nombre = true;
+                }
+                if (name === 'nombre' && value.trim() !== '') {
                     updatedState.descripcion = true;
                 }
                 if (name === 'descripcion' && value.trim() !== '') {
+                    updatedState.cantidad = true;
+                }
+                if (name === 'cantidad' && value.trim() !== '') {
+                    updatedState.servicio = true;
+                }
+                if (name === 'servicio' && value.trim() !== '') {
                     updatedState.linea = true;
                 }
                 if (name === 'linea' && newInputs.linea.trim() !== '') {
@@ -67,9 +99,20 @@ function AutoPartes() {
         });
     };
 
+    const handleSelectChange = (selectedOption) => {
+        if (selectedOption) {
+            setInputs(prevData => ({
+                ...prevData,
+                servicio: {
+                    idServicio: selectedOption.value,
+                },
+            }));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const requiredFields = ['referencia', 'siigo', 'descripcion', 'linea', 'tipo'];
+        const requiredFields = ['referencia', 'siigo', 'nombre', 'descripcion', 'cantidad', 'linea', 'tipo'];
         const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
         if (allRequiredFieldsValid) {
@@ -94,11 +137,20 @@ function AutoPartes() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
+<<<<<<< HEAD
         window.location.reload(true);
+=======
+        window.location.reload();
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
         setInputs({
             referencia: '',
             siigo: '',
+            nombre: '',
             descripcion: '',
+            cantidad: '',
+            servicio: {
+                idServicio: ''
+            },
             linea: '',
             tipo: '',
             marca: '',
@@ -124,6 +176,7 @@ function AutoPartes() {
 
     useEffect(() => {
         fetchAutopartes();
+        obtenerServicios();
     }, []);
 
     return (
@@ -171,6 +224,19 @@ function AutoPartes() {
                         />
                     </div>
                     <div className='div-col002'>
+                        <label className='label006' htmlFor="nombre">Nombre: *</label>
+                        <input
+                            className='input005 input007'
+                            type="text"
+                            id="nombre"
+                            name="nombre"
+                            required
+                            value={inputs.nombre}
+                            onChange={handleInputChange}
+                            disabled={!isInputEnabled.nombre}
+                        />
+                    </div>
+                    <div className='div-col002'>
                         <label className='label006' htmlFor="descripcion">Descripción: *</label>
                         <textarea
                             className='input005 inputarea002'
@@ -184,7 +250,41 @@ function AutoPartes() {
                         />
                     </div>
                     <div className='div-col002'>
-                        <label className='label006' htmlFor="linea">Línea: *</label>
+                        <label className='label006' htmlFor="cantidad">Cantidad: *</label>
+                        <input
+                            className='input005 input007'
+                            type="text"
+                            id="cantidad"
+                            name="cantidad"
+                            required
+                            value={inputs.cantidad}
+                            onChange={handleInputChange}
+                            disabled={!isInputEnabled.cantidad}
+                        />
+                    </div>
+                </div>
+
+                <div className='column001'>
+                    <div className='div-col002'>
+                        <label className='label006' htmlFor="servicio">Servicio: *</label>
+                        <select
+                            className="dropdown-toggle002"
+                            name="servicio"
+                            value={inputs.servicio.idServicio} // Debes usar el valor del `id`
+                            onChange={(e) => handleSelectChange({ value: e.target.value })}
+                            required
+
+                        >
+                            <option value="" disabled>Selecciona una opción</option>
+                            {opcionesServicios.map((opcion) => (
+                                <option key={opcion.value} value={opcion.value}>{opcion.label}</option>
+                            ))}
+
+                        </select>
+
+                    </div>
+                    <div className='div-col002'>
+                        <label className='label006' htmlFor="linea">Linea: *</label>
                         <select
                             className="dropdown-toggle002"
                             name="linea"
@@ -198,8 +298,6 @@ function AutoPartes() {
                             <option>Grabado</option>
                         </select>
                     </div>
-                </div>
-                <div className='column001'>
                     <div className='div-col002'>
                         <label className='label006' htmlFor="tipo">Tipo: *</label>
                         <select

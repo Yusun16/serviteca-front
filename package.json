@@ -5,6 +5,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@popperjs/core": "^2.11.8",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -23,7 +24,12 @@
     "react-number-format": "^5.4.0",
     "react-router-dom": "^6.26.1",
     "react-scripts": "^5.0.1",
+<<<<<<< HEAD
     "react-select": "^5.8.1",
+=======
+    "react-select": "^5.8.2",
+    "react-tooltip": "^5.28.0",
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

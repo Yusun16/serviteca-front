@@ -16,6 +16,7 @@ export default function AgregarServicio() {
         codigo: "",
         descripcion: "",
         valorServicio: "",
+        nombre:"",
         ano: "",
         porcentajeOperario: ""
     });
@@ -38,12 +39,24 @@ export default function AgregarServicio() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
         try {
             const urlBase = "http://localhost:8080/serviteca/servicios";
             await axios.post(urlBase, servicio);
         } catch (error) {
             console.error("Error al agregar servicio", error);
         }
+=======
+            try {
+                const urlBase = "http://localhost:8080/serviteca/servicios";
+                await axios.post(urlBase, servicio);
+
+
+            } catch (error) {
+                console.error("Error al agregar servicio", error);
+            }
+
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     };
 
     const cargarServicios = async () => {
@@ -84,6 +97,7 @@ export default function AgregarServicio() {
                 servicio.codigo,
                 servicio.descripcion,
                 `$${servicio.valorServicio.toLocaleString()}`,
+                servicio.nombre,
                 servicio.ano,
                 `${servicio.porcentajeOperario}%`
             ])
@@ -141,11 +155,24 @@ export default function AgregarServicio() {
                             <input type="text" className="form-control" id="codigo" required name='codigo' value={servicio.codigo} readOnly />
                         </div>
                         <div className="mb-3">
+                            <label htmlFor="nombre" className="form-label">Nombre del servicio: *</label>
+                            <input
+                                type="text"
+                                step="any"
+                                className="form-control"
+                                id="nombre"
+                                name='nombre'
+                                required
+                                value={servicio.nombre}
+                                onChange={onInputChange}
+                            />
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="descripcion" className="form-label">Descripción: *</label>
                             <textarea
                                 style={{ resize: "none" }}
                                 className="form-control"
-                                rows={5}
+                                rows={2}
                                 id="descripcion"
                                 name='descripcion'
                                 required={true}
@@ -277,6 +304,10 @@ export default function AgregarServicio() {
                         </tbody>
                     </table>
 
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
                     {/* Paginación */}
                     <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
                     <div className='d-flex justify-content-between align-items-center'>
