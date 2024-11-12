@@ -6,10 +6,9 @@ import axios from 'axios';
 
 const CheckListComponent = () => {
     const idOrden = localStorage.getItem('idOrden');
-
     const [images, setImages] = useState([null, null, null, null, null]);
     const [formData, setFormData] = useState({
-        orden:{
+        orden: {
             idOrden: idOrden
         },
         observationsRight: '',
@@ -18,23 +17,58 @@ const CheckListComponent = () => {
         observationsBack: '',
         observationsIndicador: '',
     });
-    
+
     const urlBase = "http://localhost:8080/serviteca/servicios";
     const [combustible, setCombustible] = useState('');
     const navigate = useNavigate();
     const [listachequeo, setListachequeo] = useState([]);
+    const [historicoData, setHistoricoData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
     useEffect(() => {
+        const fetchHistoricoData = async () => {
+            try {
+                const vehiculoId = localStorage.getItem('idVehiculo');
+                const response = await axios.get(`http://localhost:8080/serviteca/historicoVehiculo`, {
+                    params: { vehiculoId }
+                });
+                setHistoricoData(response.data);
+            } catch (error) {
+                console.error('Error al obtener el historial del vehículo:', error);
+            }
+        };
+
+
+        fetchHistoricoData();
         cargarServicios();
-      }, []);
+    }, []);
 
     const cargarServicios = async () => {
         const resultado = await axios.get(urlBase);
         setListachequeo(resultado.data);
-      };
-      
+    };
+
+
+    const handleRowClick = (idOrden) => {
+        localStorage.setItem('idOrden', idOrden);
+    
+        // Cerrar el modal usando el método Bootstrap para HTML
+        const modal = document.getElementById('historia');
+        if (modal) {
+            modal.classList.remove('show'); // Eliminar clase 'show' del modal
+            modal.setAttribute('aria-hidden', 'true');
+            modal.style.display = 'none'; // Ocultar el modal en pantalla
+            document.body.classList.remove('modal-open'); // Remover clase modal-open del body
+            const backdrop = document.querySelector('.modal-backdrop'); // Eliminar backdrop si existe
+            if (backdrop) backdrop.remove();
+        }
+    
+        // Redirigir a la ruta deseada
+        navigate("/ejecucionservicio");
+    };
+    
+    
 
     const handleImageChange = (e, index) => {
         const file = e.target.files[0];
@@ -112,6 +146,11 @@ const CheckListComponent = () => {
         setCurrentPage(pageNumber);
     };
 
+    const currentData = historicoData.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+    );
+
     return (
         <div className="container">
             <div className='d-flex justify-content-between'>
@@ -184,7 +223,7 @@ const CheckListComponent = () => {
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h1 className="modal-title fs-5" id="exampleModalLabel">Seleccione el N° de servicio para abrir la ejecución</h1>
-                                <button type="button" className="btnn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 <table className="container text-center">
@@ -198,22 +237,27 @@ const CheckListComponent = () => {
                                         </tr>
                                     </thead>
                                     <tbody className='text-center'>
-                                        <tr className='tr001'>
-                                            <th scope="row">23-09-2024</th>
-                                            <td>15000 km</td>
-                                            <td>0504</td>
-                                            <td>edmundo</td>
-                                            <td>No se observa nada</td>
-                                        </tr>
+                                        {currentData.map((item, index) => (
+                                            <tr
+                                                className='tr001'
+                                                key={index}
+                                                onClick={() => handleRowClick(item.idOrden)} // Llama a handleRowClick con idOrden
+                                                style={{ cursor: 'pointer' }} // Cambia el cursor para indicar que la fila es clicable
+                                            >
+                                                <td>{item.fechaOrden}</td>
+                                                <td>{item.kilometros} km</td>
+                                                <td>{item.idOrden}</td>
+                                                <td>{item.nombreOperario}</td>
+                                                <td>{item.observacion || "No se observa nada"}</td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
-                            {/* Paginación */}
-                            <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
+                            <div className="h4 pb-2 mb-4 border-bottom border-black"></div>
                             <div className='d-flex justify-content-between align-items-center'>
                                 <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-                                <div className="d-flex justify-content-start  justify-content-end">
-
+                                <div className="d-flex justify-content-start justify-content-end">
                                     <button
                                         className="btn btn-secondary me-2"
                                         onClick={() => paginate(currentPage - 1)}
@@ -221,7 +265,7 @@ const CheckListComponent = () => {
                                     >
                                         Anterior
                                     </button>
-                                    <button type="button" class="btn btn-light"><span>{currentPage}</span></button>
+                                    <button type="button" className="btn btn-light"><span>{currentPage}</span></button>
                                     <button
                                         className="btn btn-secondary ms-2"
                                         onClick={() => paginate(currentPage + 1)}

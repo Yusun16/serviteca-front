@@ -134,8 +134,10 @@ export default function AgregarServicio() {
         try {
             const response = await axios.post(urlBase, jSonBody);
             const { idOrden } = response.data;  
+            const idVehiculo = response.data.vehiculo.id;
             
             localStorage.setItem('idOrden', idOrden);
+            localStorage.setItem('idVehiculo', idVehiculo);
     
             setOrden({
                 "codigo": "",

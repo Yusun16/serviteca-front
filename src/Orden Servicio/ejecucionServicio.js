@@ -132,6 +132,14 @@ export default function EjecucionServicio() {
                 setError(err);
             }
         };
+        const hasRefreshed = sessionStorage.getItem('hasRefreshedEjecucionServicio');
+        if (!hasRefreshed) {
+            // Establecer el indicador en sessionStorage
+            sessionStorage.setItem('hasRefreshedEjecucionServicio', 'true');
+            
+            // Reiniciar la página
+            window.location.reload();
+        }
 
         const fetchOperarios = async () => {
             try {
@@ -167,6 +175,7 @@ export default function EjecucionServicio() {
                 console.error("Error fetching autopartes por orden:", error);
             }
         };
+        
 
         fetchEjecucionServicio();
         fetchOperarios();
@@ -275,7 +284,8 @@ export default function EjecucionServicio() {
             for (const autoparte of autopartesSeleccionadas) {
                 const autopartePayload = {
                     autoparte: { idAupartes: autoparte.idAupartes },
-                    orden: { idOrden: idOrden }
+                    orden: { idOrden: idOrden },
+                    cantidad: 1
                 };
 
                 try {
