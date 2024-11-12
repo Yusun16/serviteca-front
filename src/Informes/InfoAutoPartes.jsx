@@ -27,13 +27,17 @@ function InfoAutoPartes() {
     };
 
     const handleSearch = async () => {
+        const token = localStorage.getItem('token');
         try {
             const response = await axios.get("http://localhost:8080/serviteca/consultarInformeAutoparte", {
                 params: {
                     anio: selectedYear,
                     mes: selectedMonth !== '' ? selectedMonth : null, // Solo envía el mes si está seleccionado
                     codigo: selectedPart || null
-                }
+                },
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
             setData(response.data); // Almacenar los datos recibidos en el estado
         } catch (error) {

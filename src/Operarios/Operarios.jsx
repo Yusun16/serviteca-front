@@ -5,6 +5,7 @@ import TableOperarios from './TableOperarios'
 import ModalExito from '../autopartes/ModalExito';
 import Foto001 from '../img/fotoup.jpeg';
 
+
 function Operarios() {
     const [isOn, setIsOn] = useState(false);
     const [image, setImage] = useState(null);
@@ -41,6 +42,8 @@ function Operarios() {
             ...prevData,
             [name]: value,
         }));
+
+        setErrorMessage('');
     };
 
     const validateForm = () => {
@@ -111,11 +114,27 @@ function Operarios() {
             return false;
         }
 
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+        if (!allowedTypes.includes(image.type)) {
+            setErrorMessage("La imagen debe ser un archivo JPG, PNG o JPEG.");
+            return false;
+        }
+
+        const maxSize = 5 * 1024 * 1024; // 5 MB
+        if (image.size > maxSize) {
+            setErrorMessage("La imagen no puede superar los 5 MB.");
+            return false;
+        }
+
         return true;
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!validateForm()) {
+            return;
+        }
 
         // if (!image) {
         //     alert("Por favor, selecciona una imagen.");

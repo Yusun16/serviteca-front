@@ -3,7 +3,10 @@ import axios from 'axios';
 import ModalExito from '../autopartes/ModalExito';
 import { Link } from 'react-router-dom';
 import CheckReady from '../img/check-ready.png'
-// import ModalExito from './ModalExito';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 function TableOperarios() {
     const urlBase = "http://localhost:8080/serviteca/operarios";
@@ -11,6 +14,49 @@ function TableOperarios() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
     const [operarios, setOperarios] = useState([]);
+
+    const exportToPDF = () => {
+        const doc = new jsPDF();
+        const tableColumn = ["Cedula", "Nombre", "Apellido", "Telefono", "Direccion", "Acudiente", "Telefono Acudiente", "Especialidad"];
+        const tableRows = [];
+
+        operarios.forEach(operaData => {
+            const operariosData = [
+                operaData.cedula,
+                operaData.nombre,
+                operaData.apellido,
+                operaData.telefono,
+                operaData.direccion,
+                operaData.acudiente,
+                operaData.telefonoAcudiente,
+                operaData.especialidad,
+
+            ];
+            tableRows.push(operariosData);
+        });
+
+        doc.autoTable(tableColumn, tableRows, { startY: 20 });
+        doc.text("Listado de Operarios", 14, 15);
+        doc.save("Listado_de_los_operarios.pdf");
+    };
+
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(operarios.map(operaData => ({
+            "Cedula": operaData.cedula,
+            "Nombre": operaData.nombre,
+            "Apellido": operaData.apellido,
+            "Telefono": operaData.telefono,
+            "Direccion": operaData.direccion,
+            "Acudiente": operaData.acudiente,
+            "Telefono Acudiente": operaData.telefonoAcudiente,
+            "Especialidad": operaData.especialidad,
+        })));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Operarios");
+        const excelBuffer = XLSX.write(wb, { bookType: "xlsx", type: "array" });
+        const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+        saveAs(data, "listado_de_operarios.xlsx");
+    };
 
     const cargarOperarios = async () => {
         const token = localStorage.getItem('token');
@@ -58,8 +104,8 @@ function TableOperarios() {
         <div>
             <div>
                 <ul className="icons001">
-                    <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
+                    <li className="icons002"><i onClick={exportToPDF} className="fa-solid fa-file-pdf"></i></li>
+                    <li className="icons002"><i onClick={exportToExcel} className="fa-solid fa-file-excel"></i></li>
                 </ul>
             </div>
             <table className='table001'>
