@@ -16,6 +16,7 @@ function AutoPartes() {
         nombre: '',
         descripcion: '',
         cantidad: '',
+        precioAutoparte:'',
         servicio: {
             idServicio: ''
         },
@@ -31,6 +32,7 @@ function AutoPartes() {
         nombre: false,
         descripcion: false,
         cantidad: false,
+        precioAutoparte: false,
         servicio: false,
         linea: false,
         tipo: false,
@@ -82,6 +84,9 @@ function AutoPartes() {
                     updatedState.cantidad = true;
                 }
                 if (name === 'cantidad' && value.trim() !== '') {
+                    updatedState.precioAutoparte = true;
+                }
+                if (name === 'precioAutoparte' && value.trim() !== '') {
                     updatedState.servicio = true;
                 }
                 if (name === 'servicio' && value.trim() !== '') {
@@ -154,6 +159,7 @@ function AutoPartes() {
             nombre: '',
             descripcion: '',
             cantidad: '',
+            precioAutoparte:'',
             servicio: {
                 idServicio: ''
             },
@@ -271,6 +277,19 @@ function AutoPartes() {
                 </div>
 
                 <div className='column001'>
+                <div className='div-col002'>
+                        <label className='label006' htmlFor="cantidad">Costo del producto: *</label>
+                        <input
+                            className='input005 input007'
+                            type="text"
+                            id="precioAutoparte"
+                            name="precioAutoparte"
+                            required
+                            value={inputs.precioAutoparte}
+                            onChange={handleInputChange}
+                            disabled={!isInputEnabled.precioAutoparte}
+                        />
+                    </div>
                     <div className='div-col002'>
                         <label className='label006' htmlFor="servicio">Servicio: *</label>
                         <select
