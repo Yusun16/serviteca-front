@@ -25,7 +25,7 @@ export default function EjecucionServicio() {
     const [autopartesSeleccionadasIds, setAutopartesSeleccionadasIds] = useState([]);
     const [checkboxState, setCheckboxState] = useState([]);
     const [idRevision, setIdRevision] = useState([]);
-    const [observacion, setObservacion] = useState('');
+    const [observacion, setObservacion] = useState(''); 
     const [fechaFinal, setFechaFinal] = useState('');
     const [horaFinal, setHoraFinal] = useState('');
     const [operarioId, setOperarioId] = useState('');
@@ -180,7 +180,7 @@ export default function EjecucionServicio() {
         if (!hasRefreshed) {
             // Establecer el indicador en sessionStorage
             sessionStorage.setItem('hasRefreshedEjecucionServicio', 'true');
-            
+
             // Reiniciar la página
             window.location.reload();
         }
@@ -233,7 +233,7 @@ export default function EjecucionServicio() {
                 console.error("Error fetching autopartes por orden:", error);
             }
         };
-        
+
 
         fetchEjecucionServicio();
         fetchOperarios();
@@ -740,16 +740,23 @@ export default function EjecucionServicio() {
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "absolute", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            {/* <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "absolute", height: "55px", bottom: "20px" }} /> */}
+                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "absolute", height: "55px", bottom: "20px" }} />
                                         </label>
                                     </div>
                                 </div>
                             </div>
                             <div className="col" style={{ display: "flex", flexDirection: "row", columnGap: "50px", marginBottom: "15px" }}>
 
-                                <div className='col-3' >Observaciones: </div>
+                                <div className='col-3'>Observaciones:</div>
                                 <div className='col-9'>
-                                    <input type="text" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} value={observacion} />
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="observaciones"
+                                        style={{ width: "300px", height: "100px" }}
+                                        value={observacion}
+                                        onChange={(e) => setObservacion(e.target.value)} // Asegura que puedes modificar el valor
+                                    />
                                 </div>
                             </div>
                             <div className="text-center">
