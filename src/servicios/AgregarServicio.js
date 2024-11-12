@@ -25,7 +25,7 @@ export default function AgregarServicio() {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const { codigo, descripcion, valorServicio, ano, porcentajeOperario } = servicio;
+    // const { codigo, descripcion, valorServicio, ano, porcentajeOperario } = servicio;
 
     useEffect(() => {
         cargarServicios();
@@ -39,6 +39,14 @@ export default function AgregarServicio() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
+<<<<<<< HEAD
+        try {
+            const urlBase = "http://localhost:8080/serviteca/servicios";
+            await axios.post(urlBase, servicio);
+        } catch (error) {
+            console.error("Error al agregar servicio", error);
+        }
+=======
             try {
                 const urlBase = "http://localhost:8080/serviteca/servicios";
                 await axios.post(urlBase, servicio);
@@ -48,6 +56,7 @@ export default function AgregarServicio() {
                 console.error("Error al agregar servicio", error);
             }
 
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     };
 
     const cargarServicios = async () => {
@@ -217,9 +226,7 @@ export default function AgregarServicio() {
                     <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
                         <i className="fa-regular fa-floppy-disk"></i> Guardar
                     </button>
-
-                        <Modal />
-
+                    <Modal />
                 </div>
             </form>
 
@@ -273,8 +280,6 @@ export default function AgregarServicio() {
                                             decimalScale={2}
                                         />
                                     </td>
-
-
                                     <td className='text-center'>
                                         <Link to={`/editar/${servicio.idServicio}`} className='btn btn-sm me-3'>
                                             <i className="fa-solid fa-pen-to-square"></i>
@@ -299,13 +304,15 @@ export default function AgregarServicio() {
                         </tbody>
                     </table>
 
+<<<<<<< HEAD
+=======
  
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
                     {/* Paginación */}
                     <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
                     <div className='d-flex justify-content-between align-items-center'>
                         <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
                         <div className="d-flex justify-content-start  justify-content-end">
-
                             <button
                                 className="btn btn-secondary me-2"
                                 onClick={() => paginate(currentPage - 1)}

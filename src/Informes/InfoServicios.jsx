@@ -1,4 +1,9 @@
+<<<<<<< HEAD
+import React, { useState } from 'react'
+import PieCharts from './PieCharts';
+=======
 import React, { useState } from 'react';
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
 import TableServInfo from './TableServInfo';
 import PieCharts from './PieCharts';
 

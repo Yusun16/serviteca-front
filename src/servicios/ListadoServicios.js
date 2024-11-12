@@ -20,8 +20,19 @@ export default function ListadoServicios() {
   }, []);
 
   const cargarServicios = async () => {
-    const resultado = await axios.get(urlBase);
-    setServicios(resultado.data);
+    const token = localStorage.getItem('token');
+
+    try {
+      const resultado = await axios.get(urlBase, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setServicios(resultado.data);
+    } catch (error) {
+      console.error("Error cargando los clientes:", error);
+      alert("Error cargando los clientes. Verifica la conexión con el servidor.");
+    }
   };
 
   const eliminarServicio = async (id) => {

@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
+import LogOut from '../logins/LogOut';
 
 import ModalEliminarCliente from './modalEliminarCliente';
 
@@ -22,8 +23,14 @@ export default function ListadoCliente() {
   
 
   const cargarClientes = async () => {
+    const token = localStorage.getItem('token');
+
     try {
-      const resultado = await axios.get(urlBase);
+      const resultado = await axios.get(urlBase, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setClientes(resultado.data);
     } catch (error) {
       console.error("Error cargando los clientes:", error.response || error.message);
@@ -102,6 +109,7 @@ export default function ListadoCliente() {
 
       <div className='container' style={{ margin: "30px" }}>
         <h4>Clientes</h4>
+        <LogOut />
       </div>
       <div className='container text-center' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px" }} >
         <Link type="button" className="btn btn-center btncolor" to="/agregarcliente" style={{ width: "280px", height: "50px" }}>Agregar Cliente</Link>

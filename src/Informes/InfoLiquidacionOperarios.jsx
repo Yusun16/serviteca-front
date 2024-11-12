@@ -127,7 +127,11 @@ function InfoLiquidacionOperarios() {
                             <input
                                 type="text"
                                 id="part"
+<<<<<<< HEAD
+                                placeholder="Buscar operario"
+=======
                                 placeholder="Buscar C.C"
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
                                 value={selectedPart}
                                 onChange={handlePartChange}
                             />

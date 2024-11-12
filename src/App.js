@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+import React from "react";
+import RouteServiteca from "./RouteServiteca/RouteServiteca";
+import { BrowserRouter } from "react-router-dom";
+=======
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import Navegacion from "./plantilla/Navegacion";
 import ListadoServicios from "./servicios/ListadoServicios";
@@ -42,10 +47,14 @@ function NavBarVisibility() {
 
   return !noNavRoutes.includes(location.pathname) ? <Navegacion /> : null;
 }
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
 
 function App() {
   return (
     <BrowserRouter>
+<<<<<<< HEAD
+      <RouteServiteca />
+=======
       <NavBarVisibility />
       <Routes>
         <Route exact path="/inicio" element={<VistaPrincipal />} />
@@ -87,6 +96,7 @@ function App() {
 
         {/* Rutas fin de Jefer */}
       </Routes>
+>>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     </BrowserRouter>
   );
 }
