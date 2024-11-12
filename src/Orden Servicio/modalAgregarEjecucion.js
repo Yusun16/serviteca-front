@@ -18,12 +18,21 @@ const ModalAgregarEjecucion = ({
         const idOrden = localStorage.getItem('idOrden');
 
         const fetchData = async () => {
+            const token = localStorage.getItem('token');
             try {
-                const responseEjecucion = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
+                const responseEjecucion = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const nombresServicio = responseEjecucion.data.map(servicio => servicio.nombreServicio);
                 setDatosOrden(nombresServicio);
 
-                const responseAutopartes = await axios.get(`http://localhost:8080/serviteca/autopartes?servicioId=${idOrden}`);
+                const responseAutopartes = await axios.get(`http://localhost:8080/serviteca/autopartes?servicioId=${idOrden}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 setAutopartes(responseAutopartes.data);
                 setAutopartesFiltradas(responseAutopartes.data);
             } catch (error) {
@@ -46,10 +55,10 @@ const ModalAgregarEjecucion = ({
     const isChecked = (parte) => {
         return autopartesSeleccionadasIds && autopartesSeleccionadasIds.includes(parte.idAupartes);
     };
-    
+
     const handleCheckboxChange = (parte) => {
         console.log("setAutopartesSeleccionadas:", setAutopartesSeleccionadas);
-        
+
         if (isChecked(parte)) {
             setAutopartesSeleccionadas((prev) =>
                 prev.filter((item) => item.referencia !== parte.referencia)
@@ -61,7 +70,7 @@ const ModalAgregarEjecucion = ({
             setAutopartesSeleccionadas((prev) => [...prev, parte]);
             setAutopartesSeleccionadasIds((prev) => [...prev, parte.idAupartes]);
         }
-    };    
+    };
 
     const handleAgregar = () => {
         if (onAutopartesSeleccionadas) {
@@ -69,7 +78,7 @@ const ModalAgregarEjecucion = ({
         } else {
             console.error("onAutopartesSeleccionadas no está definido.");
         }
-    };    
+    };
 
     return (
         <div className="container mt-5">

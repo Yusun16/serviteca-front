@@ -13,13 +13,33 @@ function TableOperarios() {
     const [operarios, setOperarios] = useState([]);
 
     const cargarOperarios = async () => {
-        const resultado = await axios.get(urlBase);
-        setOperarios(resultado.data);
+        const token = localStorage.getItem('token');
+
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setOperarios(resultado.data);
+        } catch (error) {
+            console.error("Error al obtener los operarios", error);
+        }
     };
 
     const eliminarOperarios = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarOperarios();
+        const token = localStorage.getItem('token');
+
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarOperarios();
+        } catch (error) {
+            console.error("Error al eliminar los operarios", error);
+        }
     };
 
     useEffect(() => {

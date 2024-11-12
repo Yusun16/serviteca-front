@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import axios from 'axios';
@@ -8,7 +9,8 @@ import fotoimage from '../img/fotoup.jpeg';
 import ModalExito from '../autopartes/ModalExito';
 
 export default function EjecucionServicio() {
-    const [image, setImage] = useState(null);
+    const navigacion = useNavigate();
+    const [imageEje, setImageEje] = useState(null);
     const [backImage, setBackImage] = useState(null);
     const [imageBackAfter, setImageBackAfter] = useState(null);
     const [imageFrontAfter, setImageFrontAfter] = useState(null);
@@ -86,8 +88,8 @@ export default function EjecucionServicio() {
         const segundaTablaStartY = doc.lastAutoTable.finalY + 10;
         doc.autoTable(segundaTablaColumn, segundaTablaRows, { startY: segundaTablaStartY });
 
-        if (image) {
-            doc.addImage(image, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
+        if (imageEje) {
+            doc.addImage(imageEje, 'JPEG', 14, doc.lastAutoTable.finalY + 10, 40, 30);
         }
         if (imageFrontAfter) {
             doc.addImage(imageFrontAfter, 'JPEG', 60, doc.lastAutoTable.finalY + 10, 40, 30);
@@ -101,10 +103,15 @@ export default function EjecucionServicio() {
 
     useEffect(() => {
         const idOrden = localStorage.getItem('idOrden');
+        const token = localStorage.getItem('token');
 
         const fetchEjecucionServicio = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`);
+                const response = await axios.get(`http://localhost:8080/serviteca/ejecucion?idOrden=${idOrden}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const data = response.data[0];
                 setDatosOrden(response.data);
 
@@ -112,30 +119,72 @@ export default function EjecucionServicio() {
                     // Establecer valores en el estado
                     setFechaInicio(data.fechaOrden);
                     setHoraInicio(data.horaOrden);
-                    setImage(data.imgFrontalRevision);
-                    setBackImage(data.imgBackRevision);
-                    setImageFrontAfter(data.imgFrontalDespues);
-                    setImageBackAfter(data.imgPosteriorDespues);
                     setIdRevision(data.idRevision);
                     setObservacion(data.observacion);
                     setFechaFinal(data.fechaFinal);
                     setHoraFinal(data.horaFinal);
+                    //
+                    if (data.imgFrontalRevision) {
+                        const imgResponse = await axios.get(data.imgFrontalRevision, {
+                            headers: { Authorization: `Bearer ${token}` },
+                            responseType: 'blob' // Importante: definir como 'blob'
+                        });
+                        setImageEje(URL.createObjectURL(imgResponse.data));
+                    }
+                    // Repetir lo mismo para las otras imágenes:
+                    if (data.imgBackRevision) {
+                        const imgResponse = await axios.get(data.imgBackRevision, {
+                            headers: { Authorization: `Bearer ${token}` },
+                            responseType: 'blob'
+                        });
+                        setBackImage(URL.createObjectURL(imgResponse.data));
+                    }
+                    //////////////////////////////////////////////////////////////
+                    // if (data.imgFrontalDespues) {
+                    //     console.log("Imagen frontal después recibida:", data.imgFrontalDespues);
+                    //     const imgFrontAfterResp = await axios.get(data.imgFrontalDespues, {
+                    //         headers: { Authorization: `Bearer ${token}` },
+                    //         responseType: 'blob',
+                    //     });
+                    //     setImageFrontAfter(URL.createObjectURL(imgFrontAfterResp.data));
+                    // } else {
+                    //     console.warn("Formato de imgFrontalDespues no compatible:", data.imgFrontalDespues);
+                    // }
+                    // if (data.imgPosteriorDespues) {
+                    //     console.log("Imagen posterior después recibida:", data.imgPosteriorDespues);
+                    //     const imgBackAfterResp = await axios.get(data.imgPosteriorDespues, {
+                    //         headers: { Authorization: `Bearer ${token}` },
+                    //         responseType: 'blob'
+                    //     });
+                    //     const objectUrl = URL.createObjectURL(imgBackAfterResp.data);
+                    //     console.log("URL de la imagen posterior después:", objectUrl);
+                    //     setImageBackAfter(objectUrl);
+                    // } else {
+                    //     console.warn("Formato de imgPosteriorDespues no compatible:", data.imgPosteriorDespues);
+                    // }
+                    setImageFrontAfter(data.imgFrontalDespues);
+                    setImageBackAfter(data.imgPosteriorDespues);
 
                     setOperarioId(data.operarioId);
                     setCheckboxState(response.data.map(item => ({
                         inicio: item.estado === true,
                         terminado: item.estado === false
                     })));
-
                 }
             } catch (err) {
                 setError(err);
+                console.error("Error al obtener los datos de ejecución:", err);
             }
         };
 
         const fetchOperarios = async () => {
+            const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8080/serviteca/operarios');
+                const response = await axios.get('http://localhost:8080/serviteca/operarios', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 const operariosData = response.data.map(operario => ({
                     value: operario.id,
                     label: `${operario.nombre} ${operario.apellido}`
@@ -147,8 +196,13 @@ export default function EjecucionServicio() {
         };
 
         const fetchAutopartes = async () => {
+            const token = localStorage.getItem('token');
             try {
-                const response = await axios.get('http://localhost:8080/serviteca/autopartes');
+                const response = await axios.get('http://localhost:8080/serviteca/autopartes', {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
                 setAutopartes(response.data);
             } catch (error) {
                 console.error("Error fetching autopartes:", error);
@@ -156,9 +210,13 @@ export default function EjecucionServicio() {
         };
 
         const fetchAutopartesPorOrden = async () => {
+            const token = localStorage.getItem('token');
             try {
                 const response = await axios.get("http://localhost:8080/api/orden-autoparte/consultarAutopartePorId", {
-                    params: { ordenId: idOrden }
+                    params: { ordenId: idOrden },
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                 });
                 setAutopartesSeleccionadas(response.data);
                 // Guardar los IDs de las autopartes seleccionadas para marcar los checkboxes
@@ -219,16 +277,19 @@ export default function EjecucionServicio() {
         if (file) {
             const imageUrl = URL.createObjectURL(file);
             setter(imageUrl);  // Establecer la URL de la imagen
+        } else {
+            console.error("No se seleccionó ningún archivo");
         }
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-        window.location.reload();
+        navigacion("/agregarorden");
     };
 
 
     const handleSubmit = async () => {
+        const token = localStorage.getItem('token');
         try {
             const operarioId = selectedOperario?.value;
             const fechaFinal = document.getElementById('dateFinal').value;
@@ -260,16 +321,24 @@ export default function EjecucionServicio() {
                 }
             };
 
-            const response = await axios.put(`http://localhost:8080/serviteca/orden/${idOrden}`, payload);
+            const response = await axios.put(`http://localhost:8080/serviteca/orden/${idOrden}`, payload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             console.log('Datos de la orden enviados con éxito:', response.data);
 
             const revisionPayload = {
                 id: idRevision,
                 imgFrontalDespues: imageFrontAfter,
-                imgBackDespues: imageBackAfter
+                imgPosteriorDespues: imageBackAfter
             };
 
-            const responseRevision = await axios.put(`http://localhost:8080/serviteca/revisiones/${idRevision}`, revisionPayload);
+            const responseRevision = await axios.put(`http://localhost:8080/serviteca/revisiones/${idRevision}`, revisionPayload, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             console.log('Imágenes de revisión enviadas con éxito:', responseRevision.data);
 
             for (const autoparte of autopartesSeleccionadas) {
@@ -277,11 +346,15 @@ export default function EjecucionServicio() {
                     autoparte: { idAupartes: autoparte.idAupartes },
                     orden: { idOrden: idOrden }
                 };
-
+                const token = localStorage.getItem('token');
                 try {
                     const responseAutoparte = await axios.post(
                         "http://localhost:8080/api/orden-autoparte",
-                        autopartePayload
+                        autopartePayload, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
                     );
                     console.log(`Autoparte con ID ${autoparte.idAupartes} vinculada a la orden con éxito:`, responseAutoparte.data);
                 } catch (error) {
@@ -316,14 +389,23 @@ export default function EjecucionServicio() {
         }
     };
 
+    useEffect(() => {
+        return () => {
+            if (backImage) URL.revokeObjectURL(backImage);
+            if (imageEje) URL.revokeObjectURL(imageEje);
+        };
+    }, [backImage, imageEje]);
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Orden Servicio</li>
-                    <li className="breadcrumb-item active" aria-current="page">Ejecución del servicio</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Orden Servicio</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Ejecución del servicio</li>
                 </ol>
             </nav>
             <div className="container text-center">
@@ -466,7 +548,7 @@ export default function EjecucionServicio() {
                                                 onClick={(e) => handleEliminarAutoparte(e, autoparte.referencia)}
                                                 className="btn"
                                             >
-                                                <i class="fa-solid fa-trash-can" style={{color: "#000000;"}}></i>
+                                                <i class="fa-solid fa-trash-can" style={{ color: "#000000;" }}></i>
                                             </button>
                                         </td>
                                     </tr>
@@ -532,10 +614,10 @@ export default function EjecucionServicio() {
                                 <div className='col-3'>Foto frontal:</div>
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
-                                        {image && (
+                                        {imageEje && (
                                             <img
-                                                src={image}
-                                                alt="Foto-subida"
+                                                src={imageEje}
+                                                alt="Foto-frontal-antes"
                                                 style={{
                                                     objectFit: "fill",
                                                     zIndex: "2",
@@ -547,17 +629,18 @@ export default function EjecucionServicio() {
                                                 }}
                                             />
                                         )}
-                                        <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
+                                        {/* <label htmlFor='fotoimg' style={{ width: "50%", height: "100%", }}>
                                             <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
                                             <img src={image} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
-                                        </label>
+                                        </label> */}
                                     </div>
                                 </div>
                                 <div className='container'>
                                     <div className='col-3'>
                                         <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
+                                            {console.log("Valor de imageFrontAfter:", imageFrontAfter)}
                                             {imageFrontAfter && (
                                                 <img
                                                     src={imageFrontAfter}
@@ -582,17 +665,16 @@ export default function EjecucionServicio() {
                                                 onChange={(e) => handleImageChange(e, setImageFrontAfter)}
                                             />
                                             <label htmlFor='fotoFrontAfter' style={{ width: "50%", height: "100%", }}>
-                                                <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
+                                                <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "absolute", left: "100px", width: "85px", top: "90px" }}>
                                                     Examinar
                                                 </div>
-                                                <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
+                                                <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "absolute", height: "55px", bottom: "20px" }} />
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="col" style={{ display: "flex", flexDirection: "row", alignItems: "center", columnGap: "50px", marginBottom: "15px" }}>
-
                                 {/* Foto Posterior */}
                                 <div className='col-3'>Foto posterior:</div>
                                 <div className='col-3'>
@@ -619,6 +701,7 @@ export default function EjecucionServicio() {
                                 <div className='col-3'>
                                     <div className="card" style={{ width: '185px', height: '120px', overflow: "hidden" }}>
                                         {/* Mostrar la imagen solo si existe una URL */}
+                                        {console.log("Valor de imageBackAfter:", imageBackAfter)}
                                         {imageBackAfter && (
                                             <img
                                                 src={imageBackAfter}
@@ -644,10 +727,10 @@ export default function EjecucionServicio() {
                                             onChange={(e) => handleImageChange(e, setImageBackAfter)} // Actualiza la imagen
                                         />
                                         <label htmlFor='fotoBackAfter' style={{ width: "50%", height: "100%" }}>
-                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "100px", width: "85px", top: "90px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "absolute", left: "100px", width: "85px", top: "90px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "relative", height: "55px", bottom: "20px" }} />
+                                            {/* <img src={fotoimage} alt="foto ejemplo" style={{ width: "55px", zIndex: "1", position: "absolute", height: "55px", bottom: "20px" }} /> */}
                                         </label>
                                     </div>
                                 </div>
@@ -656,28 +739,32 @@ export default function EjecucionServicio() {
 
                                 <div className='col-3' >Observaciones: </div>
                                 <div className='col-9'>
-                                    <input type="observaciones" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} value={observacion} />
+                                    <input type="text" className="form-control" id="observaciones" style={{ width: "300px", height: "100px" }} value={observacion} />
                                 </div>
                             </div>
-
-                            <button type="button" className="btn btn-success" onClick={handleSubmit}>Guardar</button>
+                            <div className="text-center">
+                                <button type="button" className="btnncolor-orden" onClick={handleSubmit}>
+                                    Guardar
+                                    <i className="fa-solid fa-check" style={{ marginLeft: "7px" }} />
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-                {isModalOpen && (
-                    // Añadir el z-index
-                    <ModalExito
-                        idmodal="demo-modal3"
-                        titlemodal="Guardado"
-                        lineado="linea002"
-                        parexito="Registro guardado con éxito"
-                        className="modal__message003 "
-                        onClose={handleCloseModal}
-                        btnclassName="btn0010"
-                        buttonContent="OK"
-                    />
-                )}
             </form>
+            {isModalOpen && (
+                <ModalExito
+                    idmodal="demo-modal3"
+                    titlemodal="Guardado"
+                    lineado="linea002"
+                    parexito="Registro guardado con éxito"
+                    className="modal__message005"
+                    onClose={handleCloseModal}
+                    rutaDir="/agregarorden"
+                    btnclassName="btn0010"
+                    buttonContent="OK"
+                />
+            )}
         </div>
 
     )

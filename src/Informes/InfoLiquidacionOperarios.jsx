@@ -21,16 +21,16 @@ function InfoLiquidacionOperarios() {
         if (selectedYear) url.searchParams.append('anio', selectedYear);
         if (selectedMonth) url.searchParams.append('mes', selectedMonth);
         if (selectedPart) url.searchParams.append('cedula', selectedPart);
-    
+
         try {
             const response = await fetch(url);
             const result = await response.json();
-    
+
             // Agrupar datos por operario
             const groupedData = result.reduce((acc, curr) => {
                 const existingOperario = acc.find(item => item.cedula === curr.cedula);
                 const serviceValue = curr.valorServicio * (curr.porcentajeOperario / 100);
-    
+
                 if (existingOperario) {
                     existingOperario.totalServiciosRealizados += parseInt(curr.totalServiciosRealizados, 10);
                     existingOperario.comisionPorServicios.push({
@@ -39,7 +39,7 @@ function InfoLiquidacionOperarios() {
                         valorCalculado: serviceValue,
                     });
                     existingOperario.totalComision += serviceValue;
-    
+
                     if (!existingOperario.maxComisionServicio || curr.porcentajeOperario > existingOperario.maxComisionServicio.porcentaje) {
                         existingOperario.maxComisionServicio = {
                             valorServicio: curr.valorServicio,
@@ -67,7 +67,7 @@ function InfoLiquidacionOperarios() {
                 }
                 return acc;
             }, []);
-    
+
             setData(groupedData);
         } catch (error) {
             console.error("Error fetching data:", error);
@@ -117,9 +117,9 @@ function InfoLiquidacionOperarios() {
                             <select id="month" value={selectedMonth} onChange={handleMonthChange}>
                                 <option value="">Seleccione el mes</option>
                                 {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-                                  'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((month, index) => (
-                                    <option key={index} value={index + 1}>{month}</option>
-                                ))}
+                                    'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'].map((month, index) => (
+                                        <option key={index} value={index + 1}>{month}</option>
+                                    ))}
                             </select>
                         </div>
                         <div className="filter">
@@ -127,11 +127,7 @@ function InfoLiquidacionOperarios() {
                             <input
                                 type="text"
                                 id="part"
-<<<<<<< HEAD
                                 placeholder="Buscar operario"
-=======
-                                placeholder="Buscar C.C"
->>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
                                 value={selectedPart}
                                 onChange={handlePartChange}
                             />

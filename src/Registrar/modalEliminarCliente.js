@@ -11,12 +11,12 @@ export default function () {
                         <div className="modal-header ">
                             <button type="button" className="equis-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <div className="modal-body text-center" style={{color: "black"}} >
-                        <h5> Registro eliminado</h5>
-                          
+                        <div className="modal-body text-center" style={{ color: "black" }} >
+                            <h5> Registro eliminado</h5>
+
                         </div>
-                        <div className='container ' style={{ display: "flex", alignItems: "center", justifyContent: "center"}}>
-                        <img src={CheckReady} alt='eliminar-registro' className='img-ready ' />
+                        <div className='container ' style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <img src={CheckReady} alt='eliminar-registro' className='img-ready' />
 
                         </div>
                     </div>

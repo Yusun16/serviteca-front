@@ -22,9 +22,20 @@ export default function BuscarVehiculo() {
         if (placa) queryParams.append('placa', placa);
         if (marca) queryParams.append('marca', marca);
 
-        const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
-        setVehiculos(response.data);
-        setShowTable(true);
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            setVehiculos(response.data);
+            setShowTable(true);
+        } catch (error) {
+            console.error("Error al buscar los vehiculos:", error);
+            alert("Error al buscar los vehiculos. Verifica la conexión con el servidor.");
+        }
     };
 
     useEffect(() => {
@@ -32,15 +43,36 @@ export default function BuscarVehiculo() {
     }, []);
 
     const cargarVehiculos = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado de cargar Vehiculos");
-        console.log(resultado.data);
-        setVehiculos(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado de cargar Vehiculos");
+            console.log(resultado.data);
+            setVehiculos(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar los vehiculos:", error);
+            alert("Error al cargar los vehiculos. Verifica la conexión con el servidor.");
+        }
     }
 
     const eliminarVehiculo = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarVehiculos();
+
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            cargarVehiculos();
+        } catch (error) {
+            console.error("Error al eliminar los vehiculos:", error);
+            alert("Error al eliminar los vehiculos. Verifica la conexión con el servidor.");
+        }
     };
 
     // Paginación
@@ -87,11 +119,14 @@ export default function BuscarVehiculo() {
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Vehículo</li>
-                    <li className="breadcrumb-item active" aria-current="page">Buscar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Vehículos</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Buscar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>

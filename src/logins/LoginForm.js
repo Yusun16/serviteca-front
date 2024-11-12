@@ -149,7 +149,7 @@ const LoginForm = () => {
           <form onSubmit={handleSubmit}>
             <div className="input-group-login">
               <i className="fas fa-user i-login"></i>
-              <input className="input-login" type="text" placeholder="Usuario" value={username}
+              <input className="input-login" type="email" placeholder="Usuario" value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required />
             </div>

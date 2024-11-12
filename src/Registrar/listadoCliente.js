@@ -6,7 +6,6 @@ import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
-import LogOut from '../logins/LogOut';
 
 import ModalEliminarCliente from './modalEliminarCliente';
 
@@ -20,7 +19,7 @@ export default function ListadoCliente() {
   useEffect(() => {
     cargarClientes();
   }, []);
-  
+
 
   const cargarClientes = async () => {
     const token = localStorage.getItem('token');
@@ -33,19 +32,24 @@ export default function ListadoCliente() {
       });
       setClientes(resultado.data);
     } catch (error) {
-      console.error("Error cargando los clientes:", error.response || error.message);
-      alert("Error cargando los clientes. Verifica la conexión con el servidor.");
+      console.error("Error al cargar los clientes:", error.response || error.message);
+      alert("Error al cargar los clientes. Verifica la conexión con el servidor.");
     }
   };
-  
+
 
   const eliminarCliente = async (id) => {
+    const token = localStorage.getItem('token');
     try {
-      await axios.delete(`${urlBase}/${id}`);
+      await axios.delete(`${urlBase}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       cargarClientes();
     } catch (error) {
-      console.error("Error eliminando el cliente:", error);
-      alert("Error eliminando el cliente, por favor intenta de nuevo.");
+      console.error("Error al eliminar los clientes:", error);
+      alert("Error al eliminar los clientes, por favor intenta de nuevo.");
     }
   };
 
@@ -63,8 +67,6 @@ export default function ListadoCliente() {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
-  
 
   const exportToPDF = () => {
     const doc = new jsPDF();
@@ -100,16 +102,17 @@ export default function ListadoCliente() {
 
   return (
     <div className='container'>
-      <nav aria-label="breadcrumb">
+      <nav aria-label="breadcrumb" className='breadcrumb002'>
         <ol className="breadcrumb">
-          <li className="breadcrumb-item">Inicio</li>
-          <li className="breadcrumb-item active" aria-current="page">Cliente</li>
+          <li className="breadcrumb-item breadcrumb001">
+            <i className="fa-solid fa-house"></i>
+            Inicio
+          </li>
+          <li className="breadcrumb-item active breadcrumb003" aria-current="page">Clientes</li>
         </ol>
       </nav>
-
       <div className='container' style={{ margin: "30px" }}>
         <h4>Clientes</h4>
-        <LogOut />
       </div>
       <div className='container text-center' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px" }} >
         <Link type="button" className="btn btn-center btncolor" to="/agregarcliente" style={{ width: "280px", height: "50px" }}>Agregar Cliente</Link>
@@ -150,14 +153,14 @@ export default function ListadoCliente() {
                   </Link>
                 </td>
                 <td>
-                  <button  data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarCliente(cliente.id)} className='btn btn-sm'>
+                  <button data-bs-toggle="modal" data-bs-target="#modaleliminarcliente" onClick={() => eliminarCliente(cliente.id)} className='btn btn-sm'>
                     <i className="fa-solid fa-trash-can"></i>
                   </button>
                   <ModalEliminarCliente />
                 </td>
               </tr>
             ))}
-                    <tr  >
+            <tr  >
               <th className='text-letras colorthead ' style={{ padding: "10px 0px" }} scope="col"></th>
               <th className='text-letras colorthead' scope="col"></th>
               <th className='text-letras colorthead' scope="col"></th>

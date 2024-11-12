@@ -32,7 +32,7 @@ function AutoPartes() {
         descripcion: false,
         cantidad: false,
         servicio: false,
-        linea: true,
+        linea: false,
         tipo: false,
         marca: false,
         modelo: false,
@@ -41,8 +41,13 @@ function AutoPartes() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const obtenerServicios = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/servicios');
+            const response = await axios.get('http://localhost:8080/serviteca/servicios', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setServicios(response.data);
             const opciones = response.data.map((servicio) => ({
                 value: servicio.idServicio,
@@ -50,17 +55,17 @@ function AutoPartes() {
             }));
             setOpcionesServicios(opciones);
         } catch (error) {
-            console.error("Error al obtener los clientes", error);
+            console.error("Error al obtener los servicios", error);
         }
     };
 
-    // Maneja el cambio en los inputs
+    // Manejando el cambio en los inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputs((prevInputs) => {
             const newInputs = { ...prevInputs, [name]: value };
 
-            // Habilitar el siguiente input si el actual no está vacío
+            // Habilitar input por input cuando si el anterior tiene un registro!!!
             setIsInputEnabled((prevState) => {
                 const updatedState = { ...prevState };
 
@@ -107,6 +112,11 @@ function AutoPartes() {
                     idServicio: selectedOption.value,
                 },
             }));
+
+            setIsInputEnabled(prevState => ({
+                ...prevState,
+                linea: true,
+            }));
         }
     };
 
@@ -121,7 +131,7 @@ function AutoPartes() {
             try {
                 await axios.post('http://localhost:8080/serviteca/autopartes', inputs, {
                     headers: {
-                        Authorization: `Bearer ${token}`, // Incluir el token en los headers
+                        Authorization: `Bearer ${token}`,
                     },
                 });
                 setIsModalOpen(true);
@@ -137,11 +147,7 @@ function AutoPartes() {
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
-<<<<<<< HEAD
         window.location.reload(true);
-=======
-        window.location.reload();
->>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
         setInputs({
             referencia: '',
             siigo: '',
@@ -165,7 +171,7 @@ function AutoPartes() {
         try {
             const response = await axios.get('http://localhost:8080/serviteca/autopartes', {
                 headers: {
-                    Authorization: `Bearer ${token}`, // Incluir el token en los headers
+                    Authorization: `Bearer ${token}`,
                 },
             });
             setAutopartes(response.data);
@@ -270,18 +276,16 @@ function AutoPartes() {
                         <select
                             className="dropdown-toggle002"
                             name="servicio"
-                            value={inputs.servicio.idServicio} // Debes usar el valor del `id`
+                            value={inputs.servicio.idServicio}
                             onChange={(e) => handleSelectChange({ value: e.target.value })}
+                            disabled={!isInputEnabled.servicio}
                             required
-
                         >
                             <option value="" disabled>Selecciona una opción</option>
                             {opcionesServicios.map((opcion) => (
                                 <option key={opcion.value} value={opcion.value}>{opcion.label}</option>
                             ))}
-
                         </select>
-
                     </div>
                     <div className='div-col002'>
                         <label className='label006' htmlFor="linea">Linea: *</label>

@@ -8,6 +8,16 @@
   height: 50vh;
 }
 
+.body-register-user {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #e85d4a;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40vh;
+}
+
 .login-container {
   text-align: center;
   display: flex;

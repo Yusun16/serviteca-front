@@ -35,7 +35,6 @@ export default function AgregarVehiculo() {
     const servicios = [
         { cedula: '123456789', nombre: 'Juan Perez', ciudad: 'Bogotá' },
         { cedula: '987654321', nombre: 'Maria Gomez', ciudad: 'Medellín' },
-
     ];
 
     const [vehiculo, setVehiculo] = useState({
@@ -50,8 +49,13 @@ export default function AgregarVehiculo() {
     })
 
     const obtenerClientes = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/cliente');
+            const response = await axios.get('http://localhost:8080/serviteca/cliente', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setClientes(response.data);
             const opciones = response.data.map((cliente) => ({
                 value: cliente.id,
@@ -64,7 +68,6 @@ export default function AgregarVehiculo() {
     };
 
     // const { placa, marca, linea, modelo, cliente, foto, Observacion } = vehiculo
-
 
     // JSON de departamentos y ciudades de Colombia
     const lineasYmarcas = {
@@ -80,14 +83,13 @@ export default function AgregarVehiculo() {
         "Mercedes-Benz": ["Clase A", "Clase C", "Clase E", "GLA", "GLC"],
         "Subaru": ["Impreza", "Legacy", "Outback", "Forester", "Crosstrek", "",],
         "Mazda": ["Mazda2", "Mazda3", "CX-3", "CX-5", "MX-5 Miata",],
-
     };
 
     const lineas = Object.keys(lineasYmarcas);
     const marcas = vehiculo.linea ? lineasYmarcas[vehiculo.linea] : [];
 
     const handleChange = (e, selectedOption) => {
-        console.log(selectedOption, "select"); 
+        console.log(selectedOption, "select");
         if (selectedOption) {
             // Lógica para manejar el cambio de cliente
             setVehiculo(prevData => ({
@@ -96,7 +98,7 @@ export default function AgregarVehiculo() {
                     id: selectedOption.value,
                 },
             }));
-        }else {
+        } else {
             // Lógica para manejar cambios en los inputs
             const { name, value } = e.target;
             setVehiculo(prevData => ({
@@ -123,18 +125,37 @@ export default function AgregarVehiculo() {
     }, []);
 
     const cargarVehiculos = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado de cargar Vehiculos");
-        console.log(resultado.data);
-        setVehiculos(resultado.data);
+        const token = localStorage.getItem('token');
+
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado de cargar Vehiculos");
+            console.log(resultado.data);
+            setVehiculos(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar los vehiculos:", error);
+            alert("Error al cargar los vehiculos. Verifica la conexión con el servidor.");
+        }
     }
 
     const eliminarVehiculo = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarVehiculos();
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            cargarVehiculos();
+        } catch (error) {
+            console.error("Error al cargar los vehiculos:", error);
+            alert("Error al cargar los vehiculos. Verifica la conexión con el servidor.");
+        }
     };
-
-
 
     // const onSubmit = async (e) => {
     //     e.preventDefault();
@@ -192,6 +213,21 @@ export default function AgregarVehiculo() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(vehiculo.cliente);
+
+        const requiredFields = ["placa", "marca", "linea", "modelo", "observacion"];
+        const allFieldsFilled = requiredFields.every(field => vehiculo[field].trim() !== "");
+
+        if (!allFieldsFilled) {
+            alert("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+
+        if (!image) {
+            alert("Por favor, selecciona una imagen.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
         try {
             // Preparar datos del vehículo
             const jSonBody = {
@@ -204,29 +240,31 @@ export default function AgregarVehiculo() {
                 },
                 observacion: vehiculo.observacion
             };
-    
+
             // Enviar vehículo
             const response = await axios.post('http://localhost:8080/serviteca/vehiculos', jSonBody, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
-    
+
             const vehiculoId = response.data.id;
-    
+
             // Subir imagen si existe
             if (image) {
                 const imageFormData = new FormData();
                 imageFormData.append('id', vehiculoId);
                 imageFormData.append('file', image);
-    
+
                 await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
                     },
                 });
             }
-    
+
             // Limpiar el estado del vehículo
             setVehiculo({
                 placa: "",
@@ -236,24 +274,27 @@ export default function AgregarVehiculo() {
                 cliente: { id: "" },
                 observacion: "",
             });
-    
-            
+
             // navegacion("/agregarvehiculo");
+            // Abrir el modal después de la respuesta exitosa
+            const modal = new window.bootstrap.Modal(document.getElementById('modalagregarvehiculo'));
+            modal.show();
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
         }
     };
-    
-    
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Vehiculo</li>
-                    <li className="breadcrumb-item active" aria-current="page">Agregar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Vehiculos</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Agregar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>
@@ -333,12 +374,11 @@ export default function AgregarVehiculo() {
                                                 onChange={handleImageChange}
                                             // value={foto}
                                             />
-
                                             <label htmlFor='fotoimg' style={{ width: "100%", height: "100%", }}>
-                                                <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                                <div class="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "absolute", left: "250px", width: "95px", top: "100px" }}>
                                                     Examinar
                                                 </div>
-                                                <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px", }} />
+                                                <img src={fotoimage} alt="foto ejemplo" style={{ width: "90px", zIndex: "1", left: "50px", position: "absolute", height: "90px", bottom: "30px", }} />
                                             </label>
                                         </div>
                                     </div>
@@ -354,7 +394,7 @@ export default function AgregarVehiculo() {
                         </div>
 
                         <div className='text-center'>
-                            <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregarvehiculo">
+                            <button type="submit" className="btnncolor btn-sm me-3">
                                 <i className="fa-regular fa-floppy-disk"></i> Guardar
                             </button>
                             <ModalGuardar />

@@ -30,14 +30,24 @@ export default function ListadoServicios() {
       });
       setServicios(resultado.data);
     } catch (error) {
-      console.error("Error cargando los clientes:", error);
-      alert("Error cargando los clientes. Verifica la conexión con el servidor.");
+      console.error("Error cargando los servicios:", error);
+      alert("Error al cargar los servicios. Verifica la conexión con el servidor.");
     }
   };
 
   const eliminarServicio = async (id) => {
-    await axios.delete(`${urlBase}/${id}`);
-    cargarServicios();
+    const token = localStorage.getItem('token');
+    try {
+      await axios.delete(`${urlBase}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      });
+      cargarServicios();
+    } catch (error) {
+      console.error("Error al eliminar los servicios:", error);
+      alert("Error al eliminar los servicios. Verifica la conexión con el servidor.");
+    }
   };
 
   // Calcular el índice del primer y último elemento de la página actual
@@ -93,25 +103,23 @@ export default function ListadoServicios() {
 
   return (
     <div className='container'>
-      <nav aria-label="breadcrumb">
+      <nav aria-label="breadcrumb" className='breadcrumb002'>
         <ol className="breadcrumb">
-          <li className="breadcrumb-item">Inicio</li>
-          <li className="breadcrumb-item active" aria-current="page">Servicios</li>
+          <li className="breadcrumb-item breadcrumb001">
+            <i className="fa-solid fa-house"></i>
+            Inicio
+          </li>
+          <li className="breadcrumb-item active breadcrumb003" aria-current="page">Servicios</li>
         </ol>
       </nav>
-
       <div className='container text' style={{ margin: "30px" }}>
         <h2> Servicios </h2>
       </div>
 
       <div className='container text-center ' style={{ margin: "30px", display: "flex", justifyContent: "center", gap: "84px" }} >
-
         <Link type="button" className="btn btn-center btncolor" to="/agregarservicio" style={{ width: "280px", height: "50px" }}>Agregar servicio</Link>
         <Link type="button" className="btn btn-center btncolor " to="/buscarservicio" style={{ width: "280px", height: "50px" }}>Buscar servicio</Link>
-
-
       </div>
-
       <div className="nav justify-content-end">
         <button className="fa-sharp fa-solid fa-file-pdf p-2 g-col-6"
           style={{ listStyle: "none", color: "black", fontSize: "31px", background: "none", border: "none" }}
@@ -193,9 +201,9 @@ export default function ListadoServicios() {
 
         {/* Paginación */}
         <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
-          <div className='d-flex justify-content-between align-items-center'>
-            <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
-            <div className="d-flex justify-content-start  justify-content-end">
+        <div className='d-flex justify-content-between align-items-center'>
+          <h6><span>Mostrando {currentPage} de {totalPages}</span></h6>
+          <div className="d-flex justify-content-start  justify-content-end">
 
             <button
               className="btn btn-secondary me-2"

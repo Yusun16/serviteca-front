@@ -24,12 +24,8 @@
     "react-number-format": "^5.4.0",
     "react-router-dom": "^6.26.1",
     "react-scripts": "^5.0.1",
-<<<<<<< HEAD
     "react-select": "^5.8.1",
-=======
-    "react-select": "^5.8.2",
     "react-tooltip": "^5.28.0",
->>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     "web-vitals": "^2.1.4",
     "xlsx": "^0.18.5"
   },

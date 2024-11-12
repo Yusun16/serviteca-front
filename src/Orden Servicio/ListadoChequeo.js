@@ -12,10 +12,20 @@ function ListadoChequeo() {
     }, []);
 
     const cargarRevisiones = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado cargar chequeos");
-        console.log(resultado.data);
-        setRevisiones(resultado.data);
+
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado cargar chequeos");
+            console.log(resultado.data);
+            setRevisiones(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar el chequeo", error);
+        }
     }
 
     return (

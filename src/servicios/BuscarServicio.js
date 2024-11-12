@@ -14,7 +14,7 @@ export default function BuscarServicio() {
     const [codigo, setCodigo] = useState('');
     const [descripcion, setDescripcion] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [showTable, setShowTable] = useState(false); // Estado para controlar la visibilidad de la tabla
+    const [showTable, setShowTable] = useState(false);
     const itemsPerPage = 8;
 
     useEffect(() => {
@@ -22,13 +22,33 @@ export default function BuscarServicio() {
     }, []);
 
     const cargarServicios = async () => {
-        const resultado = await axios.get(urlBase);
-        setServicios(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setServicios(resultado.data);
+        } catch (error) {
+            console.error("Error cargando los servicios:", error);
+            alert("Error al cargar los servicios. Verifica la conexión con el servidor.");
+        }
     };
 
     const eliminarServicio = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarServicios();
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            cargarServicios();
+        } catch (error) {
+            console.error("Error al eliminar los servicios:", error);
+            alert("Error al eliminar los servicios. Verifica la conexión con el servidor.");
+        }
     };
 
     const handleSubmit = async (e) => {
@@ -37,9 +57,22 @@ export default function BuscarServicio() {
         if (codigo) queryParams.append('codigo', codigo);
         if (descripcion) queryParams.append('descripcion', descripcion);
 
-        const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
-        setServicios(response.data);
-        setShowTable(true); // Mostrar la tabla después de realizar la búsqueda
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            setServicios(response.data);
+            setShowTable(true);
+        } catch (error) {
+            console.error("Error al buscar los servicios:", error);
+            alert("Error al buscar los servicios. Verifica la conexión con el servidor.");
+        }
     };
 
     // Calcular el índice del primer y último elemento de la página actual
@@ -96,13 +129,17 @@ export default function BuscarServicio() {
     return (
         <>
             <div className='container'>
-                <nav aria-label="breadcrumb">
+                <nav aria-label="breadcrumb" className='breadcrumb002'>
                     <ol className="breadcrumb">
-                        <li className="breadcrumb-item">Inicio</li>
-                        <li className="breadcrumb-item active" aria-current="page">Servicios</li>
-                        <li className="breadcrumb-item active" aria-current="page">Buscar</li>
+                        <li className="breadcrumb-item breadcrumb001">
+                            <i className="fa-solid fa-house"></i>
+                            Inicio
+                        </li>
+                        <li className="breadcrumb-item active breadcrumb004" aria-current="page">Servicios</li>
+                        <li className="breadcrumb-item active breadcrumb003" aria-current="page">Buscar</li>
                     </ol>
                 </nav>
+
                 <div className='container' style={{ margin: "30px" }}>
                     <h3>Buscar Servicio</h3>
                     <div className='text'>

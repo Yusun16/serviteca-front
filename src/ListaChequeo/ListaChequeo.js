@@ -9,7 +9,7 @@ const CheckListComponent = () => {
 
     const [images, setImages] = useState([null, null, null, null, null]);
     const [formData, setFormData] = useState({
-        orden:{
+        orden: {
             idOrden: idOrden
         },
         observationsRight: '',
@@ -18,7 +18,7 @@ const CheckListComponent = () => {
         observationsBack: '',
         observationsIndicador: '',
     });
-    
+
     const urlBase = "http://localhost:8080/serviteca/servicios";
     const [combustible, setCombustible] = useState('');
     const navigate = useNavigate();
@@ -28,13 +28,18 @@ const CheckListComponent = () => {
 
     useEffect(() => {
         cargarServicios();
-      }, []);
+    }, []);
 
     const cargarServicios = async () => {
-        const resultado = await axios.get(urlBase);
+        const token = localStorage.getItem('token');
+        const resultado = await axios.get(urlBase, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
         setListachequeo(resultado.data);
-      };
-      
+    };
+
 
     const handleImageChange = (e, index) => {
         const file = e.target.files[0];
@@ -60,10 +65,12 @@ const CheckListComponent = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const token = localStorage.getItem('token');
         try {
             // Enviar los datos del formulario para agregar los campos de observacion
             const response = await axios.post('http://localhost:8080/serviteca/revisiones', formData, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -86,6 +93,7 @@ const CheckListComponent = () => {
             // Enviar FormData que incluye las imágenes
             await axios.put('http://localhost:8080/serviteca/revisiones/uploadFotos', formDataWithFiles, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });

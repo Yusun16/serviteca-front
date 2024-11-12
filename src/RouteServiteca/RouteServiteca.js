@@ -15,6 +15,7 @@ import ListadoCliente from "../Registrar/listadoCliente";
 import AgregarCliente from "../Registrar/agregarCliente";
 import BuscarCliente from "../Registrar/buscarCliente";
 import ListadoVehiculo from "../Registrar/listadoVehiculo";
+import EditarVehiculo from "../Registrar/EditarVehiculo";
 import AgregarVehiculo from "../Registrar/agregarVehiculo";
 import BuscarVehiculo from "../Registrar/buscarVehiculo";
 import EjecucionServicio from "../Orden Servicio/ejecucionServicio";
@@ -36,13 +37,15 @@ import Restriccion from './Restriccion';
 import ResetPassword from '../logins/ResetPassword';
 import ConfirmEmail from '../logins/ConfirmEmail';
 import NewPassword from '../logins/NewPassword';
+import RegisterUsuario from '../logins/RegisterUsuario';
+import AdminLoginForm from '../logins/AdminLoginForm';
 
 // Este es el nuevo componente para manejar la visibilidad del nav
 function NavBarVisibility() {
     const location = useLocation();
 
     // Definimos las rutas donde no queremos que se muestre el nav
-    const noNavRoutes = ["/", "/recuperar-contrasena", "/verificar-correo", "/renovar-contrasena"];
+    const noNavRoutes = ["/", "/recuperar-contrasena", "/verificar-correo", "/renovar-contrasena", "/serviteca-admin-authenticate"];
 
     // Verificamos si la ruta actual está en noNavRoutes o si es una ruta de renovar contraseña
     const isRenovarContrasenaRoute = location.pathname.startsWith("/renovar-contrasena/");
@@ -60,45 +63,48 @@ function RouteServiteca() {
                 {/* Rutas de Sesión - Inicio-Rol - Recuperación */}
                 <Route exact path="/vista-principal" element={<VistaPrincipal />} />
                 <Route exact path="/" element={<JefeTaller />} />
+                <Route exact path="/serviteca-admin-authenticate" element={<AdminLoginForm />} />
+                <Route exact path="/serviteca-admin-register" element={<Restriccion element={<RegisterUsuario />} allowedRoles={['ROLE_ADMIN']} />} />
                 <Route exact path="/recuperar-contrasena" element={<ResetPassword />} />
                 <Route exact path="/verificar-correo" element={<ConfirmEmail />} />
                 <Route exact path="/renovar-contrasena/:otp/:username" element={<NewPassword />} />
                 {/* Rutas de Servicios - Manuel */}
                 <Route exact path="/listadoservicio" element={<Restriccion element={<ListadoServicios />} allowedRoles={['ROLE_INVENTARIO']} />} />
-                <Route exact path="/agregarservicio" element={<AgregarServicio />} />
-                <Route exact path="/buscarservicio/" element={<BuscarServicio />} />
-                <Route exact path="/editar/:id" element={<EditarServicio />} />
+                <Route exact path="/agregarservicio" element={<Restriccion element={<AgregarServicio />} allowedRoles={['ROLE_INVENTARIO']} />} />
+                <Route exact path="/buscarservicio/" element={<Restriccion element={<BuscarServicio />} allowedRoles={['ROLE_INVENTARIO']} />} />
+                <Route exact path="/editar/:id" element={<Restriccion element={<EditarServicio />} allowedRoles={['ROLE_INVENTARIO']} />} />
                 {/* Rutas de Ordenes de Servicios - Manuel y Yusun */}
                 <Route exact path="/agregarorden/" element={<Restriccion element={<AgregarOrden />} allowedRoles={['ROLE_TALLER']} />} />
-                <Route exact path="/ordenservicio/" element={<ListadoOrden />} />
-                <Route exact path="/buscarorden/" element={<BuscarOrden />} />
-                <Route exact path="/ejecucionServicio/" element={<EjecucionServicio />} />
-                <Route exact path="/modalAgregarEjecucion/" element={<ModalAgregarEjecucion />} />
+                <Route exact path="/ordenservicio/" element={<Restriccion element={<ListadoOrden />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/buscarorden/" element={<Restriccion element={<BuscarOrden />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/ejecucionServicio/" element={<Restriccion element={<EjecucionServicio />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/modalAgregarEjecucion/" element={<Restriccion element={<ModalAgregarEjecucion />} allowedRoles={['ROLE_TALLER']} />} />
                 {/* Rutas de Lista de Chequeo - Yusun */}
-                <Route exact path="/listachequeo/" element={<ListadoChequeo />} />
-                <Route path="/chequeo" element={<ListaChequeo />} />
+                <Route exact path="/listachequeo/" element={<Restriccion element={<ListadoChequeo />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/chequeo" element={<Restriccion element={<ListaChequeo />} allowedRoles={['ROLE_TALLER']} />} />
                 {/* Rutas de Clientes - Manuel */}
                 <Route exact path="/listadocliente/" element={<Restriccion element={<ListadoCliente />} allowedRoles={['ROLE_TALLER']} />} />
-                <Route exact path="/agregarCliente/" element={<AgregarCliente />} />
-                <Route exact path="/buscarCliente/" element={<BuscarCliente />} />
-                <Route exact path="/EditarCliente/:id" element={<EditarCliente />} />
+                <Route exact path="/agregarCliente/" element={<Restriccion element={<AgregarCliente />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/buscarCliente/" element={<Restriccion element={<BuscarCliente />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/EditarCliente/:id" element={<Restriccion element={<EditarCliente />} allowedRoles={['ROLE_TALLER']} />} />
                 {/* Rutas de Vehiculos - Manuel */}
-                <Route exact path="/listadovehiculo" element={<ListadoVehiculo />} />
-                <Route exact path="/agregarvehiculo" element={<AgregarVehiculo />} />
-                <Route exact path="/buscarvehiculo" element={<BuscarVehiculo />} />
+                <Route exact path="/listadovehiculo" element={<Restriccion element={<ListadoVehiculo />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/agregarvehiculo" element={<Restriccion element={<AgregarVehiculo />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/buscarvehiculo" element={<Restriccion element={<BuscarVehiculo />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route exact path="/EditarVehiculo/:id" element={<Restriccion element={<EditarVehiculo />} allowedRoles={['ROLE_TALLER']} />} />
 
                 {/* Rutas de Jefer */}
                 <Route path="/auto-partes" element={<Restriccion element={<IniAutPar />} allowedRoles={['ROLE_ASISTENTE']} />} />
                 <Route path="/agregar-auto-partes" element={<Restriccion element={<AutoPartes />} allowedRoles={['ROLE_ASISTENTE']} />} />
-                <Route path="/buscar-auto-partes" element={<BuscarAutPar />} />
-                <Route path="/editar-auto-partes/:id" element={<ModalEdit />} />
-                <Route path="/operarios" element={<IniOperarios />} />
-                <Route path="/agregar-operarios" element={<Operarios />} />
-                <Route path="/buscar-operarios" element={<BuscarOperarios />} />
-                <Route path="/editar-operarios/:id" element={<ModalEditOpe />} />
-                <Route path="/informe-auto-partes" element={<InfoAutoPartes />} />
-                <Route path="/informe-liquidacion-operarios" element={<InfoLiquidacionOperarios />} />
-                <Route path="/informe-servicios" element={<InfoServicios />} />
+                <Route path="/buscar-auto-partes" element={<Restriccion element={<BuscarAutPar />} allowedRoles={['ROLE_ASISTENTE']} />} />
+                <Route path="/editar-auto-partes/:id" element={<Restriccion element={<ModalEdit />} allowedRoles={['ROLE_ASISTENTE']} />} />
+                <Route path="/operarios" element={<Restriccion element={<IniOperarios />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/agregar-operarios" element={<Restriccion element={<Operarios />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/buscar-operarios" element={<Restriccion element={<BuscarOperarios />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/editar-operarios/:id" element={<Restriccion element={<ModalEditOpe />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/informe-auto-partes" element={<Restriccion element={<InfoAutoPartes />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/informe-liquidacion-operarios" element={<Restriccion element={<InfoLiquidacionOperarios />} allowedRoles={['ROLE_TALLER']} />} />
+                <Route path="/informe-servicios" element={<Restriccion element={<InfoServicios />} allowedRoles={['ROLE_TALLER']} />} />
                 {/* Rutas fin de Jefer */}
             </Routes>
         </div>

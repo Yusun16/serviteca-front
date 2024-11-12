@@ -82,6 +82,14 @@ export default function VistaPrincipal() {
                                 </li>
                             </ul>
                         )}
+
+                        {activeRole === 'ROLE_ADMIN' && (
+                            <ul>
+                                <li style={{ marginBottom: "40px" }}>
+                                    <Link className='servicios text-white' style={{ textDecoration: "none", position: "relative", left: "18px" }} to="/serviteca-admin-register">Registrar Usuarios</Link>
+                                </li>
+                            </ul>
+                        )}
                     </div>
                 </div>
             </div>

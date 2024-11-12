@@ -16,7 +16,7 @@ export default function AgregarServicio() {
         },
         kilometraje: "",
         fecha: "",
-        hora:""
+        hora: ""
     });
 
     const [isEditing, setIsEditing] = useState(false); // Controla si se puede editar el formulario
@@ -28,8 +28,13 @@ export default function AgregarServicio() {
 
     // Esta función obtiene el código solo cuando el usuario presiona "Agregar Nueva Orden de Servicio"
     const obtenerCodigo = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/generarcodigo');
+            const response = await axios.get('http://localhost:8080/serviteca/generarcodigo', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setOrden(prevOrden => ({ ...prevOrden, codigo: response.data }));
         } catch (error) {
             console.error("Error al obtener el código", error);
@@ -37,8 +42,13 @@ export default function AgregarServicio() {
     };
 
     const obtenerClientes = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/cliente');  // Ajusta la URL según sea necesario
+            const response = await axios.get('http://localhost:8080/serviteca/cliente', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });  // Ajusta la URL según sea necesario
             setClientes(response.data);  // Guardamos los clientes en el estado
         } catch (error) {
             console.error("Error al obtener los clientes", error);
@@ -46,8 +56,13 @@ export default function AgregarServicio() {
     };
 
     const obtenerVehiculos = async (id) => {
+        const token = localStorage.getItem('token');
         try {
-            const respuesta = await axios.get('http://localhost:8080/serviteca/vehiculosCliente/' + id); // Asegúrate de que la URL sea correcta
+            const respuesta = await axios.get('http://localhost:8080/serviteca/vehiculosCliente/' + id, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }); // Asegúrate de que la URL sea correcta
             const vehiculos = respuesta.data.map(vehiculo => ({
                 value: vehiculo.vehiculoId, // Ajusta según tu estructura de datos
                 label: vehiculo.placa,      // La placa o cualquier otro identificador
@@ -59,8 +74,13 @@ export default function AgregarServicio() {
     };
 
     const obtenerServicios = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/servicios');
+            const response = await axios.get('http://localhost:8080/serviteca/servicios', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setServicios(response.data);
             const servicios = response.data.map((servicio) => ({
                 value: servicio.idServicio,
@@ -130,13 +150,18 @@ export default function AgregarServicio() {
             fecha: orden.fecha,
             hora: orden.hora
         };
-    
+
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.post(urlBase, jSonBody);
-            const { idOrden } = response.data;  
-            
+            const response = await axios.post(urlBase, jSonBody, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const { idOrden } = response.data;
+
             localStorage.setItem('idOrden', idOrden);
-    
+
             setOrden({
                 "codigo": "",
                 "servicio": {
@@ -149,13 +174,13 @@ export default function AgregarServicio() {
                 "fecha": "",
                 "hora": ""
             });
-    
+
             setIsEditing(false);
             navegacion("/chequeo");
         } catch (error) {
             console.error("Error al enviar los datos: ", error);
         }
-    };    
+    };
 
     const handleAgregarOrden = () => {
         obtenerCodigo(); // Llama la función para obtener el código cuando el usuario presiona el botón
@@ -169,14 +194,15 @@ export default function AgregarServicio() {
 
     return (
         <div className="container my-5 ">
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-
-                    <li className="breadcrumb-item"><i className="fa-solid fa-house"></i><a href="/agregarorden"> Inicio</a></li>
-                    <li className="breadcrumb-item active" aria-current="page">Orden de Servicio</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Orden de Servicio</li>
                 </ol>
             </nav>
-
             <div className="text-center mb-4">
                 <div className="row" style={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
                     <div className="col-4">
@@ -221,7 +247,7 @@ export default function AgregarServicio() {
                             options={opcionesClientes}
                             isDisabled={!isEditing}
                             isClearable
-                            className='selecclientes'
+                            className='selecclientes2'
                             placeholder="Seleccione un cliente"
                         /><button className="btn btn-link" disabled={!isEditing}><Link type="button" class="btn btncolor" to="/agregarcliente"><i class="fa-solid fa-plus" style={{ color: "#ffffff;" }}></i></Link></button>
 
@@ -239,7 +265,7 @@ export default function AgregarServicio() {
                             options={opcionesVehiculos}  // Opciones de vehículos obtenidas desde tu backend
                             isDisabled={!isEditing}
                             isClearable
-                            className='selecclientes'
+                            className='selecclientes3'
                             placeholder="Seleccione un vehículo"
                         />
                         <button className="btn btn-link" disabled={!isEditing}>
@@ -261,7 +287,7 @@ export default function AgregarServicio() {
                             options={opcionesServicios}
                             isDisabled={!isEditing}
                             isClearable
-                            className='selecclientes'
+                            className='selecclientes4'
                             placeholder="Seleccione un cliente"
                         />
 

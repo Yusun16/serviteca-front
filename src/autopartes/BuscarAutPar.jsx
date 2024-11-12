@@ -23,13 +23,33 @@ function BuscarAutPar() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const cargarAutoPartes = async () => {
-        const resultado = await axios.get(urlBase);
-        setAutopartes(resultado.data);
+        const token = localStorage.getItem('token');
+
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAutopartes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar las autopartes:", error);
+        }
     };
 
     const eliminarAutoPartes = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarAutoPartes();
+        const token = localStorage.getItem('token');
+
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarAutoPartes();
+        } catch (error) {
+            console.error("Error al eliminar la autoparte:", error);
+        }
     };
 
     useEffect(() => {
@@ -50,14 +70,17 @@ function BuscarAutPar() {
         if (siigo) queryParams.append('siigo', siigo);
         if (descripcion) queryParams.append('descripcion', descripcion);
 
+        const token = localStorage.getItem('token');
+
         try {
-            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
             if (response.data.length === 0) {
                 // Colocar un modal para el aviso de: "Búsqueda no encontrada."
-                // setErrorMessage(
-                //     <span>
-                //         <strong>Búsqueda no encontrada.</strong> Intenta con otros parámetros.
-                //     </span>);
                 setIsModalOpen(true);
             } else {
                 setAutopartes(response.data);

@@ -9,8 +9,6 @@ import ModalEliminarCliente from './modalEliminarCliente';
 import ModalGuardarCliente from './modalGuardarCliente';
 
 export default function AgregarCliente() {
-
-
     let navegacion = useNavigate();
 
     const urlBase = "http://localhost:8080/serviteca/cliente";
@@ -40,7 +38,7 @@ export default function AgregarCliente() {
         ciudad: "",
         razonSocial: "",
         nit: "",
-       
+
     });
 
     const { cedula, nombre, apellido, correo, direccion, telefono, departamento, ciudad } = cliente;
@@ -53,6 +51,14 @@ export default function AgregarCliente() {
 
     const handleSwitchChange = () => {
         setIsJuridico(!isJuridico);
+
+        setCliente((prevCliente) => {
+            if (!isJuridico) {
+                return { ...prevCliente, cedula: "", apellido: "", nombre: "", correo: "", direccion: "", telefono: "", departamento: "", ciudad: "", };
+            } else {
+                return { ...prevCliente, cedula: "", nombre: "", correo: "", direccion: "", telefono: "", departamento: "", ciudad: "", };
+            }
+        });
     };
 
     // JSON de departamentos y ciudades de Colombia
@@ -88,10 +94,6 @@ export default function AgregarCliente() {
         "Valle del Cauca": ["Cali"],
         "Vaupés": ["Mitú"],
         "Vichada": ["Puerto Carreño"],
-
-
-
-        // Agrega más departamentos y ciudades según sea necesario
     };
 
     const departamentos = Object.keys(departamentosYciudades);
@@ -108,18 +110,35 @@ export default function AgregarCliente() {
     }, []);
 
     const cargarClientes = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado de cargar Vehiculos");
-        console.log(resultado.data);
-        setClientes(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado de cargar clientes");
+            setClientes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar los clientes:", error.response || error.message);
+            alert("Error al cargar los clientes. Verifica la conexión con el servidor.");
+        }
     }
 
     const eliminarCliente = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarClientes();
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarClientes();
+        } catch (error) {
+            console.error("Error al eliminar los clientes:", error.response || error.message);
+            alert("Error al eliminar los clientes. Verifica la conexión con el servidor.");
+        }
     };
-
-    
 
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(clientes.map(cliente => ({
@@ -150,18 +169,45 @@ export default function AgregarCliente() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const urlBase = "http://localhost:8080/serviteca/cliente";
-        await axios.post(urlBase, cliente);
-        // navegacion("/listadoCliente");
+
+        let requiredFields = isJuridico
+            ? ["correo", "direccion", "telefono", "departamento", "ciudad", "nombre", "cedula"]
+            : ["correo", "direccion", "telefono", "departamento", "ciudad", "nombre", "cedula", "apellido"];
+
+
+        const allFieldsFilled = requiredFields.every(field => cliente[field] && cliente[field].trim() !== "");
+
+        if (!allFieldsFilled) {
+            alert("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post(urlBase, cliente, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // navegacion("/listadoCliente");
+            const modal = new window.bootstrap.Modal(document.getElementById('modalagregarcliente'));
+            modal.show();
+        } catch (error) {
+            console.error("Error al agregar los clientes:", error);
+            alert("Error al agregar los clientes, por favor intenta de nuevo.");
+        }
     }
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Cliente</li>
-                    <li className="breadcrumb-item active" aria-current="page">Agregar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Clientes</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Agregar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>
@@ -301,15 +347,15 @@ export default function AgregarCliente() {
                     )}
 
                     <div className='text-center'>
-                        <button type="submit" className="btn btn-success btn-sm me-3"  data-bs-toggle="modal" data-bs-target="#modalagregarcliente">
+                        <button type="submit" className="btn btn-success btn-sm me-3">
                             <i className="fa-regular fa-floppy-disk" >
                             </i> Guardar</button>
-                       <ModalGuardarCliente />
+                        <ModalGuardarCliente />
                     </div>
                 </form>
             </div>
 
-            
+
             {/* Contenedor del formulario y la tabla */}
             <div className='d-flex'>
                 <div className='container'>
@@ -356,13 +402,13 @@ export default function AgregarCliente() {
                                     </td>
                                 </tr>
                             ))}
-                             <tr className='container'>
+                            <tr className='container'>
                                 <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col"></th>
                                 <th className='text-letras colorthead' scope="col">  </th>
-                            
+
                             </tr>
                         </tbody>
 

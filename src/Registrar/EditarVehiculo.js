@@ -10,7 +10,9 @@ export default function EditarVehiculo() {
     const { id } = useParams();
     const [clientes, setClientes] = useState([]);
     const [opcionesClientes, setOpcionesClientes] = useState([]);
-    const [image, setImage] = useState(null);
+    const [imageSrc, setImageSrc] = useState(null);
+    const [imageFile, setImageFile] = useState(null);
+    const [error, setError] = useState('');
 
     // Estado para almacenar la información del vehículo
     const [vehiculo, setVehiculos] = useState({
@@ -25,8 +27,13 @@ export default function EditarVehiculo() {
     })
 
     const obtenerClientes = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/serviteca/cliente');
+            const response = await axios.get('http://localhost:8080/serviteca/cliente', {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
             setClientes(response.data);
             const opciones = response.data.map((cliente) => ({
                 value: cliente.id,
@@ -37,8 +44,6 @@ export default function EditarVehiculo() {
             console.error("Error al obtener los clientes", error);
         }
     };
-
-
     // const { placa, marca, linea, modelo, cliente, foto, observacion } = vehiculo;
 
     const lineasYmarcas = {
@@ -65,8 +70,31 @@ export default function EditarVehiculo() {
 
     // Cargar los datos del vehículo desde el backend
     const cargarVehiculo = async () => {
-        const resultado = await axios.get(`${urlBase}/${id}`);
-        setVehiculos(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setVehiculos(resultado.data);
+
+            if (resultado.data.foto) {
+                // Solicitar la imagen como un blob para incluir el token
+                const response = await axios.get(resultado.data.foto, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    responseType: 'blob' // Para recibir la respuesta como blob
+                });
+
+                // Crear una URL temporal para el blob y configurarla como fuente de la imagen
+                setImageSrc(URL.createObjectURL(response.data));
+            }
+        } catch (error) {
+            console.error("Error al cargar los vehiculos:", error);
+            alert("Error al cargar los vehiculos. Verifica la conexión con el servidor.");
+        }
     };
 
     // Manejo de cambios en los campos del formulario
@@ -75,12 +103,25 @@ export default function EditarVehiculo() {
     };
 
     // Envío del formulario
-    // Envío del formulario
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         console.log("Estado del vehículo antes de enviar:", vehiculo);
 
+        const requiredFields = ["placa", "marca", "linea", "modelo", "observacion"];
+        const allFieldsFilled = requiredFields.every(field => vehiculo[field].trim() !== "");
+
+        if (!allFieldsFilled) {
+            setError('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+
+        if (!imageSrc) {
+            setError("Por favor, selecciona una imagen.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
         try {
             // Preparar datos del vehículo
             const jSonBody = {
@@ -100,6 +141,7 @@ export default function EditarVehiculo() {
             // Enviar vehículo
             const response = await axios.post('http://localhost:8080/serviteca/vehiculos', jSonBody, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -109,13 +151,14 @@ export default function EditarVehiculo() {
             const vehiculoId = response.data.id;
 
             // Subir imagen si existe
-            if (image) {
+            if (imageFile) {
                 const imageFormData = new FormData();
                 imageFormData.append('id', vehiculoId);
-                imageFormData.append('file', image);
+                imageFormData.append('file', imageFile);
 
                 const imageResponse = await axios.put('http://localhost:8080/serviteca/vehiculos/photo', imageFormData, {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
                     },
                 });
@@ -137,7 +180,8 @@ export default function EditarVehiculo() {
 
             // Redirigir (si es necesario)
             // navegacion("/agregarvehiculo");
-
+            const modal = new window.bootstrap.Modal(document.getElementById('modaleditarvehiculo'));
+            modal.show();
         } catch (error) {
             console.error('Error al enviar los datos', error);
             alert('Hubo un problema al enviar los datos');
@@ -155,20 +199,25 @@ export default function EditarVehiculo() {
         }
     };
 
-
     // Manejar el cambio de la imagen
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setImage(file); // Almacenar el archivo directamente en lugar de la URL
+        if (file) {
+            setImageSrc(URL.createObjectURL(file));
+            setImageFile(file);
+        }
     };
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Vehiculo</li>
-                    <li className="breadcrumb-item active" aria-current="page">Editar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Vehiculos</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Editar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>
@@ -189,6 +238,7 @@ export default function EditarVehiculo() {
                                     value={vehiculo.placa}
                                     onChange={onInputChange}
                                     style={{ width: "320px" }}
+                                    required
                                 />
                             </div>
                             <div className="col">
@@ -242,11 +292,10 @@ export default function EditarVehiculo() {
                                 <div className="w-50">
                                     <label htmlFor="cliente" className="col-4 col-form-label">Foto:*</label>
                                     <div className="card" style={{ width: '329px', height: '130px', overflow: "hidden" }}>
-                                        {image && (
+                                        {imageSrc && (
                                             <img
-                                                src={image}
-                                                className=''
-                                                alt="Foto-subida"
+                                                src={imageSrc}
+                                                alt="Foto del vehículo"
                                                 style={{
                                                     objectFit: "fill",
                                                     zIndex: "2",
@@ -258,18 +307,18 @@ export default function EditarVehiculo() {
                                                 }}
                                             />
                                         )}
+                                        {/* El input para cargar una nueva imagen */}
                                         <input
                                             type="file"
                                             className="form-control-file d-none"
                                             id="fotoimg"
                                             accept="image/*"
-                                            onChange={handleImageChange} // Maneja la selección de imagen
+                                            onChange={handleImageChange}
                                         />
                                         <label htmlFor='fotoimg' style={{ width: "100%", height: "100%" }}>
-                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px", top: "100px" }}>
+                                            <div className="h6 mb-4 text-secondary border-bottom border-secondary" style={{ position: "relative", left: "250px", width: "95px" }}>
                                                 Examinar
                                             </div>
-                                            <img src={vehiculo.foto} alt="foto ejemplo" style={{ width: "120px", zIndex: "1", left: "50px", position: "relative", height: "90px", bottom: "30px" }} />
                                         </label>
                                     </div>
                                 </div>
@@ -290,11 +339,12 @@ export default function EditarVehiculo() {
                         </div>
                     </div>
                     <div className='text-center'>
-                        <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditarvehiculo">
+                        <button type="submit" className="btnncolor btn-sm me-3">
                             <i className="fa-regular fa-floppy-disk"></i> Guardar
                         </button>
                         <ModalEditar />
                     </div>
+                    {error && <div className="error-message">{error}</div>}
                 </form>
             </div>
         </div>

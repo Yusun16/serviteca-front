@@ -24,9 +24,19 @@ export default function BuscarCliente() {
         if (correo) queryParams.append('correo', correo);
         if (telefono) queryParams.append('telefono', telefono);
 
-        const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
-        setClientes(response.data);
-        setShowTable(true);
+        const token = localStorage.getItem('token');
+        try {
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setClientes(response.data);
+            setShowTable(true);
+        } catch (error) {
+            console.error("Error al buscar los clientes:", error);
+            alert("Error al buscar los clientes, por favor intenta de nuevo.");
+        }
     };
 
     useEffect(() => {
@@ -34,21 +44,35 @@ export default function BuscarCliente() {
     }, []);
 
     const cargarClientes = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado de cargar Clientes");
-        console.log(resultado.data);
-        setClientes(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado de cargar Clientes");
+            setClientes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar los clientes:", error.response || error.message);
+            alert("Error al cargar los clientes. Verifica la conexión con el servidor.");
+        }
     }
 
     const eliminarCliente = async (id) => {
+        const token = localStorage.getItem('token');
         try {
-          await axios.delete(`${urlBase}/${id}`);
-          cargarClientes();
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarClientes();
         } catch (error) {
-          console.error("Error eliminando el cliente:", error);
-          alert("Error al eliminar al cliente, por favor intenta de nuevo.");
+            console.error("Error al eliminar el cliente:", error);
+            alert("Error al eliminar al cliente, por favor intenta de nuevo.");
         }
-      };
+    };
 
     // Paginación
     const indexOfLastItem = currentPage * itemsPerPage;
@@ -94,11 +118,14 @@ export default function BuscarCliente() {
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item">Cliente</li>
-                    <li className="breadcrumb-item active" aria-current="page">Buscar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Clientes</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Buscar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>

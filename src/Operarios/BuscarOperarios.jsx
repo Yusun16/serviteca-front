@@ -17,13 +17,31 @@ function BuscarOperarios() {
     const [telefono, setTelefono] = useState('');
 
     const cargarOperarios = async () => {
-        const resultado = await axios.get(urlBase);
-        setOperarios(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setOperarios(resultado.data);
+        } catch (error) {
+            console.error("Error al obtener los operarios", error);
+        }
     };
 
     const eliminarOperarios = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarOperarios();
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarOperarios();
+        } catch (error) {
+            console.error("Error al eliminar los operarios", error);
+        }
     };
 
     useEffect(() => {
@@ -44,8 +62,15 @@ function BuscarOperarios() {
         if (correo) queryParams.append('correo', correo);
         if (telefono) queryParams.append('telefono', telefono);
 
+        const token = localStorage.getItem('token');
+
         try {
-            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`);
+            const response = await axios.get(`${urlBase}/buscar?${queryParams.toString()}`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
             if (response.data.length === 0) {
                 // Colocar un modal para el aviso de: "Búsqueda no encontrada."
                 setErrorMessage('Búsqueda no encontrada.');

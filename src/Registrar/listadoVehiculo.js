@@ -25,15 +25,35 @@ export default function ListadoVehiculo() {
     }, []);
 
     const cargarVehiculos = async () => {
-        const resultado = await axios.get(urlBase);
-        console.log("Resultado de cargar Vehiculos");
-        console.log(resultado.data);
-        setVehiculos(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            console.log("Resultado de cargar Vehiculos");
+            setVehiculos(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar los vehiculos:", error);
+            alert("Error al cargar los vehiculos. Verifica la conexión con el servidor.");
+        }
     }
 
     const eliminarVehiculo = async (id) => {
-        await axios.delete(`${urlBase}/${id}`);
-        cargarVehiculos();
+        const token = localStorage.getItem('token');
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
+            cargarVehiculos();
+        } catch (error) {
+            console.error("Error al eliminar los vehiculos:", error);
+            alert("Error al eliminar los vehiculos. Verifica la conexión con el servidor.");
+        }
     };
 
     const paginate = (pageNumber) => {
@@ -79,20 +99,17 @@ export default function ListadoVehiculo() {
         saveAs(data, "listado_vehiculos.xlsx");
     };
 
-
-   
-
-
-
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item active" aria-current="page">Vehiculo</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Vehiculos</li>
                 </ol>
             </nav>
-
             <div className='container' style={{ margin: "30px" }}>
                 <h4>Vehiculo</h4>
             </div>
@@ -143,13 +160,13 @@ export default function ListadoVehiculo() {
                                 </td>
                             </tr>
                         ))}
-                         <tr className='container'>
-                                <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
-                                <th className='text-letras colorthead' scope="col"></th>
-                                <th className='text-letras colorthead' scope="col"></th>
-                                <th className='text-letras colorthead' scope="col"></th>
-                                <th className='text-letras colorthead' scope="col">  </th>
-                            </tr>
+                        <tr className='container'>
+                            <th className='text-letras colorthead' style={{ padding: "10px 0px" }} scope="col"></th>
+                            <th className='text-letras colorthead' scope="col"></th>
+                            <th className='text-letras colorthead' scope="col"></th>
+                            <th className='text-letras colorthead' scope="col"></th>
+                            <th className='text-letras colorthead' scope="col">  </th>
+                        </tr>
                     </tbody>
 
                 </table>

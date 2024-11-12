@@ -28,8 +28,17 @@ function ModalEditOpe() {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const cargarOperarios = async () => {
-        const resultado = await axios.get(`${urlBase}/${id}`);
-        setOperarios(resultado.data);
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setOperarios(resultado.data);
+        } catch (error) {
+            console.error("Error al obtener los operarios", error);
+        }
     };
 
     useEffect(() => {
@@ -46,8 +55,6 @@ function ModalEditOpe() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(urlBase, operarios)
-        // navegacion("/auto-partes")
 
         const requiredFields = [
             'cedula',
@@ -62,10 +69,22 @@ function ModalEditOpe() {
 
         const allFieldsFilled = requiredFields.every(field => operarios[field].trim() !== '');
 
-        if (allFieldsFilled) {
+        if (!allFieldsFilled) {
+            setError('Por favor, completa todos los campos obligatorios.');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post(urlBase, operarios, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            // navegacion("/auto-partes")
             setError('');
             setIsModalOpen(true);
-        } else {
+        } catch (error) {
             setError('Por favor, completa todos los campos obligatorios.');
         }
     };

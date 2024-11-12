@@ -9,6 +9,7 @@ function Operarios() {
     const [isOn, setIsOn] = useState(false);
     const [image, setImage] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
@@ -42,13 +43,92 @@ function Operarios() {
         }));
     };
 
+    const validateForm = () => {
+        const {
+            cedula,
+            nombre,
+            apellido,
+            correo,
+            telefono,
+            direccion,
+            acudiente,
+            telefonoAcudiente,
+            especialidad,
+        } = formData;
+
+        const cedulaRegex = /^\d{7,12}$/;
+        const nameRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const phoneRegex = /^\d{10}$/;
+
+        if (!cedula || !cedulaRegex.test(cedula)) {
+            setErrorMessage("La cédula debe ser un número entre 7 y 12 dígitos.");
+            return false;
+        }
+
+        if (!nombre || !nameRegex.test(nombre)) {
+            setErrorMessage("El nombre solo puede contener letras.");
+            return false;
+        }
+
+        if (!apellido || !nameRegex.test(apellido)) {
+            setErrorMessage("El apellido solo puede contener letras.");
+            return false;
+        }
+
+        if (!correo || !emailRegex.test(correo)) {
+            setErrorMessage("Por favor, ingresa un correo electrónico válido.");
+            return false;
+        }
+
+        if (!telefono || !phoneRegex.test(telefono)) {
+            setErrorMessage("El teléfono debe ser un número válido de al menos 7 dígitos.");
+            return false;
+        }
+
+        if (!direccion.trim()) {
+            setErrorMessage("La dirección no puede estar vacía.");
+            return false;
+        }
+
+        if (!acudiente || !nameRegex.test(acudiente)) {
+            setErrorMessage("El nombre del acudiente solo puede contener letras.");
+            return false;
+        }
+
+        if (!telefonoAcudiente || !phoneRegex.test(telefonoAcudiente)) {
+            setErrorMessage("El teléfono del acudiente debe ser un número válido.");
+            return false;
+        }
+
+        if (!especialidad) {
+            setErrorMessage("Por favor, selecciona una especialidad.");
+            return false;
+        }
+
+        if (!image) {
+            setErrorMessage("Por favor, selecciona una imagen.");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // if (!image) {
+        //     alert("Por favor, selecciona una imagen.");
+        //     return;
+        // }
+
+        const token = localStorage.getItem('token');
 
         // Guardando datos del Formulario
         try {
             const response = await axios.post('http://localhost:8080/serviteca/operarios', formData, {
                 headers: {
+                    Authorization: `Bearer ${token}`,
                     'Content-Type': 'application/json',
                 },
             });
@@ -63,6 +143,7 @@ function Operarios() {
 
                 await axios.put('http://localhost:8080/serviteca/operarios/photo', imageFormData, {
                     headers: {
+                        Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
                     },
                 });
@@ -72,7 +153,7 @@ function Operarios() {
             // alert('Operario y foto subidos correctamente');
         } catch (error) {
             console.error('Error al enviar los datos', error);
-            alert('Hubo un problema al enviar los datos');
+            setErrorMessage("Hubo un problema al enviar los datos. Intenta nuevamente.");
         }
     };
 
@@ -277,6 +358,7 @@ function Operarios() {
                                 </div>
                             </button>
                         </div>
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
                     </div>
                 </form>
                 <div>

@@ -11,12 +11,13 @@ import ModalEliminar from './modalEliminar';
 
 export default function AgregarServicio() {
     let navigate = useNavigate();
+    const urlBase = "http://localhost:8080/serviteca/servicios";
 
     const [servicio, setServicio] = useState({
         codigo: "",
         descripcion: "",
         valorServicio: "",
-        nombre:"",
+        nombre: "",
         ano: "",
         porcentajeOperario: ""
     });
@@ -39,29 +40,37 @@ export default function AgregarServicio() {
     const onSubmit = async (e) => {
         e.preventDefault();
 
-<<<<<<< HEAD
+        const requiredFields = ["codigo", "descripcion", "valorServicio", "nombre", "ano", "porcentajeOperario"];
+        const allFieldsFilled = requiredFields.every(field => servicio[field].trim() !== "");
+
+        if (!allFieldsFilled) {
+            alert("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
         try {
-            const urlBase = "http://localhost:8080/serviteca/servicios";
-            await axios.post(urlBase, servicio);
+            await axios.post(urlBase, servicio, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            const modal = new window.bootstrap.Modal(document.getElementById('modalagregar'));
+            modal.show();
         } catch (error) {
             console.error("Error al agregar servicio", error);
         }
-=======
-            try {
-                const urlBase = "http://localhost:8080/serviteca/servicios";
-                await axios.post(urlBase, servicio);
-
-
-            } catch (error) {
-                console.error("Error al agregar servicio", error);
-            }
-
->>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
     };
 
     const cargarServicios = async () => {
+        const token = localStorage.getItem('token');
         try {
-            const resultado = await axios.get("http://localhost:8080/serviteca/servicios");
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setServicios(resultado.data);
         } catch (error) {
             console.error("Error al cargar servicios", error);
@@ -70,7 +79,12 @@ export default function AgregarServicio() {
 
     const obtenerUltimoCodigo = async () => {
         try {
-            const resultado = await axios.get("http://localhost:8080/serviteca/servicios");
+            const token = localStorage.getItem('token');
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const ultimoServicio = resultado.data[resultado.data.length - 1];
             const nuevoCodigo = ultimoServicio ? (parseInt(ultimoServicio.codigo) + 1).toString().padStart(4, '0') : '0001';
             setServicio({ ...servicio, codigo: nuevoCodigo });
@@ -80,8 +94,13 @@ export default function AgregarServicio() {
     };
 
     const eliminarServicio = async (id) => {
+        const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:8080/serviteca/servicios/${id}`);
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            });
             cargarServicios();
         } catch (error) {
             console.error("Error al eliminar servicio", error);
@@ -136,11 +155,14 @@ export default function AgregarServicio() {
     return (
         <div className='container' >
             {/* Formulario de agregar servicio */}
-            <nav aria-label="breadcrumb">
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
                 <ol className="breadcrumb">
-                    <li className="breadcrumb-item">Inicio</li>
-                    <li className="breadcrumb-item active" aria-current="page">Servicios</li>
-                    <li className="breadcrumb-item active" aria-current="page">Agregar</li>
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Servicios</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Agregar</li>
                 </ol>
             </nav>
             <div className='container' style={{ margin: "30px" }}>
@@ -223,7 +245,7 @@ export default function AgregarServicio() {
                 </div>
 
                 <div className='text-center'>
-                    <button type="submit" className="btnncolor btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modalagregar">
+                    <button type="submit" className="btnncolor btn-sm me-3">
                         <i className="fa-regular fa-floppy-disk"></i> Guardar
                     </button>
                     <Modal />
@@ -304,10 +326,6 @@ export default function AgregarServicio() {
                         </tbody>
                     </table>
 
-<<<<<<< HEAD
-=======
- 
->>>>>>> 8c370155bc306cd35a732fc3d62a7a42feb13b54
                     {/* Paginación */}
                     <div class="h4 pb-2 mb-4  border-bottom border-black"></div>
                     <div className='d-flex justify-content-between align-items-center'>

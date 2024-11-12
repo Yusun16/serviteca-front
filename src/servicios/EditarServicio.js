@@ -26,8 +26,19 @@ export default function EditarServicio() {
     }, [])
 
     const cargarServicio = async () => {
-        const resultado = await axios.get(`${urlBase}/${id}`)
-        setServicios(resultado.data)
+        const token = localStorage.getItem('token');
+        try {
+            const resultado = await axios.get(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            setServicios(resultado.data)
+
+        } catch (error) {
+            console.error("Error al cargar los servicios:", error);
+            alert("Error al cargar los servicios. Verifica la conexión con el servidor.");
+        }
     }
 
     const onInputCahnge = (e) => {
@@ -36,19 +47,44 @@ export default function EditarServicio() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        await axios.post(urlBase, servicio)
-        navegacion("/")
 
+        const requiredFields = ["codigo", "descripcion", "valorServicio", "nombre", "ano", "porcentajeOperario"];
+        const allFieldsFilled = requiredFields.every(field =>
+            servicio[field] !== null && servicio[field] !== undefined &&
+            (typeof servicio[field] === "string" ? servicio[field].trim() !== "" : servicio[field] !== "")
+        );
 
+        if (!allFieldsFilled) {
+            alert("Por favor, completa todos los campos obligatorios.");
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post(urlBase, servicio, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            })
+            navegacion("/listadoservicio")
+            const modal = new window.bootstrap.Modal(document.getElementById('modaleditar'));
+            modal.show();
+        } catch (error) {
+            console.error("Error al editar los servicios:", error);
+            alert("Error al editar los servicios. Verifica la conexión con el servidor.");
+        }
     }
 
     return (
         <div className='container'>
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">Inicio</li>
-                    <li class="breadcrumb-item active" aria-current="page">Servicios</li>
-                    <li class="breadcrumb-item active" aria-current="page">Editar</li>
+            <nav aria-label="breadcrumb" className='breadcrumb002'>
+                <ol className="breadcrumb">
+                    <li className="breadcrumb-item breadcrumb001">
+                        <i className="fa-solid fa-house"></i>
+                        Inicio
+                    </li>
+                    <li className="breadcrumb-item active breadcrumb004" aria-current="page">Servicios</li>
+                    <li className="breadcrumb-item active breadcrumb003" aria-current="page">Editar</li>
                 </ol>
             </nav>
             <div className='container text-center' style={{ margin: "30px" }}>
@@ -60,7 +96,7 @@ export default function EditarServicio() {
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="codigo" className="form-label">Código: *</label>
-                                <input type="number" className="form-control" id="codigo" name='codigo' value={codigo} readOnly onChange={(e) => onInputCahnge(e)} />
+                                <input type="number" className="form-control" id="codigo" name='codigo' value={servicio.codigo} readOnly onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="mb-3">
@@ -79,7 +115,7 @@ export default function EditarServicio() {
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="descripcion" className="form-label" style={{ resize: "none" }} >Descripción: *</label>
-                                <textarea type="text" className="form-control" rows={5} id="descripcion" name='descripcion' required={true} value={descripcion} onChange={(e) => onInputCahnge(e)} />
+                                <textarea type="text" className="form-control" rows={5} id="descripcion" name='descripcion' required={true} value={servicio.descripcion} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                     </div>
@@ -87,32 +123,29 @@ export default function EditarServicio() {
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="ano" className="form-label">Año: *</label>
-                                <input type="date" className="form-control" id="ano" name='ano' required value={ano} onChange={(e) => onInputCahnge(e)} />
+                                <input type="date" className="form-control" id="ano" name='ano' required value={servicio.ano} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="porcentajeOperario" className="form-label">Porcentaje Operario: *</label>
-                                <input type="number" className="form-control" id="porcentajeOperario" name='porcentajeOperario' required={true} value={porcentajeOperario} onChange={(e) => onInputCahnge(e)} />
+                                <input type="number" className="form-control" id="porcentajeOperario" name='porcentajeOperario' required={true} value={servicio.porcentajeOperario} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                         <div className="col">
                             <div className="mb-3">
                                 <label htmlFor="valorServicio" className="form-label">Valor del servicio: *</label>
-                                <input type="number" step="any" className="form-control" id="valorServicio" name='valorServicio' required={true} value={valorServicio} onChange={(e) => onInputCahnge(e)} />
+                                <input type="number" step="any" className="form-control" id="valorServicio" name='valorServicio' required={true} value={servicio.valorServicio} onChange={(e) => onInputCahnge(e)} />
                             </div>
                         </div>
                     </div>
                 </div>
-                
-
-
                 <div className='text-center'>
-                    <button type="submit" className="btn btn-success btn-sm me-3" data-bs-toggle="modal" data-bs-target="#modaleditar" ><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
-                    <button type="submit" href='/' className='btn btn-danger btn-sm me-3 '><i class="fa-regular fa-circle-xmark"></i> Cancelar</button>
+                    <button type="submit" className="btn btn-success btn-sm me-3"><i class="fa-regular fa-floppy-disk"></i> Guardar</button>
+                    <button type="button" onClick={() => navegacion('/listadoservicio')} className='btn btn-danger btn-sm me-3 '><i class="fa-regular fa-circle-xmark"></i> Cancelar</button>
                     <ModalEditar />
                 </div>
-                
+
             </form>
         </div>
     )
