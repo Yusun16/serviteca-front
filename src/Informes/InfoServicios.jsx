@@ -14,12 +14,17 @@ function InfoServicios() {
 
     const fetchServiceReport = async () => {
         const url = new URL('http://localhost:8080/serviteca/consultarInformeServicio');
+        const token = localStorage.getItem('token');
         if (selectedYear) url.searchParams.append('anio', selectedYear);
         if (selectedMonth) url.searchParams.append('mes', selectedMonth);
         if (selectedPart) url.searchParams.append('codigo', selectedPart);
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const data = await response.json();
             setServiceData(data);
         } catch (error) {

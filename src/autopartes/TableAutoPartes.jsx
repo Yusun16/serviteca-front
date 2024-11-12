@@ -15,47 +15,6 @@ function TableAutoPartes() {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(6);
 
-    const cargarAutoPartes = async () => {
-        const token = localStorage.getItem('token');
-
-        try {
-            const resultado = await axios.get(urlBase, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setAutopartes(resultado.data);
-        } catch (error) {
-            console.error("Error al cargar las autopartes:", error);
-        }
-    };
-
-    const eliminarAutoPartes = async (id) => {
-        const token = localStorage.getItem('token');
-
-        try {
-            await axios.delete(`${urlBase}/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            cargarAutoPartes();
-        } catch (error) {
-            console.error("Error al eliminar la autoparte:", error);
-        }
-    };
-
-    useEffect(() => {
-        cargarAutoPartes();
-    }, []);
-
-    // Total de filas
-    const totalRows = autopartes.length;
-    const totalPages = Math.ceil(totalRows / itemsPerPage);
-
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
     const exportToPDF = () => {
         const doc = new jsPDF();
         const tableColumn = ["Referencia", "Codigo SIIGO", "Descripcion", "Linea", "Tipo", "Marca", "Modelo"];
@@ -96,6 +55,47 @@ function TableAutoPartes() {
         const data = new Blob([excelBuffer], { type: "application/octet-stream" });
         saveAs(data, "listado_de_auto-partes.xlsx");
     };
+
+    const cargarAutoPartes = async () => {
+        const token = localStorage.getItem('token');
+
+        try {
+            const resultado = await axios.get(urlBase, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAutopartes(resultado.data);
+        } catch (error) {
+            console.error("Error al cargar las autopartes:", error);
+        }
+    };
+
+    const eliminarAutoPartes = async (id) => {
+        const token = localStorage.getItem('token');
+
+        try {
+            await axios.delete(`${urlBase}/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            cargarAutoPartes();
+        } catch (error) {
+            console.error("Error al eliminar la autoparte:", error);
+        }
+    };
+
+    useEffect(() => {
+        cargarAutoPartes();
+    }, []);
+
+    // Total de filas
+    const totalRows = autopartes.length;
+    const totalPages = Math.ceil(totalRows / itemsPerPage);
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
     return (
         <div>

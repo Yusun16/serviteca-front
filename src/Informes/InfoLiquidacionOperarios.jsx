@@ -18,12 +18,17 @@ function InfoLiquidacionOperarios() {
 
     const fetchData = async () => {
         const url = new URL('http://localhost:8080/serviteca/consultarInformeOperario');
+        const token = localStorage.getItem('token');
         if (selectedYear) url.searchParams.append('anio', selectedYear);
         if (selectedMonth) url.searchParams.append('mes', selectedMonth);
         if (selectedPart) url.searchParams.append('cedula', selectedPart);
 
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             const result = await response.json();
 
             // Agrupar datos por operario
