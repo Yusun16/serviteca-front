@@ -1,9 +1,13 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Chart } from 'chart.js/auto';
 
-function PieCharts({ labels, data }) {
+const PieCharts = forwardRef(({ labels, data }, ref) => {
     const chartRef = useRef(null);
     const chartInstance = useRef(null);
+
+    useImperativeHandle(ref, () => ({
+        getCanvas: () => chartRef.current,
+    }));
 
     useEffect(() => {
         if (chartInstance.current) {
@@ -43,6 +47,6 @@ function PieCharts({ labels, data }) {
             <canvas ref={chartRef} style={{ width: "300px", height: "200px" }} />
         </div>
     );
-}
+});
 
 export default PieCharts;
