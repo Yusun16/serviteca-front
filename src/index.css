@@ -1658,3 +1658,21 @@ li {
     width: 100%;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .printable-content,
+  .printable-content * {
+    visibility: visible;
+  }
+
+  .printable-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+}

@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import PieCharts from './PieCharts';
 import TableServInfo from './TableServInfo';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 function InfoServicios() {
     const [selectedYear, setSelectedYear] = useState('2024');
     const [selectedMonth, setSelectedMonth] = useState('');
     const [selectedPart, setSelectedPart] = useState('');
-    const [serviceData, setServiceData] = useState([]); // Estado para almacenar los datos de la consulta
+    const [serviceData, setServiceData] = useState([]);
+    const [data, setData] = useState([]);
+    const chartRef = useRef(null);
 
     const handleYearChange = (event) => setSelectedYear(event.target.value);
     const handleMonthChange = (event) => setSelectedMonth(event.target.value);
@@ -32,6 +38,62 @@ function InfoServicios() {
         }
     };
 
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+        const headers = [["Codigo Servicio", "Descripcion Servicio", "N° Servicios Realizados", "Valor Total de los Servicios"]];
+        const rows = serviceData.map(item => [
+            item.codigo,
+            item.descripcion,
+            item.cantidad,
+            item.valorTotal
+        ]);
+
+        doc.autoTable({
+            head: headers,
+            body: rows,
+            startY: 20,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [22, 160, 133] },
+        });
+
+        // Agregar imagen de la gráfica al PDF
+        if (chartRef.current) {
+            const canvas = chartRef.current.getCanvas();
+            const chartImage = canvas.toDataURL('image/png', 1.0);
+            const imgWidth = 150;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const positionY = doc.lastAutoTable.finalY + 10;
+
+            doc.addImage(chartImage, 'PNG', 10, positionY, imgWidth, imgHeight);
+        }
+
+        doc.text("Informe de los servicios", 14, 15);
+        doc.save('informe_servicios.pdf');
+    };
+
+    const exportToExcel = () => {
+        const workbook = XLSX.utils.book_new();
+
+        const combinedData = serviceData.map(item => ({
+            "Codigo Servicio": item.codigo,
+            "Descripcion Servicio": item.descripcion,
+            "N° Servicios Realizados": item.cantidad,
+            "Valor Total de los Servicios": item.valorTotal,
+        }));
+
+        const sheet = XLSX.utils.json_to_sheet(combinedData);
+        XLSX.utils.book_append_sheet(workbook, sheet, "Informe Completo");
+
+        // Guardar el archivo como Excel
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const excelBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(excelBlob, 'informes_servicios.xlsx');
+    };
+
+    const handlePrint = () => {
+        window.print();
+    };
+
     // Preparar datos para la gráfica
     const chartLabels = serviceData.map(item => item.descripcion);
     const chartData = serviceData.map(item => item.valorTotal);
@@ -49,9 +111,9 @@ function InfoServicios() {
             <div className='column005'>
                 <h6 className='text009'>Informe de servicios</h6>
                 <ul className="icons001 icons009">
-                    <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-print"></i></li>
+                    <li className="icons002"><i onClick={downloadPDF} className="fa-solid fa-file-pdf"></i></li>
+                    <li className="icons002"><i onClick={exportToExcel} className="fa-solid fa-file-excel"></i></li>
+                    <li className="icons002"><i onClick={handlePrint} className="fa-solid fa-print"></i></li>
                 </ul>
             </div>
             <div className='content-p'>
@@ -97,13 +159,15 @@ function InfoServicios() {
                     </div>
                 </div>
             </div>
-            <div>
-                <TableServInfo data={serviceData} />
-            </div>
-            <div className='text010'>
-                <h3>Gráfica</h3>
+            <div className="printable-content">
                 <div>
-                    <PieCharts labels={chartLabels} data={chartData} />
+                    <TableServInfo data={serviceData} />
+                </div>
+                <div className='text010'>
+                    <h3>Gráfica</h3>
+                    <div>
+                        <PieCharts ref={chartRef} labels={chartLabels} data={chartData} />
+                    </div>
                 </div>
             </div>
         </div>

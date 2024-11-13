@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import TableAutParInfo from './TableAutParInfo';
 import PieCharts from './PieCharts';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 function InfoAutoPartes() {
     const [isOn, setIsOn] = useState(false);
     const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
     const [selectedMonth, setSelectedMonth] = useState(''); // Mes no seleccionado inicialmente
     const [selectedPart, setSelectedPart] = useState('');
-    const [data, setData] = useState([]); // Estado para almacenar los datos del backend
+    const [data, setData] = useState([]);
+    const chartRef = useRef(null);
 
     const toggleSwitch = () => {
         setIsOn(prevState => !prevState);
@@ -45,6 +50,64 @@ function InfoAutoPartes() {
         }
     };
 
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+        const headers = [["Codigo Producto", "Descripcion", "Cantidad Existencias", "Saldo", "Indicador"]];
+        const rows = data.map(item => [
+            item.codigo,
+            item.descripcion,
+            item.cantidadExistente,
+            item.saldo,
+            item.cantidadExistente > 5 ? "Indicador Verde" : "Indicador Rojo",
+        ]);
+
+        doc.autoTable({
+            head: headers,
+            body: rows,
+            startY: 20,
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [22, 160, 133] },
+        });
+
+        // Agregar imagen de la gráfica al PDF
+        if (chartRef.current) {
+            const canvas = chartRef.current.getCanvas();
+            const chartImage = canvas.toDataURL('image/png', 1.0);
+            const imgWidth = 150;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            const positionY = doc.lastAutoTable.finalY + 10;
+
+            doc.addImage(chartImage, 'PNG', 10, positionY, imgWidth, imgHeight);
+        }
+
+        doc.text("Informe de las auto-partes", 14, 15);
+        doc.save('Informe_Auto-Partes.pdf');
+    };
+
+    const exportToExcel = () => {
+        const workbook = XLSX.utils.book_new();
+
+        const combinedData = data.map(item => ({
+            "Codigo Producto": item.codigo,
+            "Descripcion": item.descripcion,
+            "Cantidad Existencias": item.cantidadExistente,
+            "Saldo": item.saldo,
+            "Indicador": item.cantidadExistente > 5 ? "Indicador Verde" : "Indicador Rojo",
+        }));
+
+        const sheet = XLSX.utils.json_to_sheet(combinedData);
+        XLSX.utils.book_append_sheet(workbook, sheet, "Informe Completo");
+
+        // Guardar el archivo como Excel
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const excelBlob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+        saveAs(excelBlob, 'Informe_Auto-Partes.xlsx');
+    };
+
+    const handlePrint = () => {
+        window.print();
+    };
+
     // Genera una lista de años desde 2000 hasta el año actual
     const currentYear = new Date().getFullYear();
     const years = Array.from({ length: currentYear - 1999 }, (_, i) => 2000 + i);
@@ -63,9 +126,9 @@ function InfoAutoPartes() {
             <div className='column005'>
                 <h6 className='text009'>Informe de auto-partes</h6>
                 <ul className="icons001 icons009">
-                    <li className="icons002"><i className="fa-solid fa-file-pdf"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-file-excel"></i></li>
-                    <li className="icons002"><i className="fa-solid fa-print"></i></li>
+                    <li className="icons002"><i onClick={downloadPDF} className="fa-solid fa-file-pdf"></i></li>
+                    <li className="icons002"><i onClick={exportToExcel} className="fa-solid fa-file-excel"></i></li>
+                    <li className="icons002"><i onClick={handlePrint} className="fa-solid fa-print"></i></li>
                 </ul>
             </div>
             <div className='content-p'>
@@ -126,12 +189,14 @@ function InfoAutoPartes() {
                     </div>
                 </div>
             </div>
-            <div>
-                <TableAutParInfo data={data} />
-            </div>
-            <div className='text010'>
-                <h3>Gráfica</h3>
-                <PieCharts labels={data.map(item => item.descripcion)} data={data.map(item => item.saldo)} />
+            <div className="printable-content">
+                <div>
+                    <TableAutParInfo data={data} />
+                </div>
+                <div className='text010'>
+                    <h3>Gráfica</h3>
+                    <PieCharts ref={chartRef} labels={data.map(item => item.descripcion)} data={data.map(item => item.saldo)} />
+                </div>
             </div>
         </div>
     );
