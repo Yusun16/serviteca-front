@@ -20,6 +20,7 @@ function ModalEdit() {
         nombre: '',
         descripcion: '',
         cantidad: '',
+        precioAutoparte:'',
         servicio: {
             idServicio: ''
         },
@@ -116,10 +117,11 @@ function ModalEdit() {
             'nombre',
             'descripcion',
             'cantidad',
+            'precioAutoparte',
             'linea',
             'tipo',
         ];
-        const allFieldsFilled = requiredFields.every(field => autopartes[field].trim() !== '');
+        const allFieldsFilled = requiredFields.every(field => String(autopartes[field] || '').trim() !== '');
         if (allFieldsFilled) {
             const token = localStorage.getItem('token');
             try {
@@ -244,6 +246,24 @@ function ModalEdit() {
 
                                 </div>
                                 <div className='column001'>
+                                <div className='div-col002'>
+                                        <Label
+                                            className='label006'
+                                            htmlFor="precioAutoparte"
+                                            name="Precio Autoparte:"
+                                        />
+                                        <Input
+                                            className='input004'
+                                            type="text"
+                                            id="precioAutoparte"
+                                            name="precioAutoparte"
+                                            placeholder="precio Autoparte"
+                                            required={true}
+                                            value={autopartes.precioAutoparte}
+                                            onChange={(e) => handleInputChange(e)}
+                                        />
+                                    </div>
+
                                     <div className='div-col002'>
                                         <Label className='label006' htmlFor="servicio" name="Servicio:"></Label>
                                         <div className="dropdown">
