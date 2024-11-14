@@ -9,6 +9,8 @@ function AutoPartes() {
     const [autopartes, setAutopartes] = useState([]);
     const [servicios, setServicios] = useState([]);
     const [opcionesServicios, setOpcionesServicios] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
+
 
     const [inputs, setInputs] = useState({
         referencia: '',
@@ -16,7 +18,7 @@ function AutoPartes() {
         nombre: '',
         descripcion: '',
         cantidad: '',
-        precioAutoparte:'',
+        precioAutoparte: '',
         servicio: {
             idServicio: ''
         },
@@ -125,28 +127,140 @@ function AutoPartes() {
         }
     };
 
+    const validateReference = (referencia) => {
+        const referenceRegex = /^[A-Za-z0-9\-\.]+$/;
+        const refereMinLength = 4;
+        const refereMaxLength = 20;
+
+        if (!referencia || referencia.length < refereMinLength || referencia.length > refereMaxLength || !referenceRegex.test(referencia)) {
+            return "La referencia debe ser alfanumérica, y puede incluir guiones y puntos.";
+        }
+
+        const guionCount = (referencia.match(/-/g) || []).length;
+        if (guionCount > 3) {
+            return "La referencia puede tener un máximo de 3 guiones.";
+        }
+
+        if (!/[A-Za-z0-9]/.test(referencia)) {
+            return "La referencia debe contener al menos una letra o número.";
+        }
+
+        return null; // Si pasa la validación, no hay error
+    };
+
+    const validateSiigoCode = (siigo) => {
+        const siigoRegex = /^[A-Za-z0-9-]+$/;
+        const siigoMinLength = 4;
+        const siigoMaxLength = 20;
+
+        if (!siigo || siigo.length < siigoMinLength || siigo.length > siigoMaxLength || !siigoRegex.test(siigo)) {
+            return "El código Siigo debe ser alfanumérico y puede incluir guiones, con una longitud entre 6 y 20 caracteres.";
+        }
+
+        // Si tu sistema requiere que el código sea único, aquí también se podría hacer una llamada al backend para verificar si el código ya existe en la base de datos.
+
+        return null;
+    };
+
+    const validateForm = () => {
+        const {
+            referencia,
+            siigo,
+            nombre,
+            descripcion,
+            cantidad,
+            precioAutoparte,
+            servicio,
+            linea,
+            tipo,
+            marca,
+            modelo,
+        } = inputs;
+
+        const referenceError = validateReference(referencia);
+        if (referenceError) {
+            setErrorMessage(referenceError);
+            return false;
+        }
+
+        const siigoError = validateSiigoCode(siigo);
+        if (siigoError) {
+            setErrorMessage(siigoError);
+            return false;
+        }
+
+        const nameRegex = /^[A-Za-záéíóúÁÉÍÓÚñÑ ]+$/;
+        if (!nombre || !nameRegex.test(nombre)) {
+            setErrorMessage("El nombre solo puede contener letras.");
+            return false;
+        }
+
+        if (!descripcion || descripcion.length > 500) {
+            setErrorMessage("La descripción no puede estar vacía y debe tener un máximo de 500 caracteres.");
+            return false;
+        }
+
+        if (!cantidad || isNaN(cantidad) || parseInt(cantidad, 10) <= 0) {
+            setErrorMessage("La cantidad debe ser un número entero mayor que 0.");
+            return false;
+        }
+
+        if (!precioAutoparte || isNaN(precioAutoparte) || parseFloat(precioAutoparte) <= 0) {
+            setErrorMessage("El precio de la autoparte debe ser un número mayor que 0.");
+            return false;
+        }
+
+        if (!servicio) {
+            setErrorMessage("Por favor, selecciona un servicio.");
+            return false;
+        }
+
+        if (!linea) {
+            setErrorMessage("Por favor, selecciona una linea.");
+            return false;
+        }
+
+        if (!tipo) {
+            setErrorMessage("Por favor, selecciona un tipo.");
+            return false;
+        }
+
+        const marcaRegex = /^[A-Za-z]+([ -]?[A-Za-z]+)*$/;  // Letras, espacios y guiones entre palabras
+
+        if (marca && !marcaRegex.test(marca)) {
+            setErrorMessage("La marca solo puede contener letras, espacios entre palabras y guiones.");
+            return false;
+        }
+
+        const modeloRegex = /^\d{4}$/;  // Validación para año (4 dígitos)
+        if (modelo && !modeloRegex.test(modelo)) {
+            setErrorMessage("El modelo debe ser un año válido (4 dígitos).");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const requiredFields = ['referencia', 'siigo', 'nombre', 'descripcion', 'cantidad', 'linea', 'tipo'];
-        const allRequiredFieldsValid = requiredFields.every(field => inputs[field].trim() !== '');
 
-        if (allRequiredFieldsValid) {
+        if (!validateForm()) {
+            return;
+        }
 
-            const token = localStorage.getItem('token');
-            try {
-                await axios.post('http://localhost:8080/serviteca/autopartes', inputs, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setIsModalOpen(true);
-                fetchAutopartes();
-                // navegacion("/auto-partes");Actualiza la lista después de guardar
-            } catch (error) {
-                console.error('Error al guardar:', error);
-            }
-        } else {
-            alert('Por favor, completa todos los campos obligatorios.');
+        const token = localStorage.getItem('token');
+        try {
+            await axios.post('http://localhost:8080/serviteca/autopartes', inputs, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setIsModalOpen(true);
+            fetchAutopartes();
+            // navegacion("/auto-partes");Actualiza la lista después de guardar
+        } catch (error) {
+            console.error('Error al guardar:', error);
+            setErrorMessage("Hubo un problema al enviar los datos. Intenta nuevamente.");
         }
     };
 
@@ -159,7 +273,7 @@ function AutoPartes() {
             nombre: '',
             descripcion: '',
             cantidad: '',
-            precioAutoparte:'',
+            precioAutoparte: '',
             servicio: {
                 idServicio: ''
             },
@@ -216,7 +330,6 @@ function AutoPartes() {
                             type="text"
                             id="referencia"
                             name="referencia"
-                            required
                             value={inputs.referencia}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.referencia}
@@ -229,7 +342,6 @@ function AutoPartes() {
                             type="text"
                             id="siigo"
                             name="siigo"
-                            required
                             value={inputs.siigo}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.siigo}
@@ -242,7 +354,6 @@ function AutoPartes() {
                             type="text"
                             id="nombre"
                             name="nombre"
-                            required
                             value={inputs.nombre}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.nombre}
@@ -255,7 +366,6 @@ function AutoPartes() {
                             rows={3}
                             id="descripcion"
                             name="descripcion"
-                            required
                             value={inputs.descripcion}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.descripcion}
@@ -268,7 +378,6 @@ function AutoPartes() {
                             type="text"
                             id="cantidad"
                             name="cantidad"
-                            required
                             value={inputs.cantidad}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.cantidad}
@@ -277,14 +386,13 @@ function AutoPartes() {
                 </div>
 
                 <div className='column001'>
-                <div className='div-col002'>
+                    <div className='div-col002'>
                         <label className='label006' htmlFor="cantidad">Costo del producto: *</label>
                         <input
                             className='input005 input007'
                             type="text"
                             id="precioAutoparte"
                             name="precioAutoparte"
-                            required
                             value={inputs.precioAutoparte}
                             onChange={handleInputChange}
                             disabled={!isInputEnabled.precioAutoparte}
@@ -371,6 +479,7 @@ function AutoPartes() {
                     </div>
                 </div>
             </form>
+            {errorMessage && <p className="error-message container text-center">{errorMessage}</p>}
             <div>
                 <TableAutoPartes />
             </div>

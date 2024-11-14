@@ -20,7 +20,7 @@ export default function AgregarVehiculo() {
     const itemsPerPage = 8;
     const [clientes, setClientes] = useState([]);
     const [opcionesClientes, setOpcionesClientes] = useState([]);
-
+    const [errorMessage, setErrorMessage] = useState("");
 
     const paginate = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -106,6 +106,8 @@ export default function AgregarVehiculo() {
                 [name]: value,
             }));
         }
+
+        setErrorMessage("");
     };
 
     const handleSelectChange = (selectedOption) => {
@@ -157,16 +159,6 @@ export default function AgregarVehiculo() {
         }
     };
 
-    // const onSubmit = async (e) => {
-    //     e.preventDefault();
-    //     const urlBase = "http://localhost:8080/serviteca/vehiculos";
-    //     await axios.post(urlBase, vehiculo);
-    //     // Arreglar el redireccionamiento !!!
-    //     // navegacion("/agregarvehiculo")
-    //     navegacion("/listadoVehiculo")
-
-    // }
-
     // Función para exportar a Excel
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(vehiculos.map(vehiculo => ({
@@ -210,22 +202,72 @@ export default function AgregarVehiculo() {
             setImage(file);
         }
     };
+
+    const validateForm = () => {
+        const { placa, marca, linea, modelo, cliente, observacion } = vehiculo;
+
+        const placaRegex = /^[A-Z0-9]{3}-[A-Z0-9]{3}$/;
+        if (!placa || !placaRegex.test(placa)) {
+            setErrorMessage("La placa debe tener el formato ABC-123 (letras y números).");
+            return false;
+        }
+
+        if (!marca) {
+            setErrorMessage("Por favor, selecciona una marca.");
+            return false;
+        }
+
+        if (!linea) {
+            setErrorMessage("Por favor, selecciona una linea.");
+            return false;
+        }
+
+        const currentYear = new Date().getFullYear();
+        const modeloRegex = /^(19|20)\d{2}$/;
+        if (!modelo || !modeloRegex.test(modelo)) {
+            setErrorMessage("El modelo debe ser un año de 4 dígitos (ej. 2020).");
+            return false;
+        }
+
+        const modeloYear = parseInt(modelo, 10);
+        if (modeloYear < 1900 || modeloYear > currentYear) {
+            setErrorMessage(`El año del modelo debe estar entre 1900 y ${currentYear}.`);
+            return false;
+        }
+
+        if (!cliente) {
+            setErrorMessage("Por favor, selecciona una cliente.");
+            return false;
+        }
+
+        if (!image) {
+            setErrorMessage("Por favor, selecciona una imagen.");
+            return false;
+        }
+
+        if (observacion.length > 500) {
+            setErrorMessage("La observación no puede tener más de 500 caracteres.");
+            return false;
+        }
+
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(vehiculo.cliente);
 
-        const requiredFields = ["placa", "marca", "linea", "modelo", "observacion"];
-        const allFieldsFilled = requiredFields.every(field => vehiculo[field].trim() !== "");
-
-        if (!allFieldsFilled) {
-            alert("Por favor, completa todos los campos obligatorios.");
+        if (!validateForm()) {
             return;
         }
 
-        if (!image) {
-            alert("Por favor, selecciona una imagen.");
-            return;
-        }
+        // const requiredFields = ["placa", "marca", "linea", "modelo", "observacion"];
+        // const allFieldsFilled = requiredFields.every(field => vehiculo[field].trim() !== "");
+
+        // if (!allFieldsFilled) {
+        //     alert("Por favor, completa todos los campos obligatorios.");
+        //     return;
+        // }
 
         const token = localStorage.getItem('token');
         try {
@@ -281,7 +323,7 @@ export default function AgregarVehiculo() {
             modal.show();
         } catch (error) {
             console.error('Error al enviar los datos', error);
-            alert('Hubo un problema al enviar los datos');
+            setErrorMessage("Hubo un problema al enviar los datos. Intenta nuevamente.");
         }
     };
 
@@ -399,6 +441,7 @@ export default function AgregarVehiculo() {
                             </button>
                             <ModalGuardar />
                         </div>
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
                     </div>
                 </form>
             </div>
