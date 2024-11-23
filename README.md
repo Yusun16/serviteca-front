@@ -3,7 +3,7 @@
 Este proyecto consta de dos repositorios principales:
 
 1. **Frontend**: [serviteca-front](https://github.com/Yusun16/serviteca-front)
-2. **Backend**: [cw-front-backend](https://github.com/Yusun16/cw-front-backend)
+2. **Backend**: [serviteca-backend](https://github.com/Yusun16/serviteca-Backend)
 
 El objetivo es ofrecer una solución completa para la gestión de un taller automotriz, permitiendo registrar órdenes de servicio, gestionar vehículos, operarios, autopartes y servicios asignados.
 
