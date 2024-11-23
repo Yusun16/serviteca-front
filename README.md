@@ -83,7 +83,7 @@ npm start
 ```
 El frontend estará disponible en http://localhost:3000.
 
-##📄 Scripts disponibles
+## 📄 Scripts disponibles
 npm start: Inicia el servidor de desarrollo.
 npm build: Genera la versión de producción.
 
