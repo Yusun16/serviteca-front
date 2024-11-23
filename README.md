@@ -87,6 +87,6 @@ El frontend estará disponible en http://localhost:3000.
 npm start: Inicia el servidor de desarrollo.
 npm build: Genera la versión de producción.
 
-## ![image](https://github.com/user-attachments/assets/326e4a72-6d95-4d53-ace4-60650d16a26c) Contacto
+## 📧 Contacto
 GitHub: Yusun16
 Email: yusunguairabryan@gmail.com
